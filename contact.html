@@ -4,305 +4,1066 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Contact & Helpdesk - GrowKrishak</title>
+    <title>GrowKrishak - Contact & Helpdesk</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f8f9fa;
+            font-family: "Inter", sans-serif;
+            background:
+                linear-gradient(rgba(5, 25, 18, 0.96), rgba(5, 25, 18, 0.98)),
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(100, 180, 130, 0.05) 0px,
+                    rgba(100, 180, 130, 0.05) 1px,
+                    transparent 1px,
+                    transparent 50px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(100, 180, 130, 0.05) 0px,
+                    rgba(100, 180, 130, 0.05) 1px,
+                    transparent 1px,
+                    transparent 50px
+                );
+
+            color: #e8f4ed;
+            min-height: 100vh;
         }
 
-        .max-w-700 {
-            max-width: 700px;
+
+        /* =========================
+           TOP NAVBAR
+        ========================== */
+
+        .navbar {
+            width: calc(100% - 70px);
+            margin: 25px auto 0;
+
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 25px;
+
+            background: rgba(7, 31, 22, 0.86);
+            border: 1px solid rgba(80, 150, 110, 0.20);
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255,255,255,0.03);
+
+            backdrop-filter: blur(15px);
         }
 
-        .btn-gk-primary {
-            background-color: #198754;
-            border-color: #198754;
-            color: #fff;
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
         }
 
-        .btn-gk-primary:hover {
-            background-color: #157347;
-            border-color: #157347;
-            color: #fff;
-        }
 
-        .contact-icon {
-            width: 55px;
-            height: 55px;
+        .brand-logo {
+            width: 43px;
+            height: 43px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+
+            background: #a9e8b5;
+            color: #092519;
+
+            border-radius: 13px;
+
+            font-size: 22px;
+            font-weight: 800;
         }
 
-        .form-control,
-        .form-select {
-            padding: 12px 14px;
-            border-radius: 8px;
+
+        .brand-text h3 {
+            font-size: 17px;
+            margin-bottom: 3px;
         }
 
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+
+        .brand-text span {
+            font-size: 13px;
+            color: #91a89d;
+            letter-spacing: 1px;
         }
+
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+        }
+
+
+        .nav-links a {
+            color: #a9bbb2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: 0.25s;
+        }
+
+
+        .nav-links a:hover {
+            color: #9be8a8;
+        }
+
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        .status {
+            padding: 10px 18px;
+
+            border-radius: 25px;
+
+            border: 1px solid rgba(91, 202, 124, 0.25);
+
+            background: rgba(38, 113, 65, 0.20);
+
+            color: #b5ebc0;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .status-dot {
+            display: inline-block;
+
+            width: 8px;
+            height: 8px;
+
+            margin-right: 8px;
+
+            background: #39d879;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 10px #39d879;
+        }
+
+
+        .logout {
+            padding: 11px 20px;
+
+            border-radius: 13px;
+
+            border: 1px solid rgba(120, 160, 140, 0.20);
+
+            background: rgba(255,255,255,0.02);
+
+            color: #d8e5de;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .container {
+            width: calc(100% - 135px);
+            max-width: 1250px;
+
+            margin: auto;
+        }
+
+
+        .hero {
+            text-align: center;
+
+            padding: 70px 20px 45px;
+        }
+
+
+        .badge {
+            display: inline-block;
+
+            padding: 8px 17px;
+
+            border-radius: 25px;
+
+            color: #8ee3a3;
+
+            background: rgba(64, 154, 86, 0.14);
+
+            border: 1px solid rgba(83, 184, 107, 0.22);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: .5px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 55px);
+
+            line-height: 1.1;
+
+            margin-bottom: 18px;
+
+            color: #edf8f1;
+        }
+
+
+        .hero h1 span {
+            color: #8ce5a0;
+        }
+
+
+        .hero p {
+            max-width: 720px;
+
+            margin: auto;
+
+            color: #9fb2a8;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           CONTENT GRID
+        ========================== */
+
+        .content {
+            display: grid;
+
+            grid-template-columns: 0.85fr 1.15fr;
+
+            gap: 30px;
+
+            padding-bottom: 70px;
+        }
+
+
+        /* =========================
+           GLASS CARD
+        ========================== */
+
+        .card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(16, 52, 37, 0.78),
+                    rgba(7, 31, 22, 0.78)
+                );
+
+            border: 1px solid rgba(91, 160, 116, 0.18);
+
+            border-radius: 25px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.20),
+                inset 0 1px 0 rgba(255,255,255,.025);
+
+            backdrop-filter: blur(15px);
+        }
+
+
+        .card-title {
+            font-size: 21px;
+
+            margin-bottom: 25px;
+
+            color: #edf8f1;
+        }
+
+
+        /* =========================
+           CONTACT ITEMS
+        ========================== */
+
+        .contact-item {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 17px;
+
+            padding: 18px 0;
+
+            border-bottom: 1px solid rgba(120,160,140,.09);
+        }
+
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+
+            min-width: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: rgba(79, 184, 105, .10);
+
+            border: 1px solid rgba(89, 188, 112, .16);
+
+            color: #8ce3a0;
+
+            font-size: 18px;
+        }
+
+
+        .contact-item h4 {
+            font-size: 14px;
+
+            margin-bottom: 6px;
+
+            color: #9fb6aa;
+        }
+
+
+        .contact-value {
+            color: #edf7f0;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            margin-bottom: 5px;
+        }
+
+
+        .contact-description {
+            color: #7f988c;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .form-card {
+            padding: 35px;
+        }
+
+
+        .form-header {
+            margin-bottom: 25px;
+        }
+
+
+        .form-header h2 {
+            font-size: 24px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .form-header p {
+            color: #80988d;
+
+            font-size: 13px;
+        }
+
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        label {
+            display: block;
+
+            font-size: 12px;
+
+            color: #a9bdb2;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            background: rgba(4, 23, 16, .65);
+
+            border: 1px solid rgba(100, 155, 120, .18);
+
+            color: #e8f3ec;
+
+            padding: 13px 15px;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            transition: .25s;
+        }
+
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #61776c;
+        }
+
+
+        select {
+            cursor: pointer;
+        }
+
+
+        select option {
+            background: #0b291c;
+            color: white;
+        }
+
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color: rgba(112, 218, 137, .55);
+
+            box-shadow:
+                0 0 0 3px rgba(77, 180, 98, .08);
+
+            background: rgba(6, 29, 20, .9);
+        }
+
+
+        textarea {
+            min-height: 130px;
+
+            resize: vertical;
+        }
+
+
+        /* =========================
+           BUTTON
+        ========================== */
+
+        .submit-btn {
+
+            width: 100%;
+
+            border: none;
+
+            padding: 14px;
+
+            border-radius: 13px;
+
+            background: linear-gradient(
+                135deg,
+                #8be49d,
+                #5dc879
+            );
+
+            color: #062315;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .25s;
+
+            box-shadow:
+                0 8px 25px rgba(69, 190, 91, .16);
+        }
+
+
+        .submit-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(69, 190, 91, .28);
+        }
+
+
+        /* =========================
+           HELP BOX
+        ========================== */
+
+        .help-box {
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            border-radius: 15px;
+
+            background: rgba(62, 144, 80, .08);
+
+            border: 1px solid rgba(77, 171, 94, .14);
+        }
+
+
+        .help-box strong {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #b9e8c2;
+
+            font-size: 13px;
+        }
+
+
+        .help-box span {
+            color: #829b8e;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+
+            border-top: 1px solid rgba(100,150,120,.10);
+
+            padding: 25px;
+
+            text-align: center;
+
+            color: #657b70;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media(max-width: 900px) {
+
+            .navbar {
+                width: calc(100% - 30px);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                width: calc(100% - 30px);
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media(max-width: 600px) {
+
+            .navbar {
+                height: auto;
+
+                padding: 15px;
+
+                gap: 15px;
+            }
+
+            .status {
+                display: none;
+            }
+
+            .logout {
+                padding: 9px 13px;
+
+                font-size: 12px;
+            }
+
+            .hero {
+                padding-top: 50px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .card,
+            .form-card {
+                padding: 22px;
+            }
+
+        }
+
     </style>
 </head>
 
+
 <body>
 
-    <!-- Page Header -->
-    <div class="py-5 bg-white border-bottom">
-        <div class="container py-4 text-center">
 
-            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold mb-2">
-                Support & Inquiry
-            </span>
+<!-- =========================
+     NAVBAR
+========================== -->
 
-            <h1 class="display-5 fw-bold text-dark">
-                We're Here to Support Your Farm
-            </h1>
+<header class="navbar">
 
-            <p class="fs-5 text-secondary max-w-700 mx-auto">
-                Questions about AI crop detection, robot hardware purchase,
-                or government subsidies? Get in touch with our specialist team.
-            </p>
+    <div class="brand">
+
+        <div class="brand-logo">
+            A
+        </div>
+
+        <div class="brand-text">
+
+            <h3>GrowKrishak</h3>
+
+            <span>FARMER SUPPORT</span>
 
         </div>
+
     </div>
 
 
-    <!-- Main Content -->
-    <div class="container py-5">
+    <nav class="nav-links">
 
-        <div class="row g-5">
+        <a href="index.html">Overview</a>
 
-            <!-- Contact Information -->
-            <div class="col-lg-5">
+        <a href="crop.html">Crop</a>
 
-                <h4 class="fw-bold mb-4">
-                    Contact Information
-                </h4>
+        <a href="soil.html">Soil</a>
+
+        <a href="fertilizer.html">Fertilizer</a>
+
+        <a href="ai-chat.html">AI Chat</a>
+
+    </nav>
 
 
-                <!-- Phone -->
-                <div class="d-flex align-items-start gap-3 mb-4">
+    <div class="nav-right">
 
-                    <div class="contact-icon rounded-circle bg-success bg-opacity-10 text-success">
-                        <i class="fa-solid fa-phone fs-4"></i>
-                    </div>
+        <div class="status">
 
-                    <div>
-                        <h6 class="fw-bold mb-1">
-                            Toll-Free Agricultural Helpline
-                        </h6>
+            <span class="status-dot"></span>
 
-                        <div class="text-dark fw-semibold fs-5">
-                            +91 1800-425-GROW (4769)
-                        </div>
+            ONLINE • DEMO
 
-                        <small class="text-muted">
-                            Monday - Saturday: 7:00 AM - 8:00 PM IST
-                        </small>
-                    </div>
+        </div>
+
+        <button class="logout">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     HERO
+========================== -->
+
+<section class="hero">
+
+    <div class="badge">
+        <i class="fa-solid fa-headset"></i>
+        &nbsp; SUPPORT & INQUIRY
+    </div>
+
+
+    <h1>
+        We're Here to
+        <span>Support Your Farm</span>
+    </h1>
+
+
+    <p>
+        Need help with crop health, AI diagnosis, soil analysis,
+        fertilizer information or government schemes?
+        Our specialist team is here to help.
+    </p>
+
+</section>
+
+
+
+<!-- =========================
+     MAIN CONTENT
+========================== -->
+
+<main class="container">
+
+    <div class="content">
+
+
+        <!-- =========================
+             CONTACT INFORMATION
+        ========================== -->
+
+        <section class="card">
+
+            <h2 class="card-title">
+                Contact Information
+            </h2>
+
+
+            <!-- Phone -->
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+
+                    <i class="fa-solid fa-phone"></i>
 
                 </div>
 
+                <div>
 
-                <!-- Email -->
-                <div class="d-flex align-items-start gap-3 mb-4">
-
-                    <div class="contact-icon rounded-circle bg-success bg-opacity-10 text-success">
-                        <i class="fa-solid fa-envelope fs-4"></i>
-                    </div>
-
-                    <div>
-                        <h6 class="fw-bold mb-1">
-                            Email Inquiries
-                        </h6>
-
-                        <div class="text-dark fw-semibold">
-                            support@growkrishak.com
-                        </div>
-
-                        <small class="text-muted">
-                            Direct technical assistance & API integrations
-                        </small>
-                    </div>
-
-                </div>
-
-
-                <!-- Location -->
-                <div class="d-flex align-items-start gap-3 mb-4">
-
-                    <div class="contact-icon rounded-circle bg-success bg-opacity-10 text-success">
-                        <i class="fa-solid fa-location-dot fs-4"></i>
-                    </div>
-
-                    <div>
-                        <h6 class="fw-bold mb-1">
-                            Headquarters & Robotics Lab
-                        </h6>
-
-                        <div class="text-dark">
-                            GrowKrishak AgriTech Park, Sector 4
-                        </div>
-
-                        <small class="text-muted">
-                            Shivajinagar, Pune, Maharashtra 411005, India
-                        </small>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- Contact Form -->
-            <div class="col-lg-7">
-
-                <div class="p-4 p-md-5 rounded-4 bg-white border shadow-sm">
-
-                    <h4 class="fw-bold mb-3">
-                        Send Us a Message
+                    <h4>
+                        Agricultural Helpline
                     </h4>
 
-
-                    <!-- Success Message Example -->
-                    <!--
-                    <div class="alert alert-success d-flex align-items-center mb-4">
-                        <i class="fa-solid fa-circle-check fs-4 me-3"></i>
-                        <div>
-                            Thank you! Your support ticket has been received.
-                            Our agronomist team will respond within 24 hours.
-                        </div>
+                    <div class="contact-value">
+                        +91 1800-425-GROW
                     </div>
-                    -->
 
-
-                    <form method="POST" action="#">
-
-                        <!-- Name & Email -->
-                        <div class="row g-3 mb-3">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-semibold small">
-                                    Full Name
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="name"
-                                    class="form-control"
-                                    required
-                                    placeholder="e.g. Ramesh Kumar"
-                                >
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-semibold small">
-                                    Email Address
-                                </label>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    class="form-control"
-                                    required
-                                    placeholder="name@example.com"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Subject -->
-                        <div class="mb-3">
-
-                            <label class="form-label fw-semibold small">
-                                Subject
-                            </label>
-
-                            <select name="subject" class="form-select">
-
-                                <option value="Robot Inquiry">
-                                    KrishakBot Rover Hardware Inquiry
-                                </option>
-
-                                <option value="Disease Diagnosis">
-                                    Crop Disease & AI Scanner Assistance
-                                </option>
-
-                                <option value="Government Subsidy">
-                                    SMAM Subsidy Consultation
-                                </option>
-
-                                <option value="General Support">
-                                    General Platform Support
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- Message -->
-                        <div class="mb-4">
-
-                            <label class="form-label fw-semibold small">
-                                Message
-                            </label>
-
-                            <textarea
-                                name="message"
-                                rows="4"
-                                class="form-control"
-                                required
-                                placeholder="Describe your farm acreage, crop type, or question..."
-                            ></textarea>
-
-                        </div>
-
-
-                        <!-- Submit Button -->
-                        <button
-                            type="submit"
-                            class="btn btn-gk-primary w-100 py-2"
-                        >
-
-                            <i class="fa-solid fa-paper-plane me-2"></i>
-
-                            Send Inquiry
-
-                        </button>
-
-                    </form>
+                    <div class="contact-description">
+                        Monday - Saturday<br>
+                        7:00 AM - 8:00 PM IST
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+
+            <!-- Email -->
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        Email Support
+                    </h4>
+
+                    <div class="contact-value">
+                        growkrishak@gmail.com
+                    </div>
+
+                    <div class="contact-description">
+                        Technical assistance and
+                        platform support
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Location -->
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        GrowKrishak HQ
+                    </h4>
+
+                    <div class="contact-value">
+                        UPTTI, Parwati Bangla Road
+                    </div>
+
+                    <div class="contact-description">
+                        Shooterganj, Kanpur,<br>
+                        Uttar Pradesh 20108, India
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI Support -->
+
+            <div class="contact-item">
+
+                <div class="contact-icon">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        AI Farmer Assistant
+                    </h4>
+
+                    <div class="contact-value">
+                        24 × 7 AI Support
+                    </div>
+
+                    <div class="contact-description">
+                        Get instant assistance for
+                        common farming queries.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="help-box">
+
+                <strong>
+                    <i class="fa-solid fa-circle-check"></i>
+                    Response within 24 hours
+                </strong>
+
+                <span>
+                    Our agricultural support team will
+                    review your inquiry and contact you.
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             CONTACT FORM
+        ========================== -->
+
+        <section class="card form-card">
+
+            <div class="form-header">
+
+                <h2>
+                    Send Us a Message
+                </h2>
+
+                <p>
+                    Tell us how we can help with your farm.
+                </p>
+
+            </div>
+
+
+            <form action="#" method="POST">
+
+
+                <!-- Name + Email -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            FULL NAME
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="e.g. Ramesh Kumar"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            EMAIL ADDRESS
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="name@example.com"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Subject -->
+
+                <div class="form-group">
+
+                    <label>
+                        SUBJECT
+                    </label>
+
+                    <select name="subject">
+
+                        <option value="Robot Inquiry">
+                            KrishakBot Rover Hardware Inquiry
+                        </option>
+
+                        <option value="Disease Diagnosis">
+                            Crop Disease & AI Scanner Assistance
+                        </option>
+
+                        <option value="Government Subsidy">
+                            Government Scheme Consultation
+                        </option>
+
+                        <option value="Soil">
+                            Soil Quality & Analysis
+                        </option>
+
+                        <option value="Fertilizer">
+                            Fertilizer Information
+                        </option>
+
+                        <option value="General Support">
+                            General Platform Support
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Message -->
+
+                <div class="form-group">
+
+                    <label>
+                        MESSAGE
+                    </label>
+
+                    <textarea
+                        name="message"
+                        placeholder="Describe your crop, farm acreage, soil condition, or question..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    &nbsp; Send Inquiry
+
+                </button>
+
+
+            </form>
+
+        </section>
 
     </div>
 
+</main>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- =========================
+     FOOTER
+========================== -->
+
+<footer>
+
+    © 2026 GrowKrishak • Smart Agriculture Platform
+
+</footer>
+
+
 
 </body>
 </html>
