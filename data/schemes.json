@@ -1,0 +1,16 @@
+[
+  {
+    "id": "S-401",
+    "name": "PM-KISAN",
+    "description": "Income support of Rs 6000/year to farmer families.",
+    "benefits": "Rs 6000 per year in 3 installments",
+    "link": "https://pmkisan.gov.in/"
+  },
+  {
+    "id": "S-402",
+    "name": "Soil Health Card Scheme",
+    "description": "Soil testing and health cards for better fertilizer use.",
+    "benefits": "Free soil testing + guidance",
+    "link": "https://soilhealth.dac.gov.in/"
+  }
+]

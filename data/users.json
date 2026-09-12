@@ -1,0 +1,32 @@
+[
+  {
+    "id": "user-1789196618015",
+    "name": "Test User",
+    "email": "test@example.com",
+    "passwordHash": "$2a$10$eD6P9tXIHeO7GAzr68HRBuKTHiqI4VoJZdX13PVuR.JLvCyO4dzPq"
+  },
+  {
+    "id": "demo-farmer",
+    "name": "Demo Farmer",
+    "email": "demo@growkrishak.com",
+    "passwordHash": "$2a$10$c65ffco0KCiuEomG5pepO.5ZdG6j8ra821B.DD/AQ/2WAbSVTiu0e"
+  },
+  {
+    "id": "demo-manager",
+    "name": "Farm Manager",
+    "email": "farm@growkrishak.com",
+    "passwordHash": "$2a$10$Og60Mo1gm0GvYrzC2gmNKubWc0539BHrnB8uR4Y4AfHVj6Ti.ALre"
+  },
+  {
+    "id": "demo-operator",
+    "name": "Field Operator",
+    "email": "operator@growkrishak.com",
+    "passwordHash": "$2a$10$9GUjtJ9xliVLC90keN7bBeQzjB2QewP9BS7UXa47/AkLdACV8rFMq"
+  },
+  {
+    "id": "user-1789202233303",
+    "name": "uiu",
+    "email": "iouuoi@gmail.com",
+    "passwordHash": "$2a$10$k3c.fViVRP31.ESY0m2PHuIrdTekR9C8XLNChvatsdJKJaOUkyYLm"
+  }
+]

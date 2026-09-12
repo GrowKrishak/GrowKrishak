@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrowKrishak | Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at top left, rgba(25, 135, 84, 0.18), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(13, 110, 253, 0.15), transparent 32%),
+                linear-gradient(135deg, #f4fff5, #edf6ff);
+            padding: 24px;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 650px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255,255,255,0.7);
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(22, 66, 42, 0.13);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+        }
+
+        .brand-panel {
+            background: linear-gradient(160deg, #0f5132 0%, #198754 48%, #1e7e34 100%);
+            color: white;
+            padding: 54px 42px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-panel::before,
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .brand-panel::before {
+            width: 260px;
+            height: 260px;
+            top: -80px;
+            right: -40px;
+        }
+
+        .brand-panel::after {
+            width: 220px;
+            height: 220px;
+            bottom: -60px;
+            left: -40px;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.22);
+            color: #f3fff6;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .brand-panel h1 {
+            font-size: clamp(32px, 3vw, 52px);
+            line-height: 1.1;
+            margin-bottom: 18px;
+        }
+
+        .brand-panel p {
+            max-width: 480px;
+            font-size: 18px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 36px;
+        }
+
+        .mini-features {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .mini-box {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .mini-box h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .mini-box p {
+            font-size: 14px;
+            margin: 0;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .form-panel {
+            background: rgba(255,255,255,0.7);
+            padding: 54px 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-wrap {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #198754;
+        }
+
+        .logo span {
+            color: #0d6efd;
+        }
+
+        .home-link {
+            text-decoration: none;
+            color: #183b20;
+            font-weight: 700;
+            background: #edf9f0;
+            border: 1px solid #d7efe0;
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: 0.3s ease;
+        }
+
+        .home-link:hover {
+            background: #dff4e7;
+        }
+
+        .form-wrap h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #183b20;
+        }
+
+        .form-wrap > p {
+            color: #5f7865;
+            font-size: 16px;
+            margin-bottom: 28px;
+        }
+
+        .form-message {
+            min-height: 22px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #b42318;
+        }
+
+        .form-message.success {
+            color: #0f5132;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: #2c4a36;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            border: 1px solid #d5e4d9;
+            background: #f8fbf9;
+            border-radius: 14px;
+            padding: 16px 18px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.25s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.12);
+            background: #ffffff;
+        }
+
+        .options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 28px;
+            font-size: 14px;
+            color: #4f6956;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember input {
+            accent-color: #198754;
+        }
+
+        .forgot {
+            color: #198754;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .login-btn {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #198754, #1e7a5a);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            padding: 16px 22px;
+            cursor: pointer;
+            box-shadow: 0 14px 24px rgba(25, 135, 84, 0.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px rgba(25, 135, 84, 0.28);
+        }
+
+        .divider {
+            position: relative;
+            margin: 32px 0 22px;
+            text-align: center;
+            color: #6d8577;
+            font-size: 14px;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #d8e5dc;
+        }
+
+        .divider span {
+            position: relative;
+            background: rgba(255,255,255,0.7);
+            padding: 0 12px;
+        }
+
+        .socials {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn-content {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .social-btn-content svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .socials button {
+            flex: 1;
+            border: 1px solid #d7e6dc;
+            border-radius: 12px;
+            background: white;
+            color: #183b20;
+            padding: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .socials button:hover {
+            background: #f5fbf6;
+            border-color: #b8d9c2;
+        }
+
+        .signup {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 15px;
+            color: #5c7363;
+        }
+
+        .signup a {
+            color: #198754;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .login-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel {
+                padding: 36px 24px;
+            }
+
+            .form-panel {
+                padding: 36px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-shell">
+        <div class="brand-panel">
+            <div class="brand-content">
+                <div class="brand-tag">Smart agriculture dashboard</div>
+                <h1>Welcome back to GrowKrishak</h1>
+                <p>
+                    Manage your farm, check crop health, and take smarter action
+                    with powerful AI tools designed for everyday farming.
+                </p>
+
+                <div class="mini-features">
+                    <div class="mini-box">
+                        <h3>📊 Live Reports</h3>
+                        <p>Track field performance with clear insights.</p>
+                    </div>
+                    <div class="mini-box">
+                        <h3>🤖 Smart Robot</h3>
+                        <p>Control farm operations with ease.</p>
+                    </div>
+                    <div class="mini-box">
+                        <h3>🌿 Crop Care</h3>
+                        <p>Detect issues early and act faster.</p>
+                    </div>
+                    <div class="mini-box">
+                        <h3>💧 Better Watering</h3>
+                        <p>Use resources more wisely in every field.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <div class="form-wrap">
+                <div class="topbar">
+                    <div class="logo">Grow<span>Krishak</span></div>
+                    <a href="landing.html" class="home-link">Back to Home</a>
+                </div>
+
+                <h2>Login</h2>
+                <p>Access your farming dashboard and manage your fields.</p>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+                    </div>
+
+                    <div class="options">
+                        <label class="remember">
+                            <input type="checkbox" />
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot">Forgot password?</a>
+                    </div>
+
+                    <div id="loginMessage" class="form-message" aria-live="polite"></div>
+
+                    <button class="login-btn" type="submit">Login</button>
+
+                    <div class="divider"><span>or continue with</span></div>
+
+                    <div class="socials">
+                        <button type="button">
+                            <span class="social-btn-content">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="#EA4335" d="M12 10.2v3.8h5.5c-.3 1.4-1.6 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 4 1.5l2.7-2.7C16.8 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.9 0-.7-.1-1.2-.2-1.7H12z"/>
+                                    <path fill="#34A853" d="M3.5 7.5l3.5 2.6c.9-1.7 2.9-2.9 4.9-2.9 1.6 0 2.9.6 3.8 1.4l2.6-2.6C16.3 3.4 14.3 2.5 12 2.5 8.2 2.5 4.9 4.8 3.5 7.5z" opacity="0.9"/>
+                                    <path fill="#FBBC05" d="M3.5 16.5c1.4 2.7 4.7 5 8.5 5 2.6 0 4.8-.9 6.4-2.6l-3-2.4c-.9.6-2.1 1-3.4 1-2.1 0-4.1-1.2-4.8-3l-3.2 2.5z" opacity="0.9"/>
+                                    <path fill="#4285F4" d="M12 5.4c1.3 0 2.5.4 3.4 1.2l2.6-2.6c-1.5-1.3-3.5-2.1-6-2.1-4.8 0-8.8 3.8-8.8 8.6 0 1.2.2 2.4.7 3.4l3.2-2.5C6.1 7.8 8.3 5.4 12 5.4z" opacity="0.9"/>
+                                </svg>
+                                Google
+                            </span>
+                        </button>
+                        <button type="button">
+                            <span class="social-btn-content">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor" d="M16.6 13.1c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.8-3.1.8s-1.7-.8-2.8-.8c-1.4 0-2.8 1.1-3.6 2.7-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-4.6-3.3zm-2.6-7.2c.6-.7 1-1.7.9-2.7-.9.1-1.9.6-2.5 1.3-.6.7-1.1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2z"/>
+                                </svg>
+                                Apple
+                            </span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="signup">
+                    Don’t have an account? <a href="signup.html">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            loginMessage.textContent = '';
+            loginMessage.classList.remove('success');
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed.');
+                }
+
+                loginMessage.textContent = data.message;
+                loginMessage.classList.add('success');
+                window.location.href = 'n.html';
+            } catch (error) {
+                loginMessage.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

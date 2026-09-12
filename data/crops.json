@@ -1,0 +1,16 @@
+[
+  {
+    "id": "C-201",
+    "cropType": "Wheat",
+    "cropHealth": "Good",
+    "requiredMatter": "Urea + Irrigation",
+    "cropPhoto": ""
+  },
+  {
+    "id": "C-202",
+    "cropType": "Rice",
+    "cropHealth": "Average",
+    "requiredMatter": "Organic compost",
+    "cropPhoto": ""
+  }
+]
