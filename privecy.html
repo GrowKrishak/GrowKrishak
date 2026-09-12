@@ -1,1 +1,933 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Privacy Policy & Terms | GrowKrishak</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:#eaf7ef;
+    background:
+    radial-gradient(circle at 10% 10%,#164a36,transparent 30%),
+    radial-gradient(circle at 90% 90%,#0c3828,transparent 30%),
+    #04150f;
+    padding:25px 15px;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+    max-width:1050px;
+    margin:auto;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 25px;
+    margin-bottom:25px;
+
+    background:rgba(11,40,30,.88);
+    border:1px solid rgba(150,220,175,.15);
+    border-radius:20px;
+
+    backdrop-filter:blur(15px);
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(135deg,#b2edbb,#6fca82);
+    color:#082217;
+
+    border-radius:14px;
+    font-size:23px;
+    font-weight:800;
+
+    box-shadow:0 5px 20px rgba(120,220,140,.18);
+}
+
+.brand h2{
+    font-size:21px;
+}
+
+.brand p{
+    font-size:10px;
+    letter-spacing:2px;
+    color:#8da99c;
+    margin-top:3px;
+}
+
+.back-btn{
+    text-decoration:none;
+    color:#e6f5eb;
+
+    padding:10px 18px;
+
+    border-radius:12px;
+    border:1px solid #315b47;
+
+    background:#123b2c;
+
+    transition:.3s;
+}
+
+.back-btn:hover{
+    background:#1c563e;
+    transform:translateY(-2px);
+}
+
+/* MAIN */
+
+.policy-container{
+    background:rgba(7,31,23,.92);
+
+    border:1px solid rgba(150,220,175,.13);
+    border-radius:28px;
+
+    padding:45px;
+
+    box-shadow:0 20px 70px rgba(0,0,0,.35);
+
+    backdrop-filter:blur(15px);
+}
+
+/* TITLE */
+
+.page-title{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.page-title .icon{
+    width:70px;
+    height:70px;
+
+    margin:auto;
+    margin-bottom:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:22px;
+
+    background:rgba(130,210,145,.12);
+    border:1px solid rgba(140,220,160,.18);
+
+    font-size:34px;
+}
+
+.page-title h1{
+    font-size:38px;
+    margin-bottom:10px;
+
+    background:linear-gradient(90deg,#dff8e4,#91dfa0);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.page-title p{
+    color:#91aa9e;
+    line-height:1.7;
+}
+
+.update{
+    display:inline-block;
+
+    margin-top:13px;
+
+    padding:7px 15px;
+
+    border-radius:20px;
+
+    background:rgba(120,210,140,.10);
+    border:1px solid rgba(120,210,140,.15);
+
+    color:#9ddca8;
+    font-size:12px;
+}
+
+/* SECTION */
+
+.section{
+    margin-bottom:30px;
+
+    padding:25px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(20,65,48,.55),
+        rgba(8,37,27,.45)
+    );
+
+    border:1px solid rgba(150,220,175,.10);
+
+    border-radius:18px;
+
+    transition:.3s;
+}
+
+.section:hover{
+    border-color:rgba(150,220,175,.22);
+    transform:translateY(-2px);
+}
+
+.section h2{
+    color:#a9e5b2;
+    font-size:21px;
+    margin-bottom:15px;
+}
+
+.section h2 span{
+    color:#718f81;
+    font-size:15px;
+    font-weight:400;
+}
+
+.section p{
+    color:#b9cbc2;
+    font-size:15px;
+    line-height:1.9;
+    margin-bottom:12px;
+}
+
+.hindi{
+    color:#91aaa0 !important;
+}
+
+/* SPECIAL BOX */
+
+.info-box{
+    padding:20px;
+
+    margin-top:15px;
+
+    background:rgba(111,205,132,.08);
+
+    border-left:4px solid #91d99c;
+
+    border-radius:12px;
+
+    color:#cce2d4;
+
+    line-height:1.8;
+
+    font-size:14px;
+}
+
+/* DIVIDER */
+
+.divider{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    margin:45px 0;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:rgba(150,210,175,.14);
+}
+
+.divider span{
+    color:#8fd99a;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+/* TERMS TITLE */
+
+.terms-title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.terms-title h1{
+    font-size:32px;
+    color:#a9e5b2;
+    margin-bottom:8px;
+}
+
+.terms-title p{
+    color:#8da99c;
+}
+
+/* CONTACT */
+
+.contact{
+    text-align:center;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    background:rgba(120,210,140,.07);
+
+    border:1px solid rgba(130,210,150,.14);
+}
+
+.contact h2{
+    color:#a9e5b2;
+    margin-bottom:12px;
+}
+
+.contact p{
+    color:#a9bbb1;
+    line-height:1.8;
+}
+
+.email{
+    color:#9de0a7;
+    font-weight:600;
+}
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    color:#6f8b7e;
+
+    padding:25px 10px 10px;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+footer span{
+    color:#9bd8a4;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    body{
+        padding:12px 8px;
+    }
+
+    .header{
+        padding:14px;
+    }
+
+    .logo{
+        width:42px;
+        height:42px;
+    }
+
+    .brand h2{
+        font-size:17px;
+    }
+
+    .brand p{
+        font-size:8px;
+    }
+
+    .back-btn{
+        padding:8px 12px;
+        font-size:12px;
+    }
+
+    .policy-container{
+        padding:22px 15px;
+        border-radius:20px;
+    }
+
+    .page-title h1{
+        font-size:29px;
+    }
+
+    .page-title .icon{
+        width:60px;
+        height:60px;
+    }
+
+    .section{
+        padding:20px 17px;
+    }
+
+    .section h2{
+        font-size:18px;
+    }
+
+    .section p{
+        font-size:14px;
+        line-height:1.8;
+    }
+
+    .terms-title h1{
+        font-size:27px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="logo">
+            A
+        </div>
+
+        <div>
+            <h2>GrowKrishak</h2>
+            <p>FIELD UNIT #A-04</p>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">
+        ← Dashboard
+    </a>
+
+</header>
+
+
+
+<!-- POLICY -->
+
+<div class="policy-container">
+
+
+<!-- TITLE -->
+
+<div class="page-title">
+
+    <div class="icon">
+        🔐
+    </div>
+
+    <h1>Privacy Policy</h1>
+
+    <p>
+        Your privacy matters to us.
+        <br>
+        आपकी गोपनीयता हमारे लिए महत्वपूर्ण है।
+    </p>
+
+    <div class="update">
+        Last Updated • September 12, 2026
+    </div>
+
+</div>
+
+
+
+<!-- INTRODUCTION -->
+
+<section class="section">
+
+<h2>
+    Welcome to GrowKrishak
+    <span>/ GrowKrishak में आपका स्वागत है</span>
+</h2>
+
+<p>
+    GrowKrishak is an agriculture assistance platform designed to help
+    farmers and users access useful information about crops, soil,
+    weather, fertilizers, farming practices and agricultural schemes.
+    We respect your privacy and are committed to keeping your personal
+    information safe and secure while you use our platform.
+</p>
+
+<p class="hindi">
+    GrowKrishak एक कृषि सहायता प्लेटफॉर्म है जिसे किसानों और
+    उपयोगकर्ताओं को फसल, मिट्टी, मौसम, उर्वरक, खेती की तकनीकों और
+    कृषि योजनाओं से संबंधित उपयोगी जानकारी प्रदान करने के लिए बनाया
+    गया है। हम आपकी गोपनीयता का सम्मान करते हैं और आपके द्वारा दी गई
+    जानकारी को सुरक्षित रखने के लिए प्रतिबद्ध हैं।
+</p>
+
+</section>
+
+
+
+<!-- INFORMATION -->
+
+<section class="section">
+
+<h2>
+    Information We Collect
+    <span>/ हम कौन-सी जानकारी लेते हैं</span>
+</h2>
+
+<p>
+    When you create an account or use different features of GrowKrishak,
+    we may receive basic information such as your name, email address,
+    account details and information related to your farming activities.
+    This information helps us provide a more useful and personalized
+    experience.
+</p>
+
+<p class="hindi">
+    जब आप अकाउंट बनाते हैं या GrowKrishak की अलग-अलग सुविधाओं का उपयोग
+    करते हैं, तो हम आपका नाम, ईमेल पता, अकाउंट विवरण और आपकी खेती से
+    संबंधित जानकारी प्राप्त कर सकते हैं। इस जानकारी की मदद से हम आपको
+    बेहतर और उपयोगी अनुभव प्रदान कर सकते हैं।
+</p>
+
+</section>
+
+
+
+<!-- INFORMATION USE -->
+
+<section class="section">
+
+<h2>
+    How We Use Your Information
+    <span>/ आपकी जानकारी का उपयोग</span>
+</h2>
+
+<p>
+    The information collected through GrowKrishak may be used to provide
+    agricultural assistance, improve our services, display relevant
+    weather information, support crop and soil management and improve
+    the overall performance of the platform.
+</p>
+
+<p class="hindi">
+    GrowKrishak के माध्यम से प्राप्त जानकारी का उपयोग कृषि सहायता
+    प्रदान करने, हमारी सेवाओं को बेहतर बनाने, संबंधित मौसम की जानकारी
+    दिखाने, फसल और मिट्टी प्रबंधन में सहायता करने तथा प्लेटफॉर्म की
+    कार्यक्षमता को बेहतर बनाने के लिए किया जा सकता है।
+</p>
+
+</section>
+
+
+
+<!-- LOCATION -->
+
+<section class="section">
+
+<h2>
+    Location & Weather Information
+    <span>/ स्थान और मौसम की जानकारी</span>
+</h2>
+
+<p>
+    Some GrowKrishak features may use location-related information to
+    show weather conditions and other agriculture-related information
+    relevant to your area. Weather information may come from external
+    weather services and may not always represent exact local conditions.
+</p>
+
+<p class="hindi">
+    GrowKrishak की कुछ सुविधाएं आपके क्षेत्र के अनुसार मौसम और कृषि
+    संबंधी जानकारी दिखाने के लिए स्थान से संबंधित जानकारी का उपयोग
+    कर सकती हैं। मौसम की जानकारी बाहरी मौसम सेवाओं से प्राप्त हो सकती
+    है और यह हमेशा आपके क्षेत्र की वास्तविक स्थिति को पूरी तरह
+    प्रदर्शित नहीं कर सकती है।
+</p>
+
+</section>
+
+
+
+<!-- DATA SECURITY -->
+
+<section class="section">
+
+<h2>
+    Data Security
+    <span>/ डेटा सुरक्षा</span>
+</h2>
+
+<p>
+    We take reasonable technical and organizational measures to protect
+    user information from unauthorized access, misuse, alteration or
+    disclosure. However, no online platform can guarantee complete
+    security of information transmitted over the internet.
+</p>
+
+<p class="hindi">
+    हम उपयोगकर्ता की जानकारी को अनधिकृत पहुंच, गलत उपयोग, बदलाव और
+    अनधिकृत खुलासे से बचाने के लिए उचित तकनीकी और संगठनात्मक उपाय
+    करते हैं। हालांकि, इंटरनेट के माध्यम से भेजी गई जानकारी की
+    पूर्ण सुरक्षा की गारंटी किसी भी ऑनलाइन प्लेटफॉर्म द्वारा नहीं दी
+    जा सकती।
+</p>
+
+</section>
+
+
+
+<!-- DATA SHARING -->
+
+<section class="section">
+
+<h2>
+    Data Sharing
+    <span>/ डेटा साझा करना</span>
+</h2>
+
+<p>
+    GrowKrishak does not intend to sell or rent your personal information.
+    Information may be shared with service providers when required to
+    operate specific features, provide requested services, maintain
+    security or comply with applicable laws.
+</p>
+
+<p class="hindi">
+    GrowKrishak आपकी व्यक्तिगत जानकारी को बेचने या किराए पर देने का
+    उद्देश्य नहीं रखता। किसी विशेष सुविधा को चलाने, अनुरोधित सेवा
+    प्रदान करने, सुरक्षा बनाए रखने या लागू कानूनों का पालन करने के
+    लिए आवश्यकता पड़ने पर जानकारी सेवा प्रदाताओं के साथ साझा की जा
+    सकती है।
+</p>
+
+</section>
+
+
+
+<!-- COOKIES -->
+
+<section class="section">
+
+<h2>
+    Cookies
+    <span>/ कुकीज़</span>
+</h2>
+
+<p>
+    GrowKrishak may use cookies or similar technologies to maintain
+    user sessions, remember preferences and improve website
+    functionality and user experience.
+</p>
+
+<p class="hindi">
+    GrowKrishak उपयोगकर्ता सेशन को बनाए रखने, प्राथमिकताओं को याद रखने
+    और वेबसाइट की कार्यक्षमता तथा उपयोगकर्ता अनुभव को बेहतर बनाने के
+    लिए कुकीज़ या इसी तरह की तकनीक का उपयोग कर सकता है।
+</p>
+
+</section>
+
+
+
+<!-- THIRD PARTY -->
+
+<section class="section">
+
+<h2>
+    Third-Party Services
+    <span>/ थर्ड-पार्टी सेवाएं</span>
+</h2>
+
+<p>
+    GrowKrishak may use external services such as weather APIs, maps
+    and other technology providers. These services may have their own
+    privacy policies and terms. Users are encouraged to review those
+    policies when using third-party services.
+</p>
+
+<p class="hindi">
+    GrowKrishak मौसम API, मैप्स और अन्य तकनीकी सेवाओं जैसी बाहरी
+    सेवाओं का उपयोग कर सकता है। इन सेवाओं की अपनी Privacy Policy और
+    Terms हो सकती हैं। थर्ड-पार्टी सेवाओं का उपयोग करते समय उनकी
+    नीतियों को देखना उचित है।
+</p>
+
+</section>
+
+
+
+<!-- DIVIDER -->
+
+<div class="divider">
+    <span>Terms & Conditions • नियम एवं शर्तें</span>
+</div>
+
+
+
+<!-- TERMS TITLE -->
+
+<div class="terms-title">
+
+    <h1>Terms & Conditions</h1>
+
+    <p>
+        नियम एवं शर्तें
+    </p>
+
+</div>
+
+
+
+<!-- ACCEPTANCE -->
+
+<section class="section">
+
+<h2>
+    Acceptance of Terms
+    <span>/ शर्तों की स्वीकृति</span>
+</h2>
+
+<p>
+    By accessing or using GrowKrishak, you acknowledge that you have
+    read and understood these Terms & Conditions and agree to follow
+    them. If you do not agree with these terms, please discontinue
+    using the platform.
+</p>
+
+<p class="hindi">
+    GrowKrishak को एक्सेस या उपयोग करके आप स्वीकार करते हैं कि आपने
+    इन नियमों और शर्तों को पढ़ और समझ लिया है तथा इनका पालन करने के
+    लिए सहमत हैं। यदि आप इन शर्तों से सहमत नहीं हैं, तो कृपया
+    प्लेटफॉर्म का उपयोग बंद कर दें।
+</p>
+
+</section>
+
+
+
+<!-- PLATFORM USE -->
+
+<section class="section">
+
+<h2>
+    Proper Use of Platform
+    <span>/ प्लेटफॉर्म का उचित उपयोग</span>
+</h2>
+
+<p>
+    GrowKrishak should be used only for genuine agricultural,
+    educational and informational purposes. Users should not use the
+    platform for illegal activities, unauthorized access, harmful
+    activities or any activity that may damage the platform or other
+    users.
+</p>
+
+<p class="hindi">
+    GrowKrishak का उपयोग केवल वास्तविक कृषि, शैक्षणिक और जानकारी
+    प्राप्त करने के उद्देश्यों के लिए किया जाना चाहिए। उपयोगकर्ताओं
+    को प्लेटफॉर्म का उपयोग किसी अवैध गतिविधि, अनधिकृत पहुंच,
+    हानिकारक गतिविधि या प्लेटफॉर्म अथवा अन्य उपयोगकर्ताओं को नुकसान
+    पहुंचाने के लिए नहीं करना चाहिए।
+</p>
+
+</section>
+
+
+
+<!-- ACCOUNT -->
+
+<section class="section">
+
+<h2>
+    User Account
+    <span>/ उपयोगकर्ता अकाउंट</span>
+</h2>
+
+<p>
+    Users are responsible for providing accurate information while
+    creating an account and for keeping their login credentials
+    confidential. Any activity performed through a user's account
+    should be properly authorized by that user.
+</p>
+
+<p class="hindi">
+    अकाउंट बनाते समय सही जानकारी देना और अपने लॉगिन विवरण को सुरक्षित
+    रखना उपयोगकर्ता की जिम्मेदारी है। उपयोगकर्ता के अकाउंट से की गई
+    किसी भी गतिविधि के लिए उचित अनुमति और सुरक्षा बनाए रखना आवश्यक है।
+</p>
+
+</section>
+
+
+
+<!-- AGRICULTURE INFORMATION -->
+
+<section class="section">
+
+<h2>
+    Agricultural Information
+    <span>/ कृषि संबंधी जानकारी</span>
+</h2>
+
+<p>
+    GrowKrishak provides agricultural information as a support and
+    educational tool. Crop recommendations, soil information,
+    fertilizer guidance and other suggestions may vary according to
+    local conditions. Users should consider their specific situation
+    and seek professional agricultural advice when necessary.
+</p>
+
+<p class="hindi">
+    GrowKrishak कृषि जानकारी को सहायता और शैक्षणिक उद्देश्य से
+    प्रदान करता है। फसल की सलाह, मिट्टी की जानकारी, उर्वरक संबंधी
+    सुझाव और अन्य जानकारी स्थानीय परिस्थितियों के अनुसार अलग हो
+    सकती है। आवश्यकता होने पर उपयोगकर्ताओं को अपनी स्थिति के अनुसार
+    कृषि विशेषज्ञ की सलाह लेनी चाहिए।
+</p>
+
+</section>
+
+
+
+<!-- SERVICE -->
+
+<section class="section">
+
+<h2>
+    Service Availability
+    <span>/ सेवा की उपलब्धता</span>
+</h2>
+
+<p>
+    We aim to keep GrowKrishak available and functional, but temporary
+    interruptions may occur because of maintenance, technical issues,
+    internet connectivity or third-party services.
+</p>
+
+<p class="hindi">
+    हमारा प्रयास GrowKrishak को उपलब्ध और सुचारू रखने का है, लेकिन
+    रखरखाव, तकनीकी समस्या, इंटरनेट कनेक्टिविटी या थर्ड-पार्टी सेवाओं
+    के कारण सेवा कुछ समय के लिए बाधित हो सकती है।
+</p>
+
+</section>
+
+
+
+<!-- INTELLECTUAL PROPERTY -->
+
+<section class="section">
+
+<h2>
+    Intellectual Property
+    <span>/ बौद्धिक संपदा</span>
+</h2>
+
+<p>
+    The GrowKrishak name, logo, interface, design and original content
+    are protected by applicable laws. Users should not copy, reproduce,
+    modify or distribute protected materials without proper permission.
+</p>
+
+<p class="hindi">
+    GrowKrishak का नाम, लोगो, इंटरफेस, डिजाइन और मूल सामग्री लागू
+    कानूनों द्वारा संरक्षित हैं। उचित अनुमति के बिना इन सामग्रियों
+    को कॉपी, दोबारा प्रकाशित, बदलना या वितरित नहीं किया जाना चाहिए।
+</p>
+
+</section>
+
+
+
+<!-- CHANGES -->
+
+<section class="section">
+
+<h2>
+    Changes to Policy & Terms
+    <span>/ नीति और नियमों में बदलाव</span>
+</h2>
+
+<p>
+    GrowKrishak may update this Privacy Policy and Terms & Conditions
+    from time to time to reflect changes in our services, technology
+    or applicable requirements. Updated information will be displayed
+    on this page.
+</p>
+
+<p class="hindi">
+    GrowKrishak अपनी सेवाओं, तकनीक या आवश्यकताओं में बदलाव के अनुसार
+    समय-समय पर इस Privacy Policy और Terms & Conditions को अपडेट कर
+    सकता है। अपडेट की गई जानकारी इसी पेज पर प्रदर्शित की जाएगी।
+</p>
+
+</section>
+
+
+
+<!-- CONTACT -->
+
+<div class="contact">
+
+    <h2>
+        Contact Us / हमसे संपर्क करें
+    </h2>
+
+    <p>
+        If you have any questions about this Privacy Policy or
+        Terms & Conditions, please contact the GrowKrishak team.
+    </p>
+
+    <p class="hindi">
+        यदि आपको इस Privacy Policy या Terms & Conditions के बारे में
+        कोई प्रश्न है, तो आप GrowKrishak टीम से संपर्क कर सकते हैं।
+    </p>
+
+    <br>
+
+    <p class="email">
+        support@growkrishak.com
+    </p>
+
+</div>
+
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    © 2026 <span>GrowKrishak</span> • All Rights Reserved.
+
+    <br>
+
+    आपकी गोपनीयता और सुरक्षा हमारे लिए महत्वपूर्ण है।
+
+</footer>
+
+
+</div>
+
+</body>
+</html>
