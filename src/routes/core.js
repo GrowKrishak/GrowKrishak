@@ -84,7 +84,7 @@ router.get(
 );
 
 function mountPages(app) {
-app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'landing.html')));
 }
 
 module.exports = { router, mountPages, buildDashboardData };
