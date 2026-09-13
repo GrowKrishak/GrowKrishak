@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "description": "GrowKrishak backend-powered website",
   "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node tests/run-with-server.js default",
+    "test:cookie": "node tests/run-with-server.js cookie",
+    "test:mongo": "node tests/run-with-server.js mongo",
+    "test:live": "node tests/api.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

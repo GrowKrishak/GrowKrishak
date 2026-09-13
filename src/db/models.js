@@ -26,6 +26,9 @@ const User = mongoose.model(
       passwordHash: { type: String, required: true },
       location: { type: String, default: '' },
       photo: { type: String, default: '' },
+      createdAt: { type: String, default: '' },
+      updatedAt: { type: String, default: '' },
+      lastLoginAt: { type: String, default: '' },
     },
     baseOpts
   )

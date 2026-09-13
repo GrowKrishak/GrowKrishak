@@ -28,6 +28,9 @@ const config = {
   sessionSecret: process.env.SESSION_SECRET || 'growkrishak-secret-key',
   sessionMaxAge: 1000 * 60 * 60 * 8, // 8h
   jsonLimit: '12mb',
+  // Main admin credentials (override via .env / Vercel dashboard).
+  adminEmail: (process.env.ADMIN_EMAIL || 'admin@growkrishak.com').trim().toLowerCase(),
+  adminPassword: process.env.ADMIN_PASSWORD || 'Admin@123',
 };
 
 module.exports = config;

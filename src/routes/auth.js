@@ -13,6 +13,9 @@ function publicUser(user) {
     email: user.email,
     location: user.location || '',
     photo: user.photo || '',
+    createdAt: user.createdAt || '',
+    updatedAt: user.updatedAt || '',
+    lastLoginAt: user.lastLoginAt || '',
   };
 }
 
@@ -48,11 +51,17 @@ router.post(
       name: String(name).trim(),
       email: normalizedEmail,
       passwordHash: bcrypt.hashSync(password, 10),
+      location: '',
+      photo: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
     };
     users.push(newUser);
     await saveUsers(users);
 
     req.session.userId = newUser.id;
+    if (req.session) req.session.isAdmin = false;
     return res.status(201).json({ message: 'Account created successfully.', user: publicUser(newUser) });
   })
 );
@@ -73,7 +82,13 @@ router.post(
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
+    // Track login time so the admin dashboard shows real activity data.
+    user.lastLoginAt = new Date().toISOString();
+    user.updatedAt = user.lastLoginAt;
+    await saveUsers(users);
+
     req.session.userId = user.id;
+    if (req.session) req.session.isAdmin = false;
     return res.json({ message: 'Login successful.', user: publicUser(user) });
   })
 );
@@ -126,6 +141,7 @@ router.put(
     user.email = normalizedEmail;
     user.location = location ? String(location).trim() : '';
     if (typeof photo === 'string') user.photo = photo;
+    user.updatedAt = new Date().toISOString();
     await saveUsers(users);
 
     return res.json({ message: 'Profile updated successfully.', user: publicUser(user) });

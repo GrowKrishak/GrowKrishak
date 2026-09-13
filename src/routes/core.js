@@ -4,7 +4,7 @@ const path = require('path');
 const { Router } = require('express');
 const config = require('../config');
 const { asyncHandler, requireAuth } = require('../middleware');
-const { loadUsers } = require('../db');
+const { loadUsers, useMongo } = require('../db');
 
 function buildDashboardData(user) {
   return {
@@ -51,7 +51,27 @@ function buildDashboardData(user) {
 
 const router = Router();
 
-router.get('/health', (req, res) => res.json({ status: 'ok' }));
+// Reports which storage the app is actually using so you can verify a
+// proper MongoDB/Vercel setup: storage "mongodb" + mongoState 1 means
+// connected (0 = disconnected, 2 = connecting, 3 = disconnecting).
+// mongoState is read-only here — this endpoint never opens a connection.
+router.get('/health', (req, res) => {
+  let mongoState = null;
+  if (useMongo) {
+    try {
+      // eslint-disable-next-line global-require
+      mongoState = require('mongoose').connection.readyState;
+    } catch (e) {
+      mongoState = -1;
+    }
+  }
+  return res.json({
+    status: 'ok',
+    storage: useMongo ? 'mongodb' : 'json',
+    mongoConfigured: useMongo,
+    mongoState,
+  });
+});
 
 router.get(
   '/dashboard',

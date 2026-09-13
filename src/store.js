@@ -12,26 +12,65 @@ const config = require('./config');
 
 const USERS_FILE = path.join(config.dataDir, 'users.json');
 
+// Demo accounts (fixed credentials — shown on login.html for quick try-out):
+//   demo@growkrishak.com     / Demo@123
+//   farm@growkrishak.com     / Farm@123
+//   operator@growkrishak.com / Operator@123
 const DEMO_USERS = [
   {
     id: 'demo-farmer',
     name: 'Demo Farmer',
     email: 'demo@growkrishak.com',
-    passwordHash: '$2a$10$c65ffco0KCiuEomG5pepO.5ZdG6j8ra821B.DD/AQ/2WAbSVTiu0e',
+    passwordHash: '$2a$10$LYHIaDxt.aSiBJNQhjNq/eDXQEkBiVbMsXleHFcQ5411ewgCJc20e', // Demo@123
+    location: '',
+    photo: '',
+    createdAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    updatedAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    lastLoginAt: '',
   },
   {
     id: 'demo-manager',
     name: 'Farm Manager',
     email: 'farm@growkrishak.com',
-    passwordHash: '$2a$10$Og60Mo1gm0GvYrzC2gmNKubWc0539BHrnB8uR4Y4AfHVj6Ti.ALre',
+    passwordHash: '$2a$10$HbYqVErZ.04Xijl1v0wdrux.w5Memc10CXnSeXMMfM4H35Et6yehy', // Farm@123
+    location: '',
+    photo: '',
+    createdAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    updatedAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    lastLoginAt: '',
   },
   {
     id: 'demo-operator',
     name: 'Field Operator',
     email: 'operator@growkrishak.com',
-    passwordHash: '$2a$10$9GUjtJ9xliVLC90keN7bBeQzjB2QewP9BS7UXa47/AkLdACV8rFMq',
+    passwordHash: '$2a$10$JRe/a8jSDEVDrgNE/h5SROqeGe.EidYwJc6BkdmUOJ0HGrV92gBXm', // Operator@123
+    location: '',
+    photo: '',
+    createdAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    updatedAt: new Date('2024-01-15T10:00:00.000Z').toISOString(),
+    lastLoginAt: '',
   },
 ];
+
+// Backfills missing profile/timestamp fields on old records so the
+// admin dashboard always has proper data to show. Returns true when
+// any record was changed (caller persists).
+function normalizeUser(user) {
+  let changed = false;
+  if (user.location === undefined) { user.location = ''; changed = true; }
+  if (user.photo === undefined) { user.photo = ''; changed = true; }
+  if (!user.createdAt) {
+    // Derive a stable date from numeric user ids (user-<ms>) when possible.
+    const ms = user.id && String(user.id).startsWith('user-') ? Number(String(user.id).slice(5)) : NaN;
+    user.createdAt = Number.isFinite(ms) ? new Date(ms).toISOString() : new Date().toISOString();
+    changed = true;
+  }
+  if (!user.updatedAt) { user.updatedAt = user.createdAt; changed = true; }
+  if (user.lastLoginAt === undefined) { user.lastLoginAt = ''; changed = true; }
+  if (typeof user.name === 'string' && user.name.trim() !== user.name) { user.name = user.name.trim(); changed = true; }
+  if (typeof user.email === 'string' && user.email.trim().toLowerCase() !== user.email) { user.email = user.email.trim().toLowerCase(); changed = true; }
+  return changed;
+}
 
 const COLLECTION_FILES = {
   farmers: 'farmers.json',
@@ -179,10 +218,19 @@ function loadUsers() {
 
   let changed = false;
   for (const demoUser of DEMO_USERS) {
-    if (!users.some((u) => u.email === demoUser.email)) {
-      users.push(demoUser);
+    const existing = users.find((u) => u.email === demoUser.email);
+    if (!existing) {
+      users.push({ ...demoUser });
+      changed = true;
+    } else if (existing.passwordHash !== demoUser.passwordHash) {
+      // Keep demo logins working even on old data files: refresh the
+      // demo password hash, but never touch the user's own name/photo.
+      existing.passwordHash = demoUser.passwordHash;
       changed = true;
     }
+  }
+  for (const u of users) {
+    if (normalizeUser(u)) changed = true;
   }
   if (changed) saveUsers(users);
   return users;
@@ -206,4 +254,5 @@ module.exports = {
   loadUsers,
   saveUsers,
   makeId,
+  normalizeUser,
 };

@@ -462,7 +462,8 @@
                 </form>
 
                 <div class="signup">
-                    Don’t have an account? <a href="signup.html">Sign up</a>
+                    Don’t have an account? <a href="signup.html">Sign up</a><br/>
+                    <span style="font-size:13px">Site admin? <a href="admin.html">Admin login</a></span>
                 </div>
             </div>
         </div>
@@ -471,6 +472,17 @@
     <script>
         const loginForm = document.getElementById('loginForm');
         const loginMessage = document.getElementById('loginMessage');
+
+        function friendlyError(error, response) {
+            const raw = (error && error.message) || '';
+            if (raw.includes('Failed to fetch') || raw.includes('NetworkError') || raw.includes('Load failed')) {
+                return 'Cannot reach the backend. Run "node server.js" and open http://localhost:3000/login.html (not the file directly).';
+            }
+            if (response && response.status === 404) {
+                return 'Backend route missing — restart the server: press Ctrl+C, run "node server.js" again, then retry.';
+            }
+            return raw || 'Login failed.';
+        }
 
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -487,10 +499,10 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
-                    throw new Error(data.message || 'Login failed.');
+                    throw new Error(data.message || friendlyError(null, response));
                 }
 
                 loginMessage.textContent = data.message;
@@ -498,7 +510,7 @@
                 try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
                 window.location.href = 'n.html';
             } catch (error) {
-                loginMessage.textContent = error.message;
+                loginMessage.textContent = friendlyError(error, null);
             }
         });
     </script>

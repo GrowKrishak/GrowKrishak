@@ -54,6 +54,9 @@ async function seedIfEmpty() {
         passwordHash: u.passwordHash,
         location: u.location || '',
         photo: u.photo || '',
+        createdAt: u.createdAt || new Date().toISOString(),
+        updatedAt: u.updatedAt || u.createdAt || new Date().toISOString(),
+        lastLoginAt: u.lastLoginAt || '',
       }))
     );
   }

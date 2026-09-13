@@ -17,6 +17,7 @@ const {
   errorHandler,
 } = require('./middleware');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
 const { mountCrud } = require('./routes/crud');
 const { router: coreRoutes, mountPages } = require('./routes/core');
 
@@ -36,6 +37,7 @@ function createApp() {
   mountPages(app);
   app.use('/api', coreRoutes); // /api/health, /api/dashboard
   app.use('/api', authRoutes); // /api/signup, /api/login, ...
+  app.use('/api', adminRoutes); // /api/admin/login, /api/admin/users, ...
   mountCrud(app); // /api/farmers, /api/crops, ...
   app.use('/api', apiNotFound);
 

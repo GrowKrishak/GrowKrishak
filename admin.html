@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
+    <title>GrowKrishak | Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { min-height: 100vh; background: linear-gradient(135deg, #0f5132, #198754 55%, #0d6efd 130%); padding: 24px; color: #183b20; }
+        .wrap { max-width: 1150px; margin: 0 auto; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; color: #fff; flex-wrap: wrap; }
+        .logo { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .logo img { width: 44px; height: 44px; border-radius: 12px; background: #fff; object-fit: contain; }
+        .logo span { color: #cfe9ff; }
+        .home-link { text-decoration: none; color: #fff; font-weight: 700; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); padding: 8px 14px; border-radius: 999px; }
+        .card { background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,.18); }
+        #loginCard { max-width: 460px; margin: 40px auto; }
+        #loginCard h2 { font-size: 30px; margin-bottom: 8px; }
+        #loginCard p { color: #5f7865; margin-bottom: 8px; }
+        label { display: block; font-size: 14px; font-weight: 700; margin: 14px 0 8px; }
+        input[type=email], input[type=password], input[type=text], select { width: 100%; border: 1px solid #d5e4d9; background: #f8fbf9; border-radius: 12px; padding: 14px 16px; font-size: 16px; outline: none; }
+        input:focus, select:focus { border-color: #198754; box-shadow: 0 0 0 4px rgba(25,135,84,.12); background: #fff; }
+        .btn { width: 100%; margin-top: 20px; border: none; border-radius: 12px; background: linear-gradient(135deg,#198754,#0f5132); color: #fff; font-size: 17px; font-weight: 700; padding: 14px; cursor: pointer; }
+        .btn:disabled { opacity: .6; cursor: wait; }
+        .msg { min-height: 22px; margin-top: 14px; font-size: 14px; font-weight: 700; color: #b42318; }
+        .msg.success { color: #0f5132; }
+        .hint { margin-top: 12px; font-size: 13px; color: #6d8577; background: #f2f8f4; border: 1px dashed #b8d9c2; padding: 10px 12px; border-radius: 10px; }
+        #dashCard { display: none; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap: 12px; margin: 18px 0; }
+        .stat { background: #f2f8f4; border: 1px solid #d7efe0; border-radius: 14px; padding: 14px; text-align: center; }
+        .stat b { display: block; font-size: 26px; color: #0f5132; }
+        .stat span { font-size: 12px; color: #5f7865; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .toolbar .grow { flex: 1; min-width: 200px; }
+        .toolbar select { width: auto; min-width: 150px; padding: 12px 14px; }
+        .tbtn { border: 1px solid #d7e6dc; background: #fff; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer; }
+        .tbtn.primary { background: #198754; color: #fff; border-color: #198754; }
+        .tbtn:disabled { opacity: .6; cursor: wait; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5efe8; vertical-align: top; }
+        th { background: #0f5132; color: #fff; position: sticky; top: 0; white-space: nowrap; }
+        tr:nth-child(even) td { background: #f9fcfa; }
+        .table-wrap { overflow: auto; max-height: 480px; border: 1px solid #d7e6dc; border-radius: 12px; }
+        .danger { color: #b42318; cursor: pointer; font-weight: 700; background: none; border: none; font-size: 14px; padding: 2px 4px; }
+        .editbtn { color: #0f5132; cursor: pointer; font-weight: 700; background: none; border: none; font-size: 14px; padding: 2px 4px; }
+        .admin-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+        .pager { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; font-size: 14px; font-weight: 700; color: #2c4a36; }
+        .modal-back { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+        .modal-back.open { display: flex; }
+        .modal { background: #fff; border-radius: 18px; padding: 24px; width: 100%; max-width: 440px; }
+        .modal h3 { margin-bottom: 6px; }
+        .modal p { color: #5f7865; font-size: 14px; margin-bottom: 6px; }
+        .modal-row { display: flex; gap: 10px; margin-top: 18px; }
+        .modal-row button { flex: 1; border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; }
+        .save { background: #198754; color: #fff; border: none; }
+        .cancel { background: #fff; border: 1px solid #d7e6dc; }
+        .badge { display: inline-block; background: #edf9f0; border: 1px solid #d7efe0; color: #0f5132; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+        @media (max-width: 700px) { body { padding: 12px; } .card { padding: 18px; } }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div class="logo"><img src="logo.png" alt="logo" />Grow<span>Krishak</span> Admin</div>
+            <a href="landing.html" class="home-link">Back to Home</a>
+        </div>
+
+        <div class="card" id="loginCard">
+            <h2>Admin Login</h2>
+            <p>Main admin only — view and manage all registered users data.</p>
+            <form id="adminForm">
+                <label for="email">Admin email</label>
+                <input type="email" id="email" placeholder="admin@growkrishak.com" autocomplete="username" required />
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter admin password" autocomplete="current-password" required />
+                <button class="btn" id="loginBtn" type="submit">Login as Admin</button>
+                <div id="msg" class="msg" aria-live="polite"></div>
+                <div class="hint">Default (change in <b>.env</b> via <b>ADMIN_EMAIL</b> / <b>ADMIN_PASSWORD</b>):<br/>admin@growkrishak.com / Admin@123</div>
+            </form>
+        </div>
+
+        <div class="card" id="dashCard">
+            <div class="admin-bar">
+                <div><h2>Registered Users (<span id="count">0</span>)</h2><p id="adminEmail" style="color:#5f7865"></p></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="tbtn" id="refreshBtn">Refresh</button>
+                    <button class="tbtn" id="exportBtn">Export CSV</button>
+                    <button class="tbtn" id="logoutBtn" style="background:#b42318;color:#fff;border-color:#b42318">Logout</button>
+                </div>
+            </div>
+            <div class="stats" id="stats"></div>
+            <div class="toolbar">
+                <input type="text" id="q" class="grow" placeholder="Search by name, email, location, id..." />
+                <select id="sort" aria-label="Sort users">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="name">Name A–Z</option>
+                </select>
+                <select id="pageSize" aria-label="Rows per page">
+                    <option value="10">10 / page</option>
+                    <option value="20" selected>20 / page</option>
+                    <option value="50">50 / page</option>
+                    <option value="all">Show all</option>
+                </select>
+                <button class="tbtn primary" id="searchBtn" type="button">Search</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Location</th><th>Joined</th><th>Last login</th><th>Photo</th><th>Actions</th></tr></thead>
+                    <tbody id="rows"><tr><td colspan="8">Loading...</td></tr></tbody>
+                </table>
+            </div>
+            <div class="pager">
+                <button class="tbtn" id="prevBtn">← Prev</button>
+                <span id="pageInfo">Page 1</span>
+                <button class="tbtn" id="nextBtn">Next →</button>
+            </div>
+            <div id="dashMsg" class="msg"></div>
+        </div>
+    </div>
+
+    <div class="modal-back" id="modalBack">
+        <div class="modal">
+            <h3>Edit user</h3>
+            <p id="editId" style="font-size:12px"></p>
+            <form id="editForm">
+                <label for="eName">Full name</label>
+                <input type="text" id="eName" required />
+                <label for="eEmail">Email</label>
+                <input type="email" id="eEmail" required />
+                <label for="eLoc">Location</label>
+                <input type="text" id="eLoc" placeholder="Village / City (optional)" />
+                <div id="editMsg" class="msg"></div>
+                <div class="modal-row">
+                    <button type="button" class="cancel" id="editCancel">Cancel</button>
+                    <button type="submit" class="save" id="editSave">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loginCard = document.getElementById('loginCard');
+        const dashCard = document.getElementById('dashCard');
+        const msg = document.getElementById('msg');
+        const dashMsg = document.getElementById('dashMsg');
+        const rows = document.getElementById('rows');
+        const loginBtn = document.getElementById('loginBtn');
+        let cache = [];
+        let page = 1;
+        let editingId = null;
+
+        const pageSize = () => {
+            const v = document.getElementById('pageSize').value;
+            return v === 'all' ? 0 : Number(v);
+        };
+
+        function fmtDate(iso) {
+            if (!iso) return '-';
+            const d = new Date(iso);
+            if (isNaN(d)) return '-';
+            return d.toLocaleString();
+        }
+        function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        // Translates raw backend/network failures into actionable guidance.
+        // "API route not found" almost always means the running server is an
+        // old copy (started before the admin routes were added) or the page
+        // was opened without the backend (file:// / another port).
+        function friendlyError(err, status) {
+            const raw = (err && err.message) || '';
+            if (status === 404 || /API route not found/i.test(raw)) {
+                return 'Backend route missing. Restart the server: press Ctrl+C, run "node server.js" again, open http://localhost:3000/admin.html and retry.';
+            }
+            if (/failed to fetch|networkerror|load failed/i.test(raw)) {
+                return 'Cannot reach the backend. Run "node server.js" and open http://localhost:3000/admin.html (not the file directly).';
+            }
+            return raw || 'Request failed.';
+        }
+
+        function sessionExpired() {
+            dashMsg.textContent = 'Session expired. Please login again.';
+            setTimeout(() => location.reload(), 1200);
+        }
+
+        async function checkSession() {
+            try {
+                const r = await fetch('/api/admin/me');
+                if (r.ok) {
+                    const me = await r.json();
+                    showDash(me.email);
+                }
+            } catch (e) { /* backend down -> login stays visible */ }
+        }
+
+        function showDash(email) {
+            loginCard.style.display = 'none';
+            dashCard.style.display = 'block';
+            document.getElementById('adminEmail').textContent = 'Signed in as ' + email;
+            loadStats(); loadUsers();
+        }
+
+        async function loadStats() {
+            try {
+                const r = await fetch('/api/admin/stats');
+                if (r.status === 401) return sessionExpired();
+                const s = await r.json();
+                const labels = { users: 'Users', farmers: 'Farmers', crops: 'Crops', fertilizers: 'Fertilizers', schemes: 'Schemes', soils: 'Soils', signupsLast7Days: 'New (7d)' };
+                document.getElementById('stats').innerHTML = Object.keys(labels).map(k =>
+                    `<div class="stat"><b>${s[k] ?? 0}</b><span>${labels[k]}</span></div>`).join('');
+            } catch (e) { document.getElementById('stats').innerHTML = '<div class="stat"><b>!</b><span>Stats unavailable</span></div>'; }
+        }
+
+        async function loadUsers() {
+            dashMsg.textContent = '';
+            setBusy(true);
+            const q = document.getElementById('q').value.trim();
+            const sort = document.getElementById('sort').value;
+            rows.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
+            try {
+                // Fetch the full filtered+sorted list; paginate client-side for instant paging.
+                const url = '/api/admin/users' + buildQuery({ q, sort });
+                const r = await fetch(url);
+                const data = await r.json().catch(() => ({}));
+                if (r.status === 401) return sessionExpired();
+                if (r.status === 404) throw new Error(friendlyError(null, 404));
+                if (!r.ok) throw new Error(data.message || 'Failed to load users.');
+                cache = data.users || [];
+                document.getElementById('count').textContent = data.total + (q ? ` (found ${cache.length})` : '');
+                page = 1;
+                renderPage();
+            } catch (e) { rows.innerHTML = '<tr><td colspan="8">' + escapeHtml(friendlyError(e)) + '</td></tr>'; }
+            finally { setBusy(false); }
+        }
+
+        function buildQuery({ q, sort }) {
+            const p = new URLSearchParams();
+            if (q) p.set('q', q);
+            if (sort) p.set('sort', sort);
+            const s = p.toString();
+            return s ? '?' + s : '';
+        }
+
+        function renderPage() {
+            const size = pageSize();
+            const totalPages = size ? Math.max(1, Math.ceil(cache.length / size)) : 1;
+            page = Math.min(Math.max(page, 1), totalPages);
+            const slice = size ? cache.slice((page - 1) * size, page * size) : cache;
+            const start = size ? (page - 1) * size : 0;
+            document.getElementById('pageInfo').textContent = size ? `Page ${page} of ${totalPages} (${cache.length} users)` : `${cache.length} users`;
+            rows.innerHTML = slice.length ? slice.map((u, i) =>
+                `<tr><td>${start + i + 1}</td><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td>` +
+                `<td>${escapeHtml(u.location || '-')}</td><td style="white-space:nowrap">${escapeHtml(fmtDate(u.createdAt))}</td>` +
+                `<td style="white-space:nowrap">${escapeHtml(fmtDate(u.lastLoginAt))}</td>` +
+                `<td>${u.hasPhoto ? '<span class="badge">Yes</span>' : '-'}</td>` +
+                `<td style="white-space:nowrap"><button class="editbtn" data-id="${escapeHtml(u.id)}">Edit</button> | <button class="danger" data-id="${escapeHtml(u.id)}">Delete</button></td></tr>`
+            ).join('') : '<tr><td colspan="8">No users found.</td></tr>';
+        }
+
+        function setBusy(b) {
+            for (const id of ['searchBtn', 'refreshBtn', 'exportBtn', 'prevBtn', 'nextBtn']) {
+                document.getElementById(id).disabled = b;
+            }
+        }
+
+        document.getElementById('adminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            msg.textContent = ''; msg.classList.remove('success');
+            loginBtn.disabled = true; loginBtn.textContent = 'Logging in...';
+            try {
+                const r = await fetch('/api/admin/login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: document.getElementById('email').value.trim(), password: document.getElementById('password').value })
+                });
+                const data = await r.json().catch(() => ({}));
+                if (r.status === 404) throw new Error(friendlyError(null, 404));
+                if (!r.ok) throw new Error(data.message || 'Login failed.');
+                msg.textContent = data.message; msg.classList.add('success');
+                showDash(data.admin.email);
+            } catch (err) { msg.textContent = friendlyError(err); }
+            finally { loginBtn.disabled = false; loginBtn.textContent = 'Login as Admin'; }
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', loadUsers);
+        document.getElementById('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loadUsers(); } });
+        document.getElementById('sort').addEventListener('change', loadUsers);
+        document.getElementById('pageSize').addEventListener('change', () => { page = 1; renderPage(); });
+        document.getElementById('prevBtn').addEventListener('click', () => { page--; renderPage(); });
+        document.getElementById('nextBtn').addEventListener('click', () => { page++; renderPage(); });
+        document.getElementById('refreshBtn').addEventListener('click', () => { loadStats(); loadUsers(); });
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            location.reload();
+        });
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            if (!cache.length) { dashMsg.textContent = 'Nothing to export.'; return; }
+            const head = 'Name,Email,Location,Joined,LastLogin,HasPhoto,ID';
+            const lines = cache.map(u => [u.name, u.email, u.location || '', u.createdAt || '', u.lastLoginAt || '', u.hasPhoto ? 'yes' : 'no', u.id]
+                .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([[head, ...lines].join('\n')], { type: 'text/csv' }));
+            a.download = 'growkrishak-users.csv'; a.click();
+            dashMsg.textContent = `Exported ${cache.length} users.`; dashMsg.classList.add('success');
+            setTimeout(() => dashMsg.classList.remove('success'), 2000);
+        });
+
+        // Edit modal
+        const modalBack = document.getElementById('modalBack');
+        rows.addEventListener('click', async (e) => {
+            const del = e.target.closest('.danger');
+            const ed = e.target.closest('.editbtn');
+            if (del) {
+                if (!confirm('Delete this user? This cannot be undone.')) return;
+                try {
+                    const r = await fetch('/api/admin/users/' + encodeURIComponent(del.dataset.id), { method: 'DELETE' });
+                    const data = await r.json().catch(() => ({}));
+                    if (r.status === 401) return sessionExpired();
+                    dashMsg.textContent = data.message || '';
+                    loadStats(); loadUsers();
+                } catch (err) { dashMsg.textContent = 'Delete failed: ' + err.message; }
+                return;
+            }
+            if (ed) {
+                const u = cache.find(x => String(x.id) === String(ed.dataset.id));
+                if (!u) return;
+                editingId = u.id;
+                document.getElementById('eName').value = u.name || '';
+                document.getElementById('eEmail').value = u.email || '';
+                document.getElementById('eLoc').value = u.location || '';
+                document.getElementById('editId').textContent = 'ID: ' + u.id;
+                document.getElementById('editMsg').textContent = '';
+                modalBack.classList.add('open');
+            }
+        });
+        document.getElementById('editCancel').addEventListener('click', () => modalBack.classList.remove('open'));
+        modalBack.addEventListener('click', (e) => { if (e.target === modalBack) modalBack.classList.remove('open'); });
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editMsg = document.getElementById('editMsg');
+            editMsg.textContent = '';
+            const saveBtn = document.getElementById('editSave');
+            saveBtn.disabled = true;
+            try {
+                const r = await fetch('/api/admin/users/' + encodeURIComponent(editingId), {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('eName').value.trim(),
+                        email: document.getElementById('eEmail').value.trim(),
+                        location: document.getElementById('eLoc').value.trim()
+                    })
+                });
+                const data = await r.json().catch(() => ({}));
+                if (r.status === 401) return sessionExpired();
+                if (!r.ok) throw new Error(data.message || 'Update failed.');
+                modalBack.classList.remove('open');
+                dashMsg.textContent = data.message; dashMsg.classList.add('success');
+                setTimeout(() => dashMsg.classList.remove('success'), 2000);
+                loadUsers();
+            } catch (err) { editMsg.textContent = err.message; }
+            finally { saveBtn.disabled = false; }
+        });
+
+        checkSession();
+    </script>
+</body>
+</html>
