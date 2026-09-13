@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { Router } = require('express');
 const { asyncHandler, requireAuth } = require('../middleware');
 const { destroySession } = require('../session');
-const { loadUsers, saveUsers } = require('../store');
+const { loadUsers, saveUsers } = require('../db');
 
 function publicUser(user) {
   return {
@@ -25,7 +25,7 @@ const router = Router();
 router.post(
   '/signup',
   asyncHandler(async (req, res) => {
-    const users = loadUsers();
+    const users = await loadUsers();
     const { name, email, password, confirmPassword } = req.body || {};
 
     if (!name || !email || !password || !confirmPassword) {
@@ -50,7 +50,7 @@ router.post(
       passwordHash: bcrypt.hashSync(password, 10),
     };
     users.push(newUser);
-    saveUsers(users);
+    await saveUsers(users);
 
     req.session.userId = newUser.id;
     return res.status(201).json({ message: 'Account created successfully.', user: publicUser(newUser) });
@@ -60,7 +60,7 @@ router.post(
 router.post(
   '/login',
   asyncHandler(async (req, res) => {
-    const users = loadUsers();
+    const users = await loadUsers();
     const { email, password } = req.body || {};
 
     if (!email || !password) {
@@ -92,7 +92,7 @@ router.get(
     if (!req.session || !req.session.userId) {
       return res.status(401).json({ message: 'Not authenticated.' });
     }
-    const user = getUserById(loadUsers(), req.session.userId);
+    const user = getUserById(await loadUsers(), req.session.userId);
     if (!user) return res.status(401).json({ message: 'Session invalid.' });
     return res.json(publicUser(user));
   })
@@ -102,7 +102,7 @@ router.put(
   '/me',
   requireAuth,
   asyncHandler(async (req, res) => {
-    const users = loadUsers();
+    const users = await loadUsers();
     const user = getUserById(users, req.session.userId);
     if (!user) return res.status(401).json({ message: 'Session invalid.' });
 
@@ -126,7 +126,7 @@ router.put(
     user.email = normalizedEmail;
     user.location = location ? String(location).trim() : '';
     if (typeof photo === 'string') user.photo = photo;
-    saveUsers(users);
+    await saveUsers(users);
 
     return res.json({ message: 'Profile updated successfully.', user: publicUser(user) });
   })

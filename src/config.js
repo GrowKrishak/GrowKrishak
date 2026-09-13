@@ -1,5 +1,13 @@
 'use strict';
 
+// Loads local .env (MONGODB_URI, SESSION_SECRET, PORT) when present.
+// On Vercel these come from the dashboard instead.
+try {
+  require('dotenv').config();
+} catch (e) {
+  /* dotenv is optional at runtime */
+}
+
 const os = require('os');
 const path = require('path');
 

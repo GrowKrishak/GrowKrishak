@@ -1,11 +1,12 @@
 'use strict';
 
 /**
- * Session middleware that works both locally and serverless.
- * - Local dev (default): express-session with in-memory store.
- * - Vercel / serverless (SESSION_STORE=cookie, or auto when
- *   VERCEL env is set): signed-cookie sessions, because there
- *   is no shared memory between serverless instances.
+ * Session middleware that works everywhere:
+ * - MONGODB_URI set  -> connect-mongo (persistent, works
+ *   locally AND serverless on Vercel).
+ * - Vercel without DB -> signed-cookie sessions (no shared
+ *   memory between serverless instances).
+ * - Local dev default -> express-session in-memory store.
  * Only the userId is stored, so cookies stay tiny.
  */
 const expressSession = require('express-session');
@@ -18,6 +19,18 @@ function useCookieSessions() {
 }
 
 function createSessionMiddleware() {
+  if (process.env.MONGODB_URI) {
+    // eslint-disable-next-line global-require
+    const { MongoStore } = require('connect-mongo');
+    const session = require('express-session');
+    return session({
+      secret: config.sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+      cookie: { httpOnly: true, sameSite: 'lax', maxAge: config.sessionMaxAge },
+    });
+  }
   if (useCookieSessions()) {
     return cookieSession({
       name: 'gk_session',

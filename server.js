@@ -11,6 +11,16 @@
 const { createApp } = require('./src/app');
 const config = require('./src/config');
 
+// Never let a background driver retry (e.g. Mongo) take the whole
+// process down: log it and keep serving (DB routes return 503).
+process.on('unhandledRejection', (reason) => {
+  // eslint-disable-next-line no-console
+  console.error(
+    'Unhandled rejection (server staying up):',
+    reason && reason.message ? reason.message : reason
+  );
+});
+
 const app = createApp();
 
 function startServer(portIndex = 0) {

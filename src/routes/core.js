@@ -4,7 +4,7 @@ const path = require('path');
 const { Router } = require('express');
 const config = require('../config');
 const { asyncHandler, requireAuth } = require('../middleware');
-const { loadUsers } = require('../store');
+const { loadUsers } = require('../db');
 
 function buildDashboardData(user) {
   return {
@@ -57,7 +57,7 @@ router.get(
   '/dashboard',
   requireAuth,
   asyncHandler(async (req, res) => {
-    const user = loadUsers().find((u) => u.id === req.session.userId);
+    const user = (await loadUsers()).find((u) => u.id === req.session.userId);
     if (!user) return res.status(401).json({ message: 'Session invalid.' });
     return res.json(buildDashboardData(user));
   })

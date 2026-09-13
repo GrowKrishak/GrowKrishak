@@ -2,7 +2,7 @@
 
 const { Router } = require('express');
 const { asyncHandler, requireAuth } = require('../middleware');
-const { loadCollection, saveCollection, makeId } = require('../store');
+const { loadCollection, saveCollection, makeId } = require('../db');
 const schemas = require('../validators');
 
 /**
@@ -21,7 +21,7 @@ function crudRouter(key) {
     '/',
     requireAuth,
     asyncHandler(async (req, res) => {
-      const rows = loadCollection(key);
+      const rows = await loadCollection(key);
       const q = (req.query.q || '').toString().trim().toLowerCase();
       if (!q) return res.json(rows);
       return res.json(rows.filter((r) => Object.values(r).some((v) => String(v ?? '').toLowerCase().includes(q))));
@@ -32,7 +32,7 @@ function crudRouter(key) {
     '/',
     requireAuth,
     asyncHandler(async (req, res) => {
-      const rows = loadCollection(key);
+      const rows = await loadCollection(key);
       const body = req.body || {};
       const error = schema.validate(body, false);
       if (error) return res.status(400).json({ message: error });
@@ -43,7 +43,7 @@ function crudRouter(key) {
         return res.status(409).json({ message: `Duplicate id "${clean.id}". Use a unique id.` });
       }
       rows.push(clean);
-      saveCollection(key, rows);
+      await saveCollection(key, rows);
       return res.status(201).json(clean);
     })
   );
@@ -52,7 +52,7 @@ function crudRouter(key) {
     '/:id',
     requireAuth,
     asyncHandler(async (req, res) => {
-      const rows = loadCollection(key);
+      const rows = await loadCollection(key);
       const idx = rows.findIndex((r) => String(r.id) === String(req.params.id));
       if (idx === -1) return res.status(404).json({ message: 'Record not found.' });
 
@@ -61,7 +61,7 @@ function crudRouter(key) {
       if (error) return res.status(400).json({ message: error });
 
       rows[idx] = schema.normalize(merged);
-      saveCollection(key, rows);
+      await saveCollection(key, rows);
       return res.json(rows[idx]);
     })
   );
@@ -70,11 +70,11 @@ function crudRouter(key) {
     '/:id',
     requireAuth,
     asyncHandler(async (req, res) => {
-      const rows = loadCollection(key);
+      const rows = await loadCollection(key);
       const idx = rows.findIndex((r) => String(r.id) === String(req.params.id));
       if (idx === -1) return res.status(404).json({ message: 'Record not found.' });
       const [removed] = rows.splice(idx, 1);
-      saveCollection(key, rows);
+      await saveCollection(key, rows);
       return res.json({ message: 'Deleted successfully.', removed });
     })
   );
