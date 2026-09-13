@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>GrowKrishak | AI Chatbot</title>
+  <style>
+    :root {
+      --bg-1: #07120d;
+      --bg-2: #0e1d17;
+      --line: rgba(255,255,255,0.08);
+      --text: #ebf8f0;
+      --muted: #b3d2c0;
+      --green: #74dca4;
+      --green-2: #3ec987;
+      --green-3: #a5f0bc;
+      --blue: #80c8ff;
+      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #0a1612);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 48px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(11, 22, 18, 0.76);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0b1713;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text strong { font-size: 1.1rem; }
+    .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 219, 166, 0.26);
+      background: rgba(21, 42, 31, 0.85);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-2);
+      box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
+    }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: #ff7c7c; }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .section-panel {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 1.08rem; font-weight: 700; }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(116,220,164,0.09);
+      border: 1px solid rgba(116,220,164,0.18);
+      color: var(--green-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .chat-messages {
+      height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+      margin-bottom: 12px;
+    }
+
+    .msg-row { display: flex; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.bot { justify-content: flex-start; }
+
+    .bubble {
+      max-width: 80%;
+      padding: 11px 15px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .msg-row.user .bubble {
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 600;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-row.bot .bubble {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    .bubble.typing { letter-spacing: 2px; color: var(--muted); }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+    .qchip {
+      border: 1px solid rgba(116,220,164,0.3);
+      background: rgba(116,220,164,0.07);
+      color: var(--green-3);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .qchip:hover { background: rgba(116,220,164,0.16); }
+
+    .chat-input-row { display: flex; gap: 10px; }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .chat-input-row input:focus { border-color: var(--green-2); }
+
+    .send-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 22px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .footer { text-align: center; color: var(--muted); padding-top: 26px; font-size: 0.82rem; }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .topbar { flex-wrap: wrap; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brand-sub { display: none; }
+      .bubble { max-width: 92%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
+        <div class="brand-text">
+          <strong>GrowKrishak</strong>
+          <span class="brand-sub">Field Unit #A-04</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking session</span>
+        </div>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link active">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section-panel">
+          <div class="panel-head">
+            <div class="panel-title">🤖 Krishak AI Assistant</div>
+            <span class="chip" id="botStatus">Online</span>
+          </div>
+
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <div class="chips">
+            <button class="qchip" type="button" onclick="askQuick('Fertilizer prices')">Fertilizer prices</button>
+            <button class="qchip" type="button" onclick="askQuick('What is PM-KISAN?')">PM-KISAN</button>
+            <button class="qchip" type="button" onclick="askQuick('Urea dose for wheat')">Urea dose</button>
+            <button class="qchip" type="button" onclick="askQuick('Crop insurance')">Crop insurance</button>
+            <button class="qchip" type="button" onclick="askQuick('Help')">Help</button>
+          </div>
+
+          <div class="chat-input-row">
+            <input id="chatInput" type="text" placeholder="Ask about crops, soil, fertilizer, schemes…" autocomplete="off" />
+            <button class="send-btn" type="button" onclick="sendChat()">Send</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
+  </div>
+
+  <script>
+    const statusText = document.getElementById('statusText');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+
+    function paintAvatars(user) {
+      const u = user || {};
+      const initials = String(u.name || 'AS').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      ['avatarBtn', 'avatarSm'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (u.photo) {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = u.photo;
+          img.alt = 'Profile';
+          el.appendChild(img);
+        } else {
+          el.textContent = initials;
+        }
+      });
+    }
+
+    function setDd(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+      document.addEventListener('click', (e) => { if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') profileDropdown.classList.remove('open'); });
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Not authenticated');
+        const data = await response.json();
+        if (data.user && data.user.name) {
+          statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+          paintAvatars(data.user);
+          setDd('ddName', data.user.name);
+          setDd('ddEmail', data.user.email || '—');
+        }
+      } catch (error) {
+        statusText.textContent = 'Guest';
+        paintAvatars({});
+        setDd('ddName', 'Guest');
+        setDd('ddEmail', 'Not logged in');
+      }
+    }
+
+    const ddLogoutBtn = document.getElementById('ddLogout');
+    if (ddLogoutBtn) ddLogoutBtn.addEventListener('click', async () => {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (error) {}
+      window.location.href = 'login.html';
+    });
+
+    // ---------- Krishak AI brain: farming Q&A ----------
+    const BRAIN = [
+      { k: ['hello', 'hi', 'hey', 'namaste', 'namaskar', 'good morning', 'good evening', 'ram ram'], r: "Hello! 👋 I'm Krishak AI, your farming assistant.\nAsk me about crops, soil, fertilizer prices, irrigation or government schemes." },
+      { k: ['how are you', 'kaise ho'], r: "I'm running well and ready to help! 🌱\nWhat would you like to know about your farm today?" },
+      { k: ['your name', 'who are you', 'tumhara naam', 'aap kaun'], r: "I'm Krishak AI 🤖 — built into GrowKrishak to answer farming questions on crops, soil, fertilizer and schemes." },
+      { k: ['thank', 'dhanyavad', 'shukriya'], r: "You're most welcome! 🙏 Happy farming!" },
+      { k: ['bye', 'alvida', 'see you'], r: "Goodbye! 👋 Come back anytime you need farming advice." },
+      { k: ['urea price', 'price of urea', 'urea rate', 'urea cost'], r: "Urea (46% N, 45 kg bag):\n• Govt MRP: ₹242\n• Shop rate: ~₹266.50 (Kharif 2026)\nBuy neem-coated urea from licensed dealers with PoS billing." },
+      { k: ['dap price', 'price of dap', 'dap rate', 'dap cost'], r: "DAP (18:46:0, 50 kg bag): ₹1,350 — fixed government MRP.\nNo dealer can charge above this. Report overcharging to your District Agriculture Officer." },
+      { k: ['mop price', 'potash price', 'price of mop', 'mop rate'], r: "MOP / Potash (60% K2O, 50 kg bag): ~₹1,975 (Kharif 2026 rate).\nMOP rates vary slightly by brand since they are decontrolled." },
+      { k: ['npk price', 'price of npk', '10:26:26'], r: "NPK 10:26:26 (50 kg bag): ~₹1,470 (FY 2026-27 MRP).\nGood balanced fertilizer for vegetables and mixed cropping." },
+      { k: ['fertilizer price', 'fertiliser price', 'khad price', 'khad rate', 'price list', 'all prices', 'rate list'], r: "Current govt-approved rates (Sep 2026):\n• Urea 45kg — ₹266.50\n• DAP 50kg — ₹1,350\n• MOP 50kg — ₹1,975\n• NPK 10:26:26 50kg — ₹1,470\nSee the Fertilizer page for details." },
+      { k: ['urea dose', 'urea kitna', 'urea for wheat', 'nitrogen dose', 'yuria'], r: "Urea guidance:\n• Wheat: ~100–120 kg/acre in 2–3 splits (basal + tillering + flowering)\n• Rice: ~100 kg/acre in 3 splits\n• Always apply after soil test and irrigate lightly after top dressing." },
+      { k: ['dap dose', 'dap kitna', 'dap for'], r: "DAP is a basal fertilizer — apply full dose at sowing time:\n• Wheat/Rice: ~50–60 kg/acre\n• Do not top-dress DAP later; phosphorus moves slowly in soil." },
+      { k: ['pm-kisan', 'pm kisan', 'pmkisan', '6000', 'kisan samman'], r: "PM-KISAN Samman Nidhi:\n• ₹6,000/year in three ₹2,000 installments\n• Directly to bank accounts of land-holding farmer families\n• Apply/check status at pmkisan.gov.in" },
+      { k: ['fasal bima', 'crop insurance', 'bima', 'insurance', 'pmfby'], r: "PM Fasal Bima Yojana (crop insurance):\n• You pay only 2% premium (kharif) / 1.5% (rabi)\n• Covers drought, flood, pests and disease loss\n• Enroll at pmfby.gov.in or your bank before the season cut-off date." },
+      { k: ['soil health card', 'soil testing', 'soil test', 'mitti test', 'soil card'], r: "Soil Health Card scheme:\n• Free soil testing every 2 years\n• Gives exact N-P-K and micronutrient status of your field\n• Apply recommended doses only — saves fertilizer cost.\nPortal: soilhealth.dac.gov.in" },
+      { k: ['irrigation', 'sinchai', 'paani', 'water', 'drip', 'sprinkler', 'pmksy'], r: "PM Krishi Sinchai Yojana (Per drop more crop):\n• Up to 55% subsidy on drip/sprinkler for small & marginal farmers\n• Drip saves ~40–50% water vs flood irrigation\n• Check soil moisture before each cycle — overwatering harms roots." },
+      { k: ['kcc', 'kisan credit', 'loan', 'karz', 'credit card'], r: "Kisan Credit Card:\n• Working capital up to ₹3 lakh at 4% effective interest (on prompt repayment)\n• Available at any bank, PACS or CSC center\n• Apply online at jansamarth.in" },
+      { k: ['kusum', 'solar pump', 'solar'], r: "PM-KUSUM scheme:\n• ~60% subsidy on standalone solar pumps\n• Cuts diesel costs; extra power can be sold to the grid\n• Portal: pmkusum.mnre.gov.in" },
+      { k: ['scheme', 'yojana', 'sarkari', 'government', 'subsidy'], r: "Main agriculture schemes:\n1. PM-KISAN — ₹6,000/year\n2. Fasal Bima — crop insurance\n3. Soil Health Card — free testing\n4. Krishi Sinchai — irrigation subsidy\n5. KCC — cheap farm credit\n6. PM-KUSUM — solar pumps\nOpen the Schemes page for details + portals." },
+      { k: ['disease', 'pest', 'keet', 'rog', 'fungus', 'yellow leaves', 'peela'], r: "Crop health tips:\n• Yellow leaves often mean nitrogen deficiency (urea) or overwatering\n• Spots/mold suggest fungal attack — spray recommended fungicide in evening\n• Check the Crop page and remove badly infected plants to stop spread." },
+      { k: ['weed', 'kharpatwar', 'ghas'], r: "Weed control:\n• Remove weeds within 20–30 days of sowing (critical period)\n• Manual weeding is safest for vegetables\n• For herbicides, follow label dose exactly and spray on calm mornings." },
+      { k: ['wheat', 'gehu'], r: "Wheat tips (Rabi):\n• Sow Oct–Nov, seed rate ~40 kg/acre\n• Basal DAP ~50 kg + Urea in 2–3 splits\n• 4–6 irrigations: crown root, tillering, flowering, grain filling." },
+      { k: ['rice', 'paddy', 'dhaan'], r: "Paddy tips (Kharif):\n• Transplant 21–25 day seedlings, 2–3 per hill\n• Keep 2–5 cm standing water, drain before harvest\n• Urea in 3 splits; zinc deficiency is common — watch for khaira disease." },
+      { k: ['weather', 'mausam', 'rain', 'barish'], r: "Weather advice:\n• Avoid spraying before expected rain (washes chemical away)\n• Spray in calm morning/evening hours\n• Check your local IMD forecast before irrigation or harvest." },
+      { k: ['mandi', 'market price', 'bhav', 'sell crop', 'enam'], r: "Selling your crop:\n• Check e-NAM (enam.gov.in) for live mandi prices nearby\n• Compare 2–3 mandis before transporting\n• MSP crops can be sold at government procurement centers." },
+      { k: ['soil', 'mitti', 'ph ', 'organic'], r: "Soil care:\n• Test soil every 2 years (Soil Health Card — free)\n• Add FYM/compost 4–5 tonnes/acre yearly to improve structure\n• Ideal pH for most crops: 6.0–7.5" },
+      { k: ['help', 'madad', 'what can you', 'kaise use', 'options'], r: "I can answer about:\n• 🌾 Crops (wheat, rice, disease, weeds)\n• 🧪 Soil testing & care\n• 🧴 Fertilizer prices & doses\n• 💧 Irrigation\n• 🏛️ Govt schemes (PM-KISAN, Bima, KCC…)\nJust type your question!" }
+    ];
+
+    const FALLBACK = "I didn't fully get that. 🤔\nTry asking about: fertilizer prices, urea dose, PM-KISAN, crop insurance, soil testing, irrigation, wheat, rice, weeds or type 'help'.";
+
+    function botReply(text) {
+      const t = ' ' + text.toLowerCase() + ' ';
+      let best = null, bestScore = 0;
+      for (const item of BRAIN) {
+        let score = 0;
+        for (const kw of item.k) {
+          if (t.includes(kw)) score += kw.length;
+        }
+        if (score > bestScore) { bestScore = score; best = item; }
+      }
+      return best && bestScore > 0 ? best.r : FALLBACK;
+    }
+
+    function addMsg(text, who) {
+      const row = document.createElement('div');
+      row.className = 'msg-row ' + who;
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      b.textContent = text;
+      row.appendChild(b);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return row;
+    }
+
+    function sendChat() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMsg(text, 'user');
+      chatInput.value = '';
+      const typing = addMsg('● ● ●', 'bot');
+      typing.firstChild.classList.add('typing');
+      setTimeout(() => {
+        typing.remove();
+        addMsg(botReply(text), 'bot');
+      }, 700);
+    }
+
+    function askQuick(q) {
+      chatInput.value = q;
+      sendChat();
+    }
+
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendChat();
+    });
+
+    checkSession();
+    setTimeout(() => addMsg("Namaste! 🙏 I'm Krishak AI.\nAsk me anything about crops, fertilizer, soil or schemes — or tap a quick question below.", 'bot'), 400);
+  </script>
+</body>
+</html>

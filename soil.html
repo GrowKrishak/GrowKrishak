@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>GrowKrishak | Soil</title>
+  <style>
+    :root {
+      --bg-1: #07120d;
+      --bg-2: #0e1d17;
+      --line: rgba(255,255,255,0.08);
+      --text: #ebf8f0;
+      --muted: #b3d2c0;
+      --green: #74dca4;
+      --green-2: #3ec987;
+      --green-3: #a5f0bc;
+      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #0a1612);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 48px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(11, 22, 18, 0.76);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0b1713;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text strong { font-size: 1.1rem; }
+    .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 219, 166, 0.26);
+      background: rgba(21, 42, 31, 0.85);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-2);
+      box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
+    }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: #ff7c7c; }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .section-panel {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 1.08rem; font-weight: 700; }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(116,220,164,0.09);
+      border: 1px solid rgba(116,220,164,0.18);
+      color: var(--green-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .blank-box {
+      border: 1px dashed rgba(255,255,255,0.2);
+      border-radius: 18px;
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .stat-title {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .stat-value { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+
+    .delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(116,220,164,0.2);
+      background: rgba(116,220,164,0.1);
+      color: var(--green-3);
+    }
+
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    .footer { text-align: center; color: var(--muted); padding-top: 26px; font-size: 0.82rem; }
+
+    .soil-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+    .field select, .field input, .field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .field select option { color: #07120d; }
+    .field select:focus, .field input:focus, .field textarea:focus { border-color: rgba(116,220,164,0.5); }
+    .go-btn {
+      border: none; border-radius: 12px; padding: 11px 18px; font-weight: 700;
+      font-size: 0.88rem; cursor: pointer; font-family: inherit;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66); color: #03150d;
+    }
+    .crop-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .crop-tag {
+      padding: 8px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+      background: rgba(116,220,164,0.1); border: 1px solid rgba(116,220,164,0.25); color: var(--green-3);
+    }
+    .soil-meta { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 14px; }
+    .meta-box { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: rgba(255,255,255,0.02); }
+    .meta-box small { display: block; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .meta-box strong { font-size: 0.92rem; line-height: 1.5; }
+    .soil-table-wrap { overflow-x: auto; margin-top: 16px; }
+    table.soil-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    table.soil-table th, table.soil-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    table.soil-table th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .row-actions { display: flex; gap: 8px; }
+    .mini-btn { border: 1px solid var(--line); background: rgba(255,255,255,0.04); color: var(--text); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 0.78rem; font-family: inherit; }
+    .mini-btn.danger { color: #ff7c7c; border-color: rgba(255,124,124,0.3); }
+    @media (max-width: 760px) { .soil-form, .soil-meta { grid-template-columns: 1fr; } }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .topbar { flex-wrap: wrap; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brand-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
+        <div class="brand-text">
+          <strong>GrowKrishak</strong>
+          <span class="brand-sub">Field Unit #A-04</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking session</span>
+        </div>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link active">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section-panel">
+          <div class="panel-head">
+            <div class="panel-title">Soil &amp; Water</div>
+            <span class="chip">Live</span>
+          </div>
+
+          <div class="stats-grid" style="margin-top:0;">
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Soil Moisture</span>
+                <span class="stat-icon">🌧️</span>
+              </div>
+              <div class="stat-value" id="soilMoistureValue">64%</div>
+              <span class="delta">Balanced</span>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Water Usage</span>
+                <span class="stat-icon">💧</span>
+              </div>
+              <div class="stat-value" id="waterUsageValue">1,240L</div>
+              <span class="delta">▼ 12% saved</span>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Next Irrigation</span>
+                <span class="stat-icon">⏰</span>
+              </div>
+              <div class="stat-value">06:00 AM</div>
+              <span class="delta">Zone A • Auto</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-panel" style="margin-top:24px;">
+          <div class="panel-head">
+            <div class="panel-title">🌱 Soil Type &amp; Suitable Crops</div>
+            <span class="chip">Guide</span>
+          </div>
+
+          <div class="soil-form">
+            <div class="field">
+              <label for="soilTypeSelect">Select soil type</label>
+              <select id="soilTypeSelect">
+                <option value="">— Choose soil —</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="soilSearch">Search crop (e.g. Cotton, Rice)</label>
+              <input id="soilSearch" type="text" placeholder="Type a crop name to find matching soils…" />
+            </div>
+          </div>
+
+          <div id="soilInfo">
+            <div class="blank-box" style="padding:28px 16px;">Select a soil type above to see which crops grow best on it.</div>
+          </div>
+
+          <div class="panel-head" style="margin-top:22px;">
+            <div class="panel-title" style="font-size:0.95rem;">My Soil Records</div>
+            <span class="chip" id="soilCountChip">0 records</span>
+          </div>
+
+          <div class="soil-form">
+            <div class="field">
+              <label for="newSoilType">Soil type *</label>
+              <select id="newSoilType">
+                <option value="">— Select —</option>
+                <option>Alluvial</option>
+                <option>Black (Regur / Cotton)</option>
+                <option>Red</option>
+                <option>Laterite</option>
+                <option>Desert / Sandy</option>
+                <option>Mountain / Forest</option>
+                <option>Saline / Alkaline</option>
+                <option>Loamy</option>
+                <option>Clayey</option>
+                <option>Sandy Loam</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="newPhRange">pH range</label>
+              <input id="newPhRange" type="text" placeholder="e.g. 6.5 - 7.5" />
+            </div>
+            <div class="field full">
+              <label for="newSuitableCrops">Supported / suitable crops *</label>
+              <input id="newSuitableCrops" type="text" placeholder="e.g. Cotton, Soybean, Wheat" />
+            </div>
+            <div class="field full">
+              <label for="newCharacteristics">Characteristics / notes</label>
+              <textarea id="newCharacteristics" rows="2" placeholder="Fertility, water retention, region…"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="go-btn" type="button" id="addSoilBtn">➕ Add Soil Record</button>
+            <button class="secondary-btn" type="button" id="refreshSoilsBtn">↻ Refresh</button>
+          </div>
+          <div id="soilMsg" style="margin-top:10px;font-size:0.85rem;color:var(--muted);"></div>
+
+          <div class="soil-table-wrap">
+            <table class="soil-table">
+              <thead>
+                <tr><th>ID</th><th>Soil type</th><th>Suitable crops</th><th>pH</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="soilTableBody">
+                <tr><td colspan="5" style="text-align:center;color:var(--muted);">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
+  </div>
+
+  <script>
+    const statusText = document.getElementById('statusText');
+
+    function paintAvatars(user) {
+      const u = user || {};
+      const initials = String(u.name || 'AS').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      ['avatarBtn', 'avatarSm'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (u.photo) {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = u.photo;
+          img.alt = 'Profile';
+          el.appendChild(img);
+        } else {
+          el.textContent = initials;
+        }
+      });
+    }
+
+    function setDd(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+      document.addEventListener('click', (e) => { if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') profileDropdown.classList.remove('open'); });
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Not authenticated');
+        const data = await response.json();
+        if (data.user && data.user.name) {
+          statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+          paintAvatars(data.user);
+          setDd('ddName', data.user.name);
+          setDd('ddEmail', data.user.email || '—');
+        }
+        const metrics = data.metrics || {};
+        const setLive = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setLive('soilMoistureValue', metrics.soilMoisture || '64%');
+        setLive('waterUsageValue', metrics.waterUsage || '1,240L');
+      } catch (error) {
+        statusText.textContent = 'Guest';
+        paintAvatars({});
+        setDd('ddName', 'Guest');
+        setDd('ddEmail', 'Not logged in');
+      }
+    }
+
+    const ddLogoutBtn = document.getElementById('ddLogout');
+    if (ddLogoutBtn) ddLogoutBtn.addEventListener('click', async () => {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (error) {}
+      window.location.href = 'login.html';
+    });
+
+    // ---------- Soil type -> suitable crops guide (built-in + server records) ----------
+    const BUILTIN_SOILS = [
+      { soilType: 'Alluvial', suitableCrops: 'Rice, Wheat, Sugarcane, Maize, Pulses', phRange: '6.5 - 7.5', characteristics: 'Very fertile, rich in potash. Indo-Gangetic plains. Ideal for Kharif + Rabi.' },
+      { soilType: 'Black (Regur / Cotton)', suitableCrops: 'Cotton, Soybean, Sunflower, Groundnut, Wheat', phRange: '6.5 - 8.0', characteristics: 'Clayey, retains moisture long. Deccan plateau. Best for cotton.' },
+      { soilType: 'Red', suitableCrops: 'Groundnut, Potato, Millet, Pulses, Tobacco', phRange: '5.5 - 7.0', characteristics: 'Iron-rich, low nitrogen. Needs organic manure + NPK as per soil test.' },
+      { soilType: 'Laterite', suitableCrops: 'Tea, Coffee, Cashew, Coconut, Rubber', phRange: '5.0 - 6.5', characteristics: 'Leached in high rainfall areas. Add lime + organic matter.' },
+      { soilType: 'Desert / Sandy', suitableCrops: 'Bajra, Guar, Barley, Watermelon, Moth Bean', phRange: '7.0 - 8.5', characteristics: 'Low water holding. Use drip irrigation + mulching.' },
+      { soilType: 'Mountain / Forest', suitableCrops: 'Tea, Apple, Spices, Maize, Barley', phRange: '5.0 - 6.5', characteristics: 'Acidic, rich in organic matter. Good on terraced slopes.' },
+      { soilType: 'Saline / Alkaline', suitableCrops: 'Dhaincha (green manure), Barley, Mustard, Sugarbeet', phRange: '7.5 - 9.5', characteristics: 'High salt. Reclaim with gypsum + drainage before sowing.' },
+      { soilType: 'Loamy', suitableCrops: 'Wheat, Rice, Sugarcane, Vegetables, Pulses', phRange: '6.0 - 7.5', characteristics: 'Balanced sand-silt-clay. Best all-round farming soil.' },
+      { soilType: 'Clayey', suitableCrops: 'Rice, Jute, Sugarcane', phRange: '6.0 - 8.0', characteristics: 'Holds water well. Good for paddy, needs drainage for others.' },
+      { soilType: 'Sandy Loam', suitableCrops: 'Groundnut, Melon, Carrot, Bajra, Potato', phRange: '6.0 - 7.0', characteristics: 'Well drained, easy tillage. Needs frequent light irrigation.' },
+    ];
+
+    let serverSoils = [];
+    const soilSelect = document.getElementById('soilTypeSelect');
+    const soilSearch = document.getElementById('soilSearch');
+    const soilInfo = document.getElementById('soilInfo');
+
+    function allSoils() {
+      // Server records override / extend built-ins by soilType name
+      const map = new Map(BUILTIN_SOILS.map((s) => [s.soilType.toLowerCase(), { ...s }]));
+      serverSoils.forEach((s) => {
+        if (s && s.soilType) map.set(String(s.soilType).toLowerCase(), { ...s });
+      });
+      return [...map.values()];
+    }
+
+    function renderSoilOptions() {
+      if (!soilSelect) return;
+      const keep = soilSelect.value;
+      soilSelect.innerHTML = '<option value="">— Choose soil —</option>' +
+        allSoils().map((s) => '<option value="' + s.soilType.replace(/"/g, '&quot;') + '">' + s.soilType + '</option>').join('');
+      if (keep) soilSelect.value = keep;
+    }
+
+    function renderSoilInfo() {
+      if (!soilInfo) return;
+      const q = (soilSearch && soilSearch.value || '').trim().toLowerCase();
+      let list = allSoils();
+      const sel = soilSelect ? soilSelect.value : '';
+      if (sel) list = list.filter((s) => s.soilType === sel);
+      if (q) list = list.filter((s) => (s.suitableCrops + ' ' + s.soilType).toLowerCase().includes(q));
+      if (!list.length) {
+        soilInfo.innerHTML = '<div class="blank-box" style="padding:28px 16px;">No match found. Try another soil or crop name.</div>';
+        return;
+      }
+      soilInfo.innerHTML = list.map((s) => {
+        const crops = String(s.suitableCrops || '').split(',').map((c) => c.trim()).filter(Boolean);
+        return '<div class="card" style="margin-bottom:14px;">' +
+          '<div class="stat-top"><span class="stat-title">🧪 ' + s.soilType + '</span><span class="chip">pH ' + (s.phRange || '—') + '</span></div>' +
+          '<div style="font-weight:700;margin-bottom:4px;">🌾 Supported crops</div>' +
+          '<div class="crop-tags">' + crops.map((c) => '<span class="crop-tag">🌱 ' + c + '</span>').join('') + '</div>' +
+          (s.characteristics ? '<div class="soil-meta"><div class="meta-box" style="grid-column:1/-1;"><small>Characteristics</small><strong>' + s.characteristics + '</strong></div></div>' : '') +
+          '</div>';
+      }).join('');
+    }
+
+    if (soilSelect) soilSelect.addEventListener('change', renderSoilInfo);
+    if (soilSearch) soilSearch.addEventListener('input', renderSoilInfo);
+
+    // ---------- Soil records CRUD (/api/soils) ----------
+    const soilTableBody = document.getElementById('soilTableBody');
+    const soilMsg = document.getElementById('soilMsg');
+    const soilCountChip = document.getElementById('soilCountChip');
+
+    function showSoilMsg(t, ok) {
+      if (!soilMsg) return;
+      soilMsg.textContent = t;
+      soilMsg.style.color = ok ? 'var(--green-3)' : 'var(--muted)';
+    }
+
+    async function loadSoils() {
+      // Always show built-in guide even if not logged in / API fails
+      renderSoilOptions();
+      renderSoilInfo();
+      if (!soilTableBody) return;
+      try {
+        const res = await fetch('/api/soils');
+        if (!res.ok) throw new Error('Login required for saved records');
+        serverSoils = await res.json();
+        renderSoilOptions();
+        renderSoilInfo();
+        if (soilCountChip) soilCountChip.textContent = serverSoils.length + ' records';
+        if (!serverSoils.length) {
+          soilTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);">No saved records yet — add your first soil above.</td></tr>';
+          return;
+        }
+        soilTableBody.innerHTML = serverSoils.map((s) =>
+          '<tr><td>' + (s.id || '—') + '</td><td><b>' + (s.soilType || '—') + '</b></td>' +
+          '<td>' + (s.suitableCrops || '—') + '</td><td>' + (s.phRange || '—') + '</td>' +
+          '<td><div class="row-actions"><button class="mini-btn" data-del="' + (s.id || '') + '">Delete</button></div></td></tr>'
+        ).join('');
+      } catch (e) {
+        soilTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);">Guide works offline ✓ — login to save your own soil records.</td></tr>';
+      }
+    }
+
+    const addSoilBtn = document.getElementById('addSoilBtn');
+    if (addSoilBtn) addSoilBtn.addEventListener('click', async () => {
+      const soilType = document.getElementById('newSoilType').value.trim();
+      const suitableCrops = document.getElementById('newSuitableCrops').value.trim();
+      const phRange = document.getElementById('newPhRange').value.trim();
+      const characteristics = document.getElementById('newCharacteristics').value.trim();
+      if (!soilType) { showSoilMsg('Please select a soil type.'); return; }
+      if (!suitableCrops) { showSoilMsg('Please enter supported / suitable crops.'); return; }
+      showSoilMsg('Saving…');
+      try {
+        const res = await fetch('/api/soils', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ soilType, suitableCrops, phRange, characteristics }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Could not save.');
+        showSoilMsg('Soil record saved ✓', true);
+        document.getElementById('newSuitableCrops').value = '';
+        document.getElementById('newPhRange').value = '';
+        document.getElementById('newCharacteristics').value = '';
+        loadSoils();
+      } catch (e) { showSoilMsg(e.message || 'Could not save. Login first.'); }
+    });
+
+    const refreshSoilsBtn = document.getElementById('refreshSoilsBtn');
+    if (refreshSoilsBtn) refreshSoilsBtn.addEventListener('click', loadSoils);
+
+    if (soilTableBody) soilTableBody.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-del]');
+      if (!btn) return;
+      if (!confirm('Delete soil record ' + btn.getAttribute('data-del') + '?')) return;
+      try {
+        const res = await fetch('/api/soils/' + encodeURIComponent(btn.getAttribute('data-del')), { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed.');
+        showSoilMsg('Deleted ✓', true);
+        loadSoils();
+      } catch (err) { showSoilMsg('Could not delete.'); }
+    });
+
+    loadSoils();
+
+    checkSession();
+  </script>
+</body>
+</html>

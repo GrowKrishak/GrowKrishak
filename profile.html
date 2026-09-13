@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>GrowKrishak | My Profile</title>
+  <style>
+    :root {
+      --bg-1: #07120d;
+      --bg-2: #0e1d17;
+      --line: rgba(255,255,255,0.08);
+      --text: #ebf8f0;
+      --muted: #b3d2c0;
+      --green: #74dca4;
+      --green-2: #3ec987;
+      --green-3: #a5f0bc;
+      --red: #ff7c7c;
+      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #0a1612);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 48px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(11, 22, 18, 0.76);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0b1713;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text strong { font-size: 1.1rem; }
+    .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 219, 166, 0.26);
+      background: rgba(21, 42, 31, 0.85);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-2);
+      box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
+    }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: var(--red); }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .section-panel {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 1.08rem; font-weight: 700; }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(116,220,164,0.09);
+      border: 1px solid rgba(116,220,164,0.18);
+      color: var(--green-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .pf-head { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+
+    .pf-avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 3px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 1.8rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .pf-head h2 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .pf-head p { margin: 0; color: var(--muted); font-size: 0.92rem; overflow-wrap: anywhere; }
+
+    .pf-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .pf-item {
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+    }
+
+    .pf-item .small {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .pf-item strong { font-size: 0.96rem; overflow-wrap: anywhere; }
+
+    .pf-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .danger-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,124,124,0.08);
+      color: var(--red);
+      border: 1px solid rgba(255,124,124,0.4);
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .footer { text-align: center; color: var(--muted); padding-top: 26px; font-size: 0.82rem; }
+
+    .pf-avatar-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 3px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 1.8rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      padding: 0;
+      font-family: inherit;
+      overflow: hidden;
+    }
+
+    .pf-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+    .pf-cam {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(11, 22, 18, 0.9);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 0.95rem;
+    }
+
+    .pf-titles h2 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .pf-titles p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .pf-form { display: grid; gap: 12px; margin-bottom: 12px; }
+
+    .pf-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .pf-field input {
+      width: 100%;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .pf-field input:focus { border-color: var(--green-2); }
+
+    .pf-msg { min-height: 22px; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+    .pf-msg.err { color: var(--red); }
+    .pf-msg.ok { color: var(--green-3); }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .topbar { flex-wrap: wrap; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pf-grid { grid-template-columns: 1fr; }
+      .brand-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
+        <div class="brand-text">
+          <strong>GrowKrishak</strong>
+          <span class="brand-sub">Field Unit #A-04</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking session</span>
+        </div>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section-panel">
+          <div class="panel-head">
+            <div class="panel-title">My Profile</div>
+            <span class="chip" id="pfChip">Guest</span>
+          </div>
+
+          <div class="pf-head">
+            <button class="pf-avatar-btn" id="pfPhotoBtn" type="button" aria-label="Change profile photo">
+              <span id="pfAvatar">AS</span>
+              <span class="pf-cam">📷</span>
+            </button>
+            <input type="file" id="pfPhotoInput" accept="image/*" hidden />
+            <div class="pf-titles">
+              <h2>Profile Settings</h2>
+              <p>Tap the photo to change it. Edit the fields and save.</p>
+            </div>
+          </div>
+
+          <div class="pf-form">
+            <div class="pf-field">
+              <label for="pfName">Name</label>
+              <input id="pfName" type="text" placeholder="Your full name" />
+            </div>
+            <div class="pf-field">
+              <label for="pfEmail">Email</label>
+              <input id="pfEmail" type="email" placeholder="you@example.com" />
+            </div>
+            <div class="pf-field">
+              <label for="pfLocation">Location</label>
+              <input id="pfLocation" type="text" placeholder="District, State e.g. Kanpur, UP" />
+            </div>
+          </div>
+          <div class="pf-msg" id="pfMsg"></div>
+
+          <div class="pf-grid">
+            <div class="pf-item">
+              <span class="small">User ID</span>
+              <strong id="pfId">—</strong>
+            </div>
+            <div class="pf-item">
+              <span class="small">Session</span>
+              <strong id="pfSession">—</strong>
+            </div>
+          </div>
+
+          <div class="pf-actions">
+            <button class="cta-btn" type="button" id="pfSave">Save Changes</button>
+            <a class="secondary-btn" href="n.html" style="text-decoration:none;">Back to Dashboard</a>
+            <button class="danger-btn" type="button" id="pfLogout">Logout</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
+  </div>
+
+  <script>
+    const statusText = document.getElementById('statusText');
+
+    let pfPhotoData = '';
+
+    function paintAvatar(user) {
+      const box = document.getElementById('pfAvatar');
+      if (!box) return;
+      const name = user.name || '';
+      const initials = name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      if (user.photo) {
+        box.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = user.photo;
+        img.alt = 'Profile photo';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+        box.appendChild(img);
+      } else {
+        box.textContent = initials;
+      }
+    }
+
+    function pfMsg(text, ok) {
+      const m = document.getElementById('pfMsg');
+      if (m) { m.textContent = text || ''; m.className = 'pf-msg ' + (ok ? 'ok' : 'err'); }
+    }
+
+    function fillProfile(user, live) {
+      const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+      const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      pfPhotoData = user.photo || '';
+      setVal('pfName', user.name || '');
+      setVal('pfEmail', user.email || '');
+      setVal('pfLocation', user.location || '');
+      paintAvatar(user);
+      setTxt('pfId', user.id || '—');
+      setTxt('pfSession', live ? 'Active' : 'Expired — login again');
+      setTxt('pfChip', live ? 'Logged in' : (user.name ? 'Session expired' : 'Guest'));
+      pfMsg('', true);
+    }
+
+    function paintAvatars(user) {
+      const u = user || {};
+      const initials = String(u.name || 'AS').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      ['avatarBtn', 'avatarSm'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (u.photo) {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = u.photo;
+          img.alt = 'Profile';
+          el.appendChild(img);
+        } else {
+          el.textContent = initials;
+        }
+      });
+    }
+
+    function setDd(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+      document.addEventListener('click', (e) => { if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') profileDropdown.classList.remove('open'); });
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Not authenticated');
+        const data = await response.json();
+        if (data.user && data.user.name) {
+          statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+          paintAvatars(data.user);
+          setDd('ddName', data.user.name);
+          setDd('ddEmail', data.user.email || '—');
+          try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
+          fillProfile(data.user, true);
+        } else {
+          throw new Error('No user');
+        }
+      } catch (error) {
+        statusText.textContent = 'Guest';
+        let cached = null;
+        try { cached = JSON.parse(sessionStorage.getItem('gk_user') || 'null'); } catch (e) { cached = null; }
+        fillProfile(cached || {}, false);
+        paintAvatars(cached || {});
+        setDd('ddName', (cached && cached.name) || 'Guest');
+        setDd('ddEmail', (cached && cached.email) || 'Not logged in');
+      }
+    }
+
+    async function doLogout() {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (error) {}
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('ddLogout').addEventListener('click', doLogout);
+    document.getElementById('pfLogout').addEventListener('click', doLogout);
+
+    document.getElementById('pfPhotoBtn').addEventListener('click', () => document.getElementById('pfPhotoInput').click());
+
+    document.getElementById('pfPhotoInput').addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      if (f.size > 2 * 1024 * 1024) { pfMsg('Photo must be under 2MB.', false); return; }
+      const r = new FileReader();
+      r.onload = () => {
+        pfPhotoData = r.result;
+        paintAvatar({ name: document.getElementById('pfName').value, photo: pfPhotoData });
+        pfMsg('Photo selected — click Save Changes.', true);
+      };
+      r.readAsDataURL(f);
+    });
+
+    document.getElementById('pfSave').addEventListener('click', async () => {
+      pfMsg('', true);
+      const body = {
+        name: document.getElementById('pfName').value.trim(),
+        email: document.getElementById('pfEmail').value.trim(),
+        location: document.getElementById('pfLocation').value.trim(),
+        photo: pfPhotoData
+      };
+      try {
+        const res = await fetch('/api/me', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Save failed.');
+        try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
+        fillProfile(data.user, true);
+        statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+        pfMsg('Profile saved ✓', true);
+      } catch (err) {
+        pfMsg(err.message, false);
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>

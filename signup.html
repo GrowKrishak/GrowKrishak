@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
     <title>GrowKrishak | Sign Up</title>
     <style>
         * {
@@ -150,6 +151,18 @@
             font-size: 28px;
             font-weight: 800;
             color: #198754;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            object-fit: contain;
+            background: #fff;
+            border: 2px solid rgba(25, 135, 84, 0.14);
         }
 
         .logo span {
@@ -377,7 +390,7 @@
         <div class="form-panel">
             <div class="form-wrap">
                 <div class="topbar">
-                    <div class="logo">Grow<span>Krishak</span></div>
+                    <div class="logo"><img src="logo.png" alt="GrowKrishak logo" />Grow<span>Krishak</span></div>
                     <a href="landing.html" class="home-link">Back to Home</a>
                 </div>
 
@@ -479,6 +492,7 @@
 
                 signupMessage.textContent = data.message;
                 signupMessage.classList.add('success');
+                try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
                 window.location.href = 'n.html';
             } catch (error) {
                 signupMessage.textContent = error.message;

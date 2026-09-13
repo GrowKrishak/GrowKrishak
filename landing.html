@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
   <title>GrowKrishak | Smart Farming Platform</title>
   <style>
     :root {
@@ -12,7 +13,7 @@
       --panel-strong: #ffffff;
       --text: #143124;
       --muted: #5d7367;
-      --green: #1c9d65;
+      --green: #1d9b64;
       --green-2: #0f5132;
       --green-3: #dff6e9;
       --accent: #0d6efd;
@@ -67,14 +68,22 @@
     }
 
     .brand-mark {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #1c9d65, #0d6efd);
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
       color: white;
       display: grid;
       place-items: center;
       box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+      border: 2px solid rgba(28,157,101,0.18);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
     }
 
     .brand span {
@@ -527,7 +536,7 @@
   <div class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">G</div>
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
         <div>Grow<span>Krishak</span></div>
       </div>
 

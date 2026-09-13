@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
   <title>GrowKrishak Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
       --bg-1: #07120d;
@@ -86,16 +88,24 @@
     }
 
     .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #cfe8b8, #70b981);
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
       color: #0b1713;
       display: grid;
       place-items: center;
       font-size: 20px;
       font-weight: 700;
-      box-shadow: 0 12px 24px rgba(80, 165, 110, 0.3);
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
     }
 
     .brand-text {
@@ -164,6 +174,75 @@
       box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
       animation: pulse 1.8s infinite ease-in-out;
     }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar { overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: var(--red); }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
@@ -492,6 +571,14 @@
       position: relative;
     }
 
+    #fieldMap {
+      position: relative;
+      z-index: 0;
+      height: 100%;
+      width: 100%;
+      background: #0a1612;
+    }
+
     .map-grid {
       position: absolute;
       inset: 0;
@@ -750,6 +837,108 @@
       font-size: 0.82rem;
     }
 
+    .types-toggle {
+      background: none;
+      border: none;
+      color: var(--green-3);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 10px 0 0;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      font-family: inherit;
+    }
+
+    .alert-types { display: none; margin-top: 10px; }
+    .alert-types.open { display: grid; gap: 8px; }
+
+    .type-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .type-row .type-dot { margin-top: 4px; flex-shrink: 0; }
+    .type-row b { color: var(--text); display: block; margin-bottom: 2px; }
+    .type-row small { display: block; font-size: 0.76rem; line-height: 1.5; }
+    .type-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+    .user-details-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .user-details-grid .info-box strong { overflow-wrap: anywhere; }
+
+    @media (max-width: 1100px) {
+      .user-details-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .user-details-grid { grid-template-columns: 1fr; }
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+    }
+
     @media (max-width: 1100px) {
       .hero,
       .content-grid,
@@ -777,7 +966,7 @@
   <div class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">A</div>
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
         <div class="brand-text">
           <strong>GrowKrishak</strong>
           <span class="brand-sub">Field Unit #A-04</span>
@@ -789,6 +978,7 @@
         <a href="#zones">Zones</a>
         <a href="#operations">Operations</a>
         <a href="#alerts">Alerts</a>
+        <a href="#fertilizer-prices">Prices</a>
       </nav>
 
       <div class="nav-actions">
@@ -796,10 +986,36 @@
           <span class="status-dot"></span>
           <span id="statusText">Checking session</span>
         </div>
-        <a class="cta-btn" href="login.html" id="authActionLink">Launch Console</a>
-        <button class="secondary-btn" type="button" id="logoutBtn" style="display:none;">Logout</button>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
       </div>
     </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link active">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
 
     <main>
       <section class="hero" id="overview">
@@ -812,7 +1028,6 @@
           </p>
 
           <div class="hero-actions">
-            <a class="cta-btn" href="login.html">Open Dashboard</a>
             <a class="secondary-btn" href="#operations">View Operations</a>
           </div>
 
@@ -860,10 +1075,91 @@
             </div>
             <div class="info-box">
               <span class="small">Weather</span>
-              <strong>24°C / Clear</strong>
+              <strong id="wxRobot">24°C / Clear</strong>
             </div>
           </div>
         </div>
+      </section>
+
+      <section class="section-panel" id="user-details" style="margin-top:24px;">
+        <div class="panel-head">
+          <div class="panel-title">User Details</div>
+          <span class="chip" id="userStatusChip">Guest</span>
+        </div>
+
+        <div class="user-details-grid">
+          <div class="info-box">
+            <span class="small">Name</span>
+            <strong id="userNameValue">—</strong>
+          </div>
+          <div class="info-box">
+            <span class="small">Email</span>
+            <strong id="userEmailValue">—</strong>
+          </div>
+          <div class="info-box">
+            <span class="small">User ID</span>
+            <strong id="userIdValue">—</strong>
+          </div>
+          <div class="info-box">
+            <span class="small">Session</span>
+            <strong id="userSessionValue">—</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-panel" id="weather" style="margin-top:24px;">
+        <div class="panel-head">
+          <div class="panel-title">Weather • Kanpur, UP</div>
+          <span class="chip" id="wxUpdated">Live</span>
+        </div>
+
+        <div class="stats-grid" style="margin-top:0;">
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Temperature</span>
+              <span class="stat-icon">🌡️</span>
+            </div>
+            <div class="stat-value" id="wxTemp">24°C</div>
+            <span class="delta" id="wxTempNote">H: — L: —</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Condition</span>
+              <span class="stat-icon">⛅</span>
+            </div>
+            <div class="stat-value" id="wxCond" style="font-size:1.4rem;">Clear</div>
+            <span class="delta">Kanpur, UP</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Humidity</span>
+              <span class="stat-icon">💧</span>
+            </div>
+            <div class="stat-value" id="wxHumidity">55%</div>
+            <span class="delta">Field comfort</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Wind</span>
+              <span class="stat-icon">💨</span>
+            </div>
+            <div class="stat-value" id="wxWind">12 km/h</div>
+            <span class="delta" id="wxRainNote">Rain chance: —</span>
+          </div>
+        </div>
+
+        <ul class="alerts-list" style="margin-top:16px;">
+          <li class="alert-item success" id="wxAlertBox">
+            <span class="alert-dot"></span>
+            <div class="alert-text">
+              <strong id="wxAlertTitle">Favourable conditions</strong>
+              <span id="wxAlertText">Good day for spraying and field work.</span>
+            </div>
+          </li>
+        </ul>
       </section>
 
       <section class="stats-grid" id="zones">
@@ -894,14 +1190,20 @@
           <span class="delta">▲ 3 new alerts</span>
         </div>
 
-        <div class="card">
-          <div class="stat-top">
-            <span class="stat-title">Alerts</span>
-            <span class="stat-icon">⚠️</span>
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Alerts</span>
+              <span class="stat-icon">⚠️</span>
+            </div>
+            <div class="stat-value" id="alertsValue">03</div>
+            <span class="delta">2 need attention</span>
+            <button class="types-toggle" id="alertTypesToggle" type="button"><span>▼</span> Which alerts?</button>
+            <div class="alert-types" id="alertTypesBox">
+              <div class="type-row"><i class="type-dot" style="background:var(--orange);"></i><div><b>Low moisture in Zone D</b><small>Scheduled irrigation was delayed by 18 minutes.</small></div></div>
+              <div class="type-row"><i class="type-dot" style="background:var(--blue);"></i><div><b>Weather update</b><small>Dry wind detected. Adjust spray timing.</small></div></div>
+              <div class="type-row"><i class="type-dot" style="background:var(--green-2);"></i><div><b>Routine inspection complete</b><small>All cameras and sensors reported normal status.</small></div></div>
+            </div>
           </div>
-          <div class="stat-value" id="alertsValue">07</div>
-          <span class="delta">2 need attention</span>
-        </div>
       </section>
 
       <section class="content-grid" id="operations">
@@ -912,13 +1214,7 @@
           </div>
 
           <div class="map-box">
-            <div class="map-grid"></div>
-            <div class="field-shape"></div>
-            <div class="route"></div>
-            <div class="marker m1"></div>
-            <div class="marker m2"></div>
-            <div class="marker m3"></div>
-            <div class="marker m4"></div>
+            <div id="fieldMap"></div>
           </div>
 
           <div class="map-footer">
@@ -1057,16 +1353,75 @@
         </div>
       </section>
 
+      <section class="section-panel" id="fertilizer-prices" style="margin-top:24px;">
+        <div class="panel-head">
+          <div class="panel-title">Fertilizer Prices</div>
+          <span class="chip">Sep 2026 • Govt rates</span>
+        </div>
+
+        <div class="stats-grid" style="margin-top:0;">
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">Urea (46% N)</span>
+              <span class="stat-icon">🧪</span>
+            </div>
+            <div class="stat-value">₹266.50</div>
+            <span class="delta">45 kg bag • MRP ₹242</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">DAP (18:46:0)</span>
+              <span class="stat-icon">🌾</span>
+            </div>
+            <div class="stat-value">₹1,350</div>
+            <span class="delta">50 kg bag • fixed MRP</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">MOP (60% K2O)</span>
+              <span class="stat-icon">🌻</span>
+            </div>
+            <div class="stat-value">₹1,975</div>
+            <span class="delta">50 kg bag • Kharif 2026</span>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-title">NPK (10:26:26)</span>
+              <span class="stat-icon">🌱</span>
+            </div>
+            <div class="stat-value">₹1,470</div>
+            <span class="delta">50 kg bag • FY 2026-27</span>
+          </div>
+        </div>
+
+        <p style="color:var(--muted);font-size:0.8rem;margin:14px 0 0;line-height:1.6;">Indicative government-approved retail rates (Kharif 2026 / FY 2026-27). Actual shop price may vary slightly by state, brand and taxes. Always buy from licensed dealers with PoS billing.</p>
+      </section>
+
     </main>
+    </div>
 
     <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // ---------- Real world map (OpenStreetMap) inside Field Map ----------
+    if (document.getElementById('fieldMap') && window.L) {
+      const fieldMap = L.map('fieldMap').setView([26.4499, 80.3319], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(fieldMap);
+      L.marker([26.4499, 80.3319]).addTo(fieldMap).bindPopup('Kanpur field segment • 1.8 km').openPopup();
+      L.marker([26.46, 80.34]).addTo(fieldMap).bindPopup('Zone A • Irrigation running');
+      L.marker([26.44, 80.322]).addTo(fieldMap).bindPopup('Zone C • Weed scan queued');
+    }
+
     const timeText = document.getElementById('timeText');
     const statusText = document.getElementById('statusText');
-    const authActionLink = document.getElementById('authActionLink');
-    const logoutBtn = document.getElementById('logoutBtn');
     const tasksList = document.getElementById('tasksList');
     const alertsList = document.getElementById('alertsList');
 
@@ -1088,7 +1443,7 @@
       document.getElementById('cropHealthValue').textContent = metrics.cropHealth || '93%';
       document.getElementById('waterUsageValue').textContent = metrics.waterUsage || '1,240L';
       document.getElementById('weedDetectionValue').textContent = metrics.weedDetection || '16 spots';
-      document.getElementById('alertsValue').textContent = metrics.alerts || '07';
+      document.getElementById('alertsValue').textContent = metrics.alerts || '03';
 
       if (tasks.length) {
         tasksList.innerHTML = tasks.map((task) => `
@@ -1113,14 +1468,42 @@
             </div>
           </li>
         `).join('');
+
+        const typesBoxLive = document.getElementById('alertTypesBox');
+        if (typesBoxLive) {
+          const toneColor = { warning: 'var(--orange)', info: 'var(--blue)', success: 'var(--green-2)' };
+          typesBoxLive.innerHTML = alerts.map((a) => `<div class="type-row"><i class="type-dot" style="background:${toneColor[a.tone] || 'var(--green-2)'};"></i><div><b>${a.title}</b><small>${a.detail}</small></div></div>`).join('');
+        }
       }
 
       if (data.user && data.user.name) {
         const firstName = data.user.name.split(' ')[0];
         statusText.textContent = `Online • ${firstName}`;
-        authActionLink.textContent = 'Dashboard';
-        authActionLink.href = 'n.html';
-        logoutBtn.style.display = 'inline-flex';
+        const setUser = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setUser('userNameValue', data.user.name || '—');
+        setUser('userEmailValue', data.user.email || '—');
+        setUser('userIdValue', data.user.id || '—');
+        setUser('userSessionValue', 'Active');
+        setUser('userStatusChip', 'Logged in');
+        try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
+        const initials = String(data.user.name).trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+        const paintTopAvatar = (id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          if (data.user.photo) {
+            el.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = data.user.photo;
+            img.alt = 'Profile';
+            el.appendChild(img);
+          } else {
+            el.textContent = initials;
+          }
+        };
+        paintTopAvatar('avatarBtn');
+        paintTopAvatar('avatarSm');
+        setUser('ddName', data.user.name);
+        setUser('ddEmail', data.user.email || '—');
       }
     }
 
@@ -1136,12 +1519,33 @@
         updateData(data);
       } catch (error) {
         statusText.textContent = 'Guest';
-        authActionLink.textContent = 'Login';
-        authActionLink.href = 'login.html';
+        const setGuest = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        let cached = null;
+        try { cached = JSON.parse(sessionStorage.getItem('gk_user') || 'null'); } catch (e) { cached = null; }
+        if (cached && cached.name) {
+          setGuest('userNameValue', cached.name || '—');
+          setGuest('userEmailValue', cached.email || '—');
+          setGuest('userIdValue', cached.id || '—');
+          setGuest('userSessionValue', 'Expired — login again');
+          setGuest('userStatusChip', 'Session expired');
+          statusText.textContent = 'Guest • ' + String(cached.name).split(' ')[0];
+        } else {
+          setGuest('userNameValue', '—');
+          setGuest('userEmailValue', '—');
+          setGuest('userIdValue', '—');
+          setGuest('userSessionValue', '—');
+          setGuest('userStatusChip', 'Guest');
+          setGuest('avatarBtn', 'AS');
+          setGuest('avatarSm', 'AS');
+          setGuest('ddName', 'Guest');
+          setGuest('ddEmail', 'Not logged in');
+        }
       }
     }
 
-    logoutBtn.addEventListener('click', async () => {
+    const ddLogoutBtn = document.getElementById('ddLogout');
+    if (ddLogoutBtn) ddLogoutBtn.addEventListener('click', async () => {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
       try {
         const response = await fetch('/api/logout', { method: 'POST' });
 
@@ -1153,9 +1557,90 @@
       }
     });
 
+    // ---------- Sidebar active link ----------
+    const sideLinks = document.querySelectorAll('.side-link');
+    sideLinks.forEach((l) => l.addEventListener('click', () => {
+      sideLinks.forEach((x) => x.classList.remove('active'));
+      l.classList.add('active');
+    }));
+    const topNavLinks = document.querySelectorAll('.nav a[href^="#"]');
+    const spyIds = ['overview', 'zones', 'operations', 'alerts', 'fertilizer-prices'];
+    window.addEventListener('scroll', () => {
+      let current = 'overview';
+      spyIds.forEach((id) => {
+        const s = document.getElementById(id);
+        if (s && s.getBoundingClientRect().top <= 160) current = id;
+      });
+      topNavLinks.forEach((l) => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+    }, { passive: true });
+
+    // ---------- Live weather for Kanpur (Open-Meteo, no key needed) ----------
+    async function loadWeather() {
+      const setWx = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.4499&longitude=80.3319&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FKolkata');
+        if (!res.ok) throw new Error('weather unavailable');
+        const w = await res.json();
+        const cur = w.current || {};
+        const daily = w.daily || {};
+        const code = Number(cur.weather_code);
+        const condMap = { 0: '☀️ Clear sky', 1: '🌤️ Mainly clear', 2: '⛅ Partly cloudy', 3: '☁️ Overcast', 45: '🌫️ Fog', 48: '🌫️ Fog', 51: '🌦️ Light drizzle', 53: '🌦️ Drizzle', 55: '🌧️ Dense drizzle', 61: '🌧️ Light rain', 63: '🌧️ Rain', 65: '⛈️ Heavy rain', 80: '🌦️ Light showers', 81: '🌧️ Showers', 82: '⛈️ Heavy showers', 95: '⛈️ Thunderstorm', 96: '⛈️ Storm + hail', 99: '⛈️ Storm + hail' };
+        const hi = daily.temperature_2m_max ? Math.round(daily.temperature_2m_max[0]) : null;
+        const lo = daily.temperature_2m_min ? Math.round(daily.temperature_2m_min[0]) : null;
+        const rain = daily.precipitation_probability_max ? (daily.precipitation_probability_max[0] ?? 0) : 0;
+        setWx('wxTemp', Math.round(cur.temperature_2m ?? 24) + '°C');
+        setWx('wxTempNote', 'H: ' + (hi !== null ? hi + '—' : '—') + ' L: ' + (lo !== null ? lo + '—' : '—'));
+        setWx('wxCond', condMap[code] || '🌡️ —');
+        setWx('wxRobot', Math.round(cur.temperature_2m ?? 24) + '°C / ' + String(condMap[code] || 'Clear').replace(/^\S+\s/, ''));
+        setWx('wxHumidity', (cur.relative_humidity_2m ?? '—') + '%');
+        setWx('wxWind', Math.round(cur.wind_speed_10m ?? 0) + ' km/h');
+        setWx('wxRainNote', 'Rain chance: ' + rain + '%');
+
+        let cls = 'success', title = 'Favourable conditions', text = 'Good day for spraying and field work.';
+        if (rain >= 60) { cls = 'warning'; title = 'Rain likely today'; text = 'Rain chance ' + rain + '% in Kanpur — postpone spraying and fertilizer top-dressing.'; }
+        else if ((cur.temperature_2m ?? 0) >= 40) { cls = 'warning'; title = 'Heat wave conditions'; text = 'Irrigate early morning and mulch crops to retain moisture.'; }
+        else if ((cur.wind_speed_10m ?? 0) > 25) { cls = 'info'; title = 'Strong winds'; text = 'Avoid spraying today — chemical drift risk is high.'; }
+        const box = document.getElementById('wxAlertBox');
+        if (box) box.className = 'alert-item ' + cls;
+        setWx('wxAlertTitle', title);
+        setWx('wxAlertText', text);
+        if (cur.time) setWx('wxUpdated', 'Live • ' + String(cur.time).slice(11, 16) + ' IST');
+      } catch (e) { /* offline: keep default values */ }
+    }
+
+    // ---------- Profile dropdown ----------
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open');
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') profileDropdown.classList.remove('open');
+      });
+      profileDropdown.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => profileDropdown.classList.remove('open')));
+    }
+
+
+    // ---------- Alerts card: expandable type breakdown ----------
+    const typesToggle = document.getElementById('alertTypesToggle');
+    const typesBox = document.getElementById('alertTypesBox');
+    if (typesToggle && typesBox) {
+      typesToggle.addEventListener('click', () => {
+        const open = typesBox.classList.toggle('open');
+        typesToggle.querySelector('span').textContent = open ? '▼' : '▶';
+      });
+    }
+
     updateTime();
     setInterval(updateTime, 30000);
+    setInterval(loadWeather, 600000);
     loadDashboard();
+    loadWeather();
   </script>
 </body>
 </html>

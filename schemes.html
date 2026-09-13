@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>GrowKrishak | Government Schemes</title>
+  <style>
+    :root {
+      --bg-1: #07120d;
+      --bg-2: #0e1d17;
+      --line: rgba(255,255,255,0.08);
+      --text: #ebf8f0;
+      --muted: #b3d2c0;
+      --green: #74dca4;
+      --green-2: #3ec987;
+      --green-3: #a5f0bc;
+      --blue: #80c8ff;
+      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #0a1612);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 48px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(11, 22, 18, 0.76);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0b1713;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text strong { font-size: 1.1rem; }
+    .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 219, 166, 0.26);
+      background: rgba(21, 42, 31, 0.85);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-2);
+      box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
+    }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: #ff7c7c; }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .section-panel {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 1.08rem; font-weight: 700; }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(116,220,164,0.09);
+      border: 1px solid rgba(116,220,164,0.18);
+      color: var(--green-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .stat-title {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .scheme-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+
+    .delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(116,220,164,0.2);
+      background: rgba(116,220,164,0.1);
+      color: var(--green-3);
+      align-self: flex-start;
+    }
+
+    .scheme-desc {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.65;
+      margin: 12px 0;
+      flex: 1;
+    }
+
+    .scheme-link {
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .scheme-link:hover { text-decoration: underline; }
+
+    .note { color: var(--muted); font-size: 0.8rem; margin: 14px 0 0; line-height: 1.6; }
+
+    .footer { text-align: center; color: var(--muted); padding-top: 26px; font-size: 0.82rem; }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .topbar { flex-wrap: wrap; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: 1fr; }
+      .brand-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
+        <div class="brand-text">
+          <strong>GrowKrishak</strong>
+          <span class="brand-sub">Field Unit #A-04</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking session</span>
+        </div>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link active">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section-panel">
+          <div class="panel-head">
+            <div class="panel-title">Government Agriculture Schemes</div>
+            <span class="chip">6 schemes</span>
+          </div>
+
+          <div class="stats-grid" style="margin-top:0;">
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Income Support</span>
+                <span class="stat-icon">💰</span>
+              </div>
+              <div class="scheme-name">PM-KISAN Samman Nidhi</div>
+              <span class="delta">₹6,000 / year</span>
+              <p class="scheme-desc">Direct income support of ₹6,000 per year in three ₹2,000 installments to all land-holding farmer families.</p>
+              <a class="scheme-link" href="https://pmkisan.gov.in/" target="_blank">Official portal ↗</a>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Crop Insurance</span>
+                <span class="stat-icon">🛡️</span>
+              </div>
+              <div class="scheme-name">PM Fasal Bima Yojana</div>
+              <span class="delta">2% farmer premium</span>
+              <p class="scheme-desc">Insurance against crop failure due to drought, flood or pests. Farmers pay only 2% (kharif) / 1.5% (rabi) premium.</p>
+              <a class="scheme-link" href="https://pmfby.gov.in/" target="_blank">Official portal ↗</a>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Soil Testing</span>
+                <span class="stat-icon">🧪</span>
+              </div>
+              <div class="scheme-name">Soil Health Card</div>
+              <span class="delta">Free testing</span>
+              <p class="scheme-desc">Free soil testing every 2 years with nutrient recommendations for balanced fertilizer use.</p>
+              <a class="scheme-link" href="https://soilhealth.dac.gov.in/" target="_blank">Official portal ↗</a>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Irrigation</span>
+                <span class="stat-icon">💧</span>
+              </div>
+              <div class="scheme-name">PM Krishi Sinchai Yojana</div>
+              <span class="delta">55% subsidy</span>
+              <p class="scheme-desc">"Per drop more crop" — subsidy up to 55% on drip and sprinkler systems for small and marginal farmers.</p>
+              <a class="scheme-link" href="https://pmksy.gov.in/" target="_blank">Official portal ↗</a>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Farm Credit</span>
+                <span class="stat-icon">💳</span>
+              </div>
+              <div class="scheme-name">Kisan Credit Card</div>
+              <span class="delta">₹3 lakh @ 4%</span>
+              <p class="scheme-desc">Working capital up to ₹3 lakh at 4% effective interest on prompt repayment. Apply at any bank.</p>
+              <a class="scheme-link" href="https://www.jansamarth.in/" target="_blank">Apply online ↗</a>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Solar Energy</span>
+                <span class="stat-icon">☀️</span>
+              </div>
+              <div class="scheme-name">PM-KUSUM</div>
+              <span class="delta">60% subsidy</span>
+              <p class="scheme-desc">Subsidy for standalone solar pumps and solarisation of grid pumps to cut diesel and power costs.</p>
+              <a class="scheme-link" href="https://pmkusum.mnre.gov.in/" target="_blank">Official portal ↗</a>
+            </div>
+          </div>
+
+          <p class="note">Benefits and portals as per Government of India guidelines. Check the official portals for the latest rules and application dates.</p>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
+  </div>
+
+  <script>
+    const statusText = document.getElementById('statusText');
+
+    function paintAvatars(user) {
+      const u = user || {};
+      const initials = String(u.name || 'AS').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      ['avatarBtn', 'avatarSm'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (u.photo) {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = u.photo;
+          img.alt = 'Profile';
+          el.appendChild(img);
+        } else {
+          el.textContent = initials;
+        }
+      });
+    }
+
+    function setDd(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+      document.addEventListener('click', (e) => { if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') profileDropdown.classList.remove('open'); });
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Not authenticated');
+        const data = await response.json();
+        if (data.user && data.user.name) {
+          statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+          paintAvatars(data.user);
+          setDd('ddName', data.user.name);
+          setDd('ddEmail', data.user.email || '—');
+        }
+      } catch (error) {
+        statusText.textContent = 'Guest';
+        paintAvatars({});
+        setDd('ddName', 'Guest');
+        setDd('ddEmail', 'Not logged in');
+      }
+    }
+
+    const ddLogoutBtn = document.getElementById('ddLogout');
+    if (ddLogoutBtn) ddLogoutBtn.addEventListener('click', async () => {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (error) {}
+      window.location.href = 'login.html';
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>

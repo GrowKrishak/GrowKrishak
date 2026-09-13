@@ -1,0 +1,51 @@
+[
+  {
+    "id": "SO-501",
+    "soilType": "Alluvial",
+    "suitableCrops": "Rice, Wheat, Sugarcane, Maize, Pulses",
+    "phRange": "6.5 - 7.5",
+    "characteristics": "Fertile, rich in potash, found in Indo-Gangetic plains."
+  },
+  {
+    "id": "SO-502",
+    "soilType": "Black (Regur / Cotton)",
+    "suitableCrops": "Cotton, Soybean, Sunflower, Groundnut, Wheat",
+    "phRange": "6.5 - 8.0",
+    "characteristics": "Moisture-retentive clayey soil, rich in iron and lime."
+  },
+  {
+    "id": "SO-503",
+    "soilType": "Red",
+    "suitableCrops": "Groundnut, Potato, Millet, Pulses, Tobacco",
+    "phRange": "5.5 - 7.0",
+    "characteristics": "Iron-rich, low nitrogen, needs fertilizer management."
+  },
+  {
+    "id": "SO-504",
+    "soilType": "Laterite",
+    "suitableCrops": "Tea, Coffee, Cashew, Coconut, Rubber",
+    "phRange": "5.0 - 6.5",
+    "characteristics": "High iron/aluminium, low fertility, good in high rainfall."
+  },
+  {
+    "id": "SO-505",
+    "soilType": "Desert / Sandy",
+    "suitableCrops": "Bajra, Guar, Barley, Watermelon, Moth Bean",
+    "phRange": "7.0 - 8.5",
+    "characteristics": "Low water retention, needs drip irrigation + organic matter."
+  },
+  {
+    "id": "SO-506",
+    "soilType": "Mountain / Forest",
+    "suitableCrops": "Tea, Apple, Spices, Maize, Barley",
+    "phRange": "5.0 - 6.5",
+    "characteristics": "Acidic, rich in organic matter, good on hill slopes."
+  },
+  {
+    "id": "SO-507",
+    "soilType": "Loamy",
+    "suitableCrops": "Wheat, Rice, Sugarcane, Vegetables, Pulses",
+    "phRange": "6.0 - 7.5",
+    "characteristics": "Balanced sand-silt-clay, ideal for most crops."
+  }
+]

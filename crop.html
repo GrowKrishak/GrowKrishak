@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>GrowKrishak | Crop</title>
+  <style>
+    :root {
+      --bg-1: #07120d;
+      --bg-2: #0e1d17;
+      --line: rgba(255,255,255,0.08);
+      --text: #ebf8f0;
+      --muted: #b3d2c0;
+      --green: #74dca4;
+      --green-2: #3ec987;
+      --green-3: #a5f0bc;
+      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #0a1612);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 48px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px 22px;
+      margin-bottom: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(11, 22, 18, 0.76);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0b1713;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid rgba(28,157,101,0.18);
+      box-shadow: 0 14px 24px rgba(28,157,101,0.22);
+    }
+
+    img.brand-mark {
+      padding: 0;
+      object-fit: contain;
+      background: #fff;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-text strong { font-size: 1.1rem; }
+    .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 219, 166, 0.26);
+      background: rgba(21, 42, 31, 0.85);
+      font-size: 0.72rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-2);
+      box-shadow: 0 0 12px rgba(70, 214, 133, 0.86);
+    }
+
+    .profile-wrap { position: relative; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(116, 220, 164, 0.45);
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-family: inherit;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .avatar.sm { width: 44px; height: 44px; flex-shrink: 0; cursor: default; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 250px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.98), rgba(10, 22, 18, 0.97));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .profile-dropdown.open { display: block; }
+
+    .profile-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .profile-id strong { display: block; font-size: 0.95rem; }
+    .profile-id span { display: block; font-size: 0.76rem; color: var(--muted); overflow-wrap: anywhere; }
+
+    .dd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .dd-item:hover { background: rgba(255,255,255,0.05); }
+    .dd-logout { color: #ff7c7c; }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 18px 14px;
+    }
+
+    .side-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    .side-nav { display: grid; gap: 8px; }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .side-link.active {
+      color: #03150d;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+
+    .section-panel {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title { font-size: 1.08rem; font-weight: 700; }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(116,220,164,0.09);
+      border: 1px solid rgba(116,220,164,0.18);
+      color: var(--green-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .blank-box {
+      border: 1px dashed rgba(255,255,255,0.2);
+      border-radius: 18px;
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 41, 31, 0.9), rgba(10, 22, 18, 0.85));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .stat-title {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .stat-value { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+
+    .delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(116,220,164,0.2);
+      background: rgba(116,220,164,0.1);
+      color: var(--green-3);
+    }
+
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .crop-preview {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+    .go-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-family: inherit;
+    }
+
+    .camera-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(3, 10, 8, 0.82);
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .camera-modal.open { display: flex; }
+
+    .camera-box {
+      width: min(560px, 100%);
+      background: linear-gradient(180deg, #12291f, #0a1612);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    #cameraVideo {
+      width: 100%;
+      border-radius: 14px;
+      background: #000;
+      max-height: 60vh;
+    }
+
+    .score-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+    .score-num { font-size: 2.2rem; font-weight: 800; }
+    .score-bar { height: 10px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+    .score-fill { height: 100%; background: linear-gradient(90deg, #2ecb7f, #1b9a66); border-radius: 99px; }
+
+    .res-title { font-weight: 700; margin: 10px 0 4px; font-size: 0.92rem; }
+    .res-list { margin: 0 0 6px; padding-left: 18px; color: var(--muted); font-size: 0.87rem; line-height: 1.7; }
+    .res-list b { color: var(--text); }
+
+    @media (max-width: 900px) {
+      .analysis-grid { grid-template-columns: 1fr; }
+    }
+
+    .footer { text-align: center; color: var(--muted); padding-top: 26px; font-size: 0.82rem; }
+
+    @media (max-width: 1100px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .side-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .side-link { justify-content: center; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding-left: 16px; padding-right: 16px; }
+      .topbar { flex-wrap: wrap; }
+      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brand-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
+        <div class="brand-text">
+          <strong>GrowKrishak</strong>
+          <span class="brand-sub">Field Unit #A-04</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Checking session</span>
+        </div>
+        <div class="profile-wrap">
+          <button class="avatar" id="avatarBtn" type="button" aria-label="Profile menu">AS</button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="avatar sm" id="avatarSm">AS</div>
+              <div class="profile-id">
+                <strong id="ddName">Guest</strong>
+                <span id="ddEmail">Not logged in</span>
+              </div>
+            </div>
+            <a class="dd-item" href="profile.html">👤 My Profile</a>
+            <a class="dd-item" href="n.html">🏠 Dashboard</a>
+            <button class="dd-item dd-logout" id="ddLogout" type="button">⏻ Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="side-label">Menu</div>
+        <nav class="side-nav">
+          <a href="n.html" class="side-link">🏠 <span>Dashboard</span></a>
+          <a href="crop.html" class="side-link active">🌾 <span>Crop</span></a>
+          <a href="soil.html" class="side-link">🧪 <span>Soil</span></a>
+          <a href="fertilizer.html" class="side-link">🧴 <span>Fertilizer</span></a>
+          <a href="schemes.html" class="side-link">🏛️ <span>Schemes</span></a>
+          <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section-panel">
+          <div class="panel-head">
+            <div class="panel-title">📷 Crop Photo Analysis</div>
+            <span class="chip">Smart check</span>
+          </div>
+
+          <div class="analysis-grid">
+            <div>
+              <img id="cropPreview" class="crop-preview" alt="Crop photo preview" style="display:none;" />
+              <div class="blank-box" id="cropPlaceholder" style="padding:28px 16px;">No photo yet — click a new photo or upload one from gallery.</div>
+              <input type="file" id="cropCameraInput" accept="image/*" capture="environment" hidden />
+              <input type="file" id="cropGalleryInput" accept="image/*" hidden />
+              <div class="btn-row">
+                <button class="go-btn" type="button" id="clickPhotoBtn">📷 Click Photo</button>
+                <button class="secondary-btn" type="button" id="uploadPhotoBtn">🖼️ Upload Photo</button>
+                <button class="go-btn" type="button" id="analyseBtn">🔍 Analyse Crop</button>
+              </div>
+            </div>
+
+            <div class="camera-modal" id="cameraModal">
+              <div class="camera-box">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <div class="btn-row">
+                  <button class="go-btn" type="button" id="captureBtn">Capture Photo</button>
+                  <button class="secondary-btn" type="button" id="closeCameraBtn">Close Camera</button>
+                </div>
+              </div>
+            </div>
+            <div id="cropResult">
+              <div class="blank-box" style="padding:28px 16px;">Analysis result will appear here with problems and solutions.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-panel" style="margin-top:24px;">
+          <div class="panel-head">
+            <div class="panel-title">Crop Management</div>
+            <span class="chip">Live</span>
+          </div>
+
+          <div class="stats-grid" style="margin-top:0;">
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Crop Health</span>
+                <span class="stat-icon">🌿</span>
+              </div>
+              <div class="stat-value" id="cropHealthValue">93%</div>
+              <span class="delta">▲ 8.4% this week</span>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Weed Detection</span>
+                <span class="stat-icon">🌱</span>
+              </div>
+              <div class="stat-value" id="weedDetectionValue">16 spots</div>
+              <span class="delta">▲ 3 new alerts</span>
+            </div>
+
+            <div class="card">
+              <div class="stat-top">
+                <span class="stat-title">Field Coverage</span>
+                <span class="stat-icon">🗺️</span>
+              </div>
+              <div class="stat-value" id="fieldCoverageValue">87%</div>
+              <span class="delta">Across all zones</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">GrowKrishak © 2026 • Smart agriculture intelligence</div>
+  </div>
+
+  <script>
+    const statusText = document.getElementById('statusText');
+
+    function paintAvatars(user) {
+      const u = user || {};
+      const initials = String(u.name || 'AS').trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AS';
+      ['avatarBtn', 'avatarSm'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (u.photo) {
+          el.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = u.photo;
+          img.alt = 'Profile';
+          el.appendChild(img);
+        } else {
+          el.textContent = initials;
+        }
+      });
+    }
+
+    function setDd(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (avatarBtn && profileDropdown) {
+      avatarBtn.addEventListener('click', (e) => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+      document.addEventListener('click', (e) => { if (!profileDropdown.contains(e.target)) profileDropdown.classList.remove('open'); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') profileDropdown.classList.remove('open'); });
+    }
+
+    async function checkSession() {
+      try {
+        const response = await fetch('/api/dashboard');
+        if (!response.ok) throw new Error('Not authenticated');
+        const data = await response.json();
+        if (data.user && data.user.name) {
+          statusText.textContent = 'Online • ' + data.user.name.split(' ')[0];
+          paintAvatars(data.user);
+          setDd('ddName', data.user.name);
+          setDd('ddEmail', data.user.email || '—');
+        }
+        const metrics = data.metrics || {};
+        const setLive = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        setLive('cropHealthValue', metrics.cropHealth || '93%');
+        setLive('weedDetectionValue', metrics.weedDetection || '16 spots');
+        setLive('fieldCoverageValue', metrics.fieldCoverage || '87%');
+      } catch (error) {
+        statusText.textContent = 'Guest';
+        paintAvatars({});
+        setDd('ddName', 'Guest');
+        setDd('ddEmail', 'Not logged in');
+      }
+    }
+
+    const ddLogoutBtn = document.getElementById('ddLogout');
+    if (ddLogoutBtn) ddLogoutBtn.addEventListener('click', async () => {
+      try { sessionStorage.removeItem('gk_user'); } catch (e) {}
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (error) {}
+      window.location.href = 'login.html';
+    });
+
+    // ---------- Crop photo analysis (leaf-colour health estimate) ----------
+    let cropImgData = '';
+
+    function cropResultMsg(text) {
+      document.getElementById('cropResult').innerHTML =
+        '<div class="blank-box" style="padding:28px 16px;">' + text + '</div>';
+    }
+
+    function handleCropFile(file) {
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { cropResultMsg('Photo is too large (max 5MB). Please choose a smaller photo.'); return; }
+      const r = new FileReader();
+      r.onload = () => {
+        cropImgData = r.result;
+        const prev = document.getElementById('cropPreview');
+        prev.src = cropImgData;
+        prev.style.display = 'block';
+        document.getElementById('cropPlaceholder').style.display = 'none';
+        cropResultMsg('Photo ready ✓ — click <b>Analyse Crop</b> to check problems and solutions.');
+      };
+      r.readAsDataURL(file);
+    }
+
+    let cameraStream = null;
+    const cameraModal = document.getElementById('cameraModal');
+    const cameraVideo = document.getElementById('cameraVideo');
+
+    function stopCamera() {
+      if (cameraStream) { cameraStream.getTracks().forEach((t) => t.stop()); cameraStream = null; }
+      if (cameraModal) cameraModal.classList.remove('open');
+      if (cameraVideo) cameraVideo.srcObject = null;
+    }
+
+    document.getElementById('clickPhotoBtn').addEventListener('click', async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        document.getElementById('cropCameraInput').click();
+        return;
+      }
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      } catch (err1) {
+        try {
+          cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        } catch (err2) {
+          cropResultMsg('Camera not available (permission denied or no camera). Pick a photo from gallery instead.');
+          document.getElementById('cropCameraInput').click();
+          return;
+        }
+      }
+      cameraVideo.srcObject = cameraStream;
+      cameraModal.classList.add('open');
+      try { await cameraVideo.play(); } catch (err3) {}
+    });
+
+    document.getElementById('closeCameraBtn').addEventListener('click', stopCamera);
+    if (cameraModal) cameraModal.addEventListener('click', (e) => { if (e.target === cameraModal) stopCamera(); });
+
+    document.getElementById('captureBtn').addEventListener('click', () => {
+      if (!cameraStream || !cameraVideo.videoWidth) { cropResultMsg('Camera is still starting, please wait a moment and retry.'); return; }
+      const cv = document.createElement('canvas');
+      cv.width = cameraVideo.videoWidth;
+      cv.height = cameraVideo.videoHeight;
+      cv.getContext('2d').drawImage(cameraVideo, 0, 0);
+      cropImgData = cv.toDataURL('image/jpeg', 0.92);
+      const prev = document.getElementById('cropPreview');
+      prev.src = cropImgData;
+      prev.style.display = 'block';
+      document.getElementById('cropPlaceholder').style.display = 'none';
+      stopCamera();
+      cropResultMsg('Photo captured. Click <b>Analyse Crop</b> to check problems and solutions.');
+    });
+    document.getElementById('uploadPhotoBtn').addEventListener('click', () => document.getElementById('cropGalleryInput').click());
+    document.getElementById('cropCameraInput').addEventListener('change', (e) => handleCropFile(e.target.files[0]));
+    document.getElementById('cropGalleryInput').addEventListener('change', (e) => handleCropFile(e.target.files[0]));
+    document.getElementById('analyseBtn').addEventListener('click', () => {
+      if (!cropImgData) { cropResultMsg('Please click or upload a crop photo first.'); return; }
+      cropResultMsg('🔍 Analysing leaf colour…');
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const S = 120;
+          const cv = document.createElement('canvas');
+          cv.width = S; cv.height = S;
+          const ctx = cv.getContext('2d');
+          ctx.drawImage(img, 0, 0, S, S);
+          const px = ctx.getImageData(0, 0, S, S).data;
+          const total = S * S;
+          let green = 0, yellow = 0, brown = 0, bright = 0;
+          for (let i = 0; i < px.length; i += 4) {
+            const r = px[i], g = px[i + 1], b = px[i + 2];
+            bright += (r + g + b) / 3;
+            if (g > r + 20 && g > b + 20) green++;
+            else if (r > 140 && g > 140 && b < 120) yellow++;
+            else if (r > 110 && g > 60 && g < 140 && b < 90) brown++;
+          }
+          const greenRatio = green / total, yellowRatio = yellow / total, brownRatio = brown / total;
+          const avgBright = bright / total;
+          let score = Math.round(greenRatio * 100);
+          const issues = [], solutions = [];
+          if (avgBright < 55) {
+            issues.push('<b>Photo is too dark</b> — result may be inaccurate.');
+            solutions.push('Retake the photo in clear daylight, close to the leaves.');
+          }
+          if (yellowRatio > 0.12) {
+            issues.push('<b>Yellowing leaves (~' + Math.round(yellowRatio * 100) + '%)</b> — possible nitrogen deficiency or overwatering.');
+            solutions.push('Top-dress urea 25–30 kg/acre + light irrigation; confirm with a soil test.');
+            score -= 10;
+          }
+          if (brownRatio > 0.12) {
+            issues.push('<b>Brown/dry patches (~' + Math.round(brownRatio * 100) + '%)</b> — possible disease, pest damage or water stress.');
+            solutions.push('Inspect leaves for pests/fungus; spray recommended pesticide/fungicide in the evening.');
+            solutions.push('Remove badly infected plants so it does not spread.');
+            score -= 15;
+          }
+          if (greenRatio < 0.35) {
+            issues.push('<b>Low green cover (~' + Math.round(greenRatio * 100) + '%)</b> — crop under stress.');
+            solutions.push('Check irrigation schedule and get a Soil Health Card test done (free).');
+            score -= 10;
+          }
+          score = Math.max(5, Math.min(98, score));
+          let condition = 'Needs attention 🟠';
+          if (issues.length === 0 && greenRatio >= 0.5) { condition = 'Healthy 🟢'; }
+          else if (score >= 60) { condition = 'Mild stress 🟡'; }
+          if (issues.length === 0) {
+            issues.push('No major colour problems found.');
+            solutions.push('Crop looks healthy — continue regular irrigation and weekly monitoring.');
+          }
+          document.getElementById('cropResult').innerHTML =
+            '<div class="score-top"><span class="score-num">' + score + '%</span><span class="chip">' + condition + '</span></div>' +
+            '<div class="score-bar"><div class="score-fill" style="width:' + score + '%;"></div></div>' +
+            '<div class="res-title">⚠️ Problems found</div><ul class="res-list"><li>' + issues.join('</li><li>') + '</li></ul>' +
+            '<div class="res-title">💡 Solutions</div><ul class="res-list"><li>' + solutions.join('</li><li>') + '</li></ul>' +
+            '<div class="res-title" style="font-weight:400;font-size:0.78rem;color:var(--muted);">Estimate from photo colours — confirm with a soil test or agronomist.</div>';
+        } catch (err) {
+          cropResultMsg('Could not analyse this photo. Please try another one.');
+        }
+      };
+      img.onerror = () => cropResultMsg('Could not read this photo. Please try another one.');
+      img.src = cropImgData;
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
