@@ -8,7 +8,10 @@
  */
 const jsonStore = require('../store');
 
-const useMongo = Boolean(process.env.MONGODB_URI);
+// Vercel serverless deployments should not force a MongoDB connection just
+// because a local .env file exists in the repo. Fall back to JSON storage on
+// Vercel unless a specific explicit override is added.
+const useMongo = Boolean(process.env.MONGODB_URI) && !process.env.VERCEL;
 
 let mongo = null;
 if (useMongo) {

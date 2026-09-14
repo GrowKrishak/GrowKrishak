@@ -1,11 +1,14 @@
 'use strict';
 
-// Loads local .env (MONGODB_URI, SESSION_SECRET, PORT) when present.
-// On Vercel these come from the dashboard instead.
-try {
-  require('dotenv').config();
-} catch (e) {
-  /* dotenv is optional at runtime */
+// Loads local .env (MONGODB_URI, SESSION_SECRET, PORT) only for local runs.
+// On Vercel, use dashboard-provided env vars instead so local secrets do not
+// accidentally force a MongoDB connection during deployment.
+if (!process.env.VERCEL) {
+  try {
+    require('dotenv').config();
+  } catch (e) {
+    /* dotenv is optional at runtime */
+  }
 }
 
 const os = require('os');

@@ -13,13 +13,18 @@ const expressSession = require('express-session');
 const cookieSession = require('cookie-session');
 const config = require('./config');
 
+function useMongoSessions() {
+  if (process.env.SESSION_STORE) return process.env.SESSION_STORE === 'mongo';
+  return !process.env.VERCEL && Boolean(process.env.MONGODB_URI);
+}
+
 function useCookieSessions() {
   if (process.env.SESSION_STORE) return process.env.SESSION_STORE === 'cookie';
   return Boolean(process.env.VERCEL);
 }
 
 function createSessionMiddleware() {
-  if (process.env.MONGODB_URI) {
+  if (useMongoSessions() && process.env.MONGODB_URI) {
     // eslint-disable-next-line global-require
     const { MongoStore } = require('connect-mongo');
     const session = require('express-session');
