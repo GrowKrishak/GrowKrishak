@@ -77,14 +77,15 @@ router.get(
   '/dashboard',
   requireAuth,
   asyncHandler(async (req, res) => {
-    const user = (await loadUsers()).find((u) => u.id === req.session.userId);
+    const user = (awai
+      t loadUsers()).find((u) => u.id === req.session.userId);
     if (!user) return res.status(401).json({ message: 'Session invalid.' });
     return res.json(buildDashboardData(user));
   })
 );
 
 function mountPages(app) {
-  app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'landing.html')));
+app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'index.html')));
 }
 
 module.exports = { router, mountPages, buildDashboardData };
