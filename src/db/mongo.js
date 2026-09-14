@@ -27,8 +27,8 @@ async function ensureConnection() {
   if (!connecting) {
     connecting = mongoose
       .connect(mongoUri(), {
-        serverSelectionTimeoutMS: 8000,
-        connectTimeoutMS: 8000,
+        serverSelectionTimeoutMS: 4000,
+        connectTimeoutMS: 4000,
         maxPoolSize: 1,
       })
       .then(() => {
