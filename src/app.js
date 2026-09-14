@@ -35,10 +35,10 @@ function createApp() {
 
   app.use(requestLogger);
   app.use(blockPrivateFiles);
-  // Local dev serves *.html directly from the repo root.
-  // On Vercel the CDN serves static files natively (see vercel.json —
-  // only /api/* reaches the serverless function), so this is a
-  // harmless fallback there.
+  // Static frontend lives in public/ (Vercel CDN serves it in
+  // production; Express serves it for local dev). Keep rootDir as a
+  // fallback so old checkouts without public/ still work.
+  app.use(express.static(config.publicDir));
   app.use(express.static(config.rootDir));
 
   mountPages(app);
@@ -53,7 +53,7 @@ function createApp() {
   // an empty 404 so the site stays usable.
   app.use((req, res, next) => {
     if (req.method === 'GET' && !req.path.startsWith('/api')) {
-      return res.sendFile(require('path').join(config.rootDir, 'index.html'), (err) => {
+      return res.sendFile(require('path').join(config.publicDir, 'index.html'), (err) => {
         if (err) next(err);
       });
     }

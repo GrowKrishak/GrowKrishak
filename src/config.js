@@ -25,6 +25,7 @@ const DATA_DIR =
 
 const config = {
   rootDir: ROOT_DIR,
+  publicDir: path.join(ROOT_DIR, 'public'),
   dataDir: DATA_DIR,
   port: Number(process.env.PORT) || 0, // 0 = auto-pick below
   portsToTry: process.env.PORT ? [Number(process.env.PORT)] : [3000, 3001, 3002, 3003, 3004, 3005],
