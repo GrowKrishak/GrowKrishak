@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * Vercel serverless entry point. vercel.json routes ONLY /api/* here;
- * static .html/.png/robots.txt are served by the Vercel CDN directly,
- * so `/` never hits this function (that was the old 404: a catch-all
- * rewrite forced every page through Express, where the bundle had no
- * static files). Exporting the Express app is all @vercel/node needs
- * — no app.listen in serverless.
+ * Vercel serverless entry point for exactly /api (see also
+ * api/[...all].js, which handles every /api/* sub-path via filesystem
+ * routing — no vercel.json rewrites). Static .html/.png/robots.txt are
+ * served by the Vercel CDN directly and never reach a function.
+ * Exporting the Express app is all @vercel/node needs — no app.listen
+ * in serverless.
  */
 const { createApp } = require('../src/app');
 
