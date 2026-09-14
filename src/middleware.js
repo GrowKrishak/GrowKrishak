@@ -31,12 +31,18 @@ function requireAdmin(req, res, next) {
 }
 
 // Blocks direct HTTP access to backend internals served by express.static.
-const BLOCKED_PREFIXES = ['/src/', '/data/', '/.git/'];
+// NOTE: '/.env' is the critical entry — it holds MONGODB_URI and must
+// never be served. '/api/index.js' is the serverless entry point source.
+const BLOCKED_PREFIXES = ['/src/', '/data/', '/tests/', '/.git/'];
 const BLOCKED_EXACT = new Set([
   '/server.js',
   '/package.json',
   '/package-lock.json',
+  '/.env',
   '/.gitignore',
+  '/.vercelignore',
+  '/vercel.json',
+  '/api/index.js',
 ]);
 
 function blockPrivateFiles(req, res, next) {

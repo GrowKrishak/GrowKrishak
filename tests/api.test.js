@@ -1,7 +1,7 @@
 'use strict';
-// Full backend API test suite (60 checks: auth, 5 CRUD collections,
+// Full backend API test suite (64 checks: auth, 5 CRUD collections,
 // dashboard, validation/duplicate/missing cases, logout, admin login
-// + user-data management).
+// + user-data management, private-file guard, favicon/robots).
 // Usage:
 //   npm test                          -> isolated server, default (JSON) mode
 //   npm run test:cookie               -> isolated server, cookie-session mode
@@ -55,6 +55,15 @@ function check(name, cond, extra) {
 
   r = await req('GET', '/server.js', undefined, false);
   check('server.js blocked', r.status === 404, r.status);
+
+  r = await req('GET', '/.env', undefined, false);
+  check('.env blocked', r.status === 404, r.status);
+
+  r = await req('GET', '/api/index.js', undefined, false);
+  check('serverless entry source blocked', r.status === 404, r.status);
+
+  check('favicon served (200)', (await fetch(BASE + '/favicon.ico')).status === 200);
+  check('robots.txt served (200)', (await fetch(BASE + '/robots.txt')).status === 200);
 
   r = await req('POST', '/api/signup', { name: 'A', email, password: 'x', confirmPassword: 'y' }, false);
   check('signup rejects mismatched passwords (400)', r.status === 400, r.status);

@@ -85,6 +85,9 @@ router.get(
 
 function mountPages(app) {
   app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'landing.html')));
+  // Browsers + bots request /favicon.ico unconditionally; serve the logo
+  // instead of logging a 404 on every visit.
+  app.get('/favicon.ico', (req, res) => res.sendFile(path.join(config.rootDir, 'logo.png')));
 }
 
 module.exports = { router, mountPages, buildDashboardData };

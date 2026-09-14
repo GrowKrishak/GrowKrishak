@@ -20,6 +20,12 @@ if (mode === 'mongo' && !process.env.MONGODB_URI) {
 const tmpData = fs.mkdtempSync(path.join(os.tmpdir(), 'gk-test-'));
 const env = { ...process.env, PORT, DATA_DIR: tmpData };
 if (mode === 'cookie') env.SESSION_STORE = 'cookie';
+// default/cookie modes must stay hermetic (isolated JSON in tmp DATA_DIR):
+// blank out any local MONGODB_URI so `npm test` never touches the real DB.
+// (Empty string, not delete: dotenv won't override a var that already
+// exists, so the server stays on the JSON store.) Only `test:mongo`
+// intentionally uses MongoDB.
+if (mode !== 'mongo') env.MONGODB_URI = '';
 
 const server = spawn(process.execPath, ['server.js'], { env, cwd: ROOT, stdio: 'ignore' });
 

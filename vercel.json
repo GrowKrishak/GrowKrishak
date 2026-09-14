@@ -3,7 +3,8 @@
     "api/index.js": {
       "includeFiles": [
         "*.html",
-        "*.png"
+        "*.png",
+        "robots.txt"
       ]
     }
   },

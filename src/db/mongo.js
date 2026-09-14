@@ -9,6 +9,11 @@ const mongoose = require('mongoose');
 const { User, MODELS } = require('./models');
 const jsonStore = require('../store');
 
+// Serverless-safe: single connection, fail fast instead of buffering
+// commands while disconnected (ensureConnection() always runs first,
+// so routes either get a live connection or a clean 503 — never a hang).
+mongoose.set('bufferCommands', false);
+
 let connected = false;
 let connecting = null;
 
@@ -17,10 +22,15 @@ function mongoUri() {
 }
 
 async function ensureConnection() {
-  if (connected) return;
+  if (connected && mongoose.connection.readyState === 1) return;
+  connected = false;
   if (!connecting) {
     connecting = mongoose
-      .connect(mongoUri(), { serverSelectionTimeoutMS: 8000 })
+      .connect(mongoUri(), {
+        serverSelectionTimeoutMS: 8000,
+        connectTimeoutMS: 8000,
+        maxPoolSize: 1,
+      })
       .then(() => {
         connected = true;
       })
