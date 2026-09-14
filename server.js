@@ -23,6 +23,9 @@ process.on('unhandledRejection', (reason) => {
 
 const app = createApp();
 
+// In serverless (Vercel) there is no port to listen on — the platform
+// invokes the exported app directly. Never call app.listen there:
+// it hangs the invocation until the gateway returns 504.
 function startServer(portIndex = 0) {
   const port = config.portsToTry[portIndex];
   const server = app.listen(port);
@@ -45,6 +48,8 @@ function startServer(portIndex = 0) {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
 
 module.exports = app;

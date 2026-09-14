@@ -64,10 +64,13 @@ function createApp() {
   return app;
 }
 
-// Export the factory (no side-effect app instance on require —
-// requiring this file must not open DB/session connections).
-// Both `require('./src/app')` and `require('./src/app').createApp`
-// give the factory for backwards compatibility.
-module.exports = createApp;
+// Default export is a ready app instance so that any platform
+// auto-detection (Vercel Express preset looks at server.js / src/app.js)
+// receives a working (req, res) handler instead of a factory.
+// `createApp` is also exposed for local dev, tests and api/ functions.
+// Note: creating one instance here is side-effect free (no DB connection
+// or listener is opened at require time).
+const app = createApp();
+module.exports = app;
 module.exports.createApp = createApp;
-module.exports.default = createApp;
+module.exports.default = app;
