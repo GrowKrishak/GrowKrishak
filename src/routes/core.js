@@ -84,10 +84,21 @@ router.get(
 );
 
 function mountPages(app) {
-  app.get('/', (req, res) => res.sendFile(path.join(config.rootDir, 'landing.html')));
+  // Homepage: index.html and landing.html are identical; try index.html
+  // first so local dev matches Vercel CDN behaviour (`/` -> index.html).
+  // sendFile errors (e.g. file not in serverless bundle) fall through
+  // to the non-API fallback in src/app.js instead of hanging/crashing.
+  app.get('/', (req, res, next) => {
+    res.sendFile(path.join(config.rootDir, 'index.html'), (err) => {
+      if (!err) return;
+      res.sendFile(path.join(config.rootDir, 'landing.html'), next);
+    });
+  });
   // Browsers + bots request /favicon.ico unconditionally; serve the logo
   // instead of logging a 404 on every visit.
-  app.get('/favicon.ico', (req, res) => res.sendFile(path.join(config.rootDir, 'logo.png')));
+  app.get('/favicon.ico', (req, res, next) =>
+    res.sendFile(path.join(config.rootDir, 'logo.png'), next)
+  );
 }
 
 module.exports = { router, mountPages, buildDashboardData };
