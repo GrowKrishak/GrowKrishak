@@ -1,5 +1,4 @@
 # Legacy PHP app + dev artefacts are not deployed to Vercel.
-GrowKrishak/
 node_modules/
 .env
 npm-debug.log*
