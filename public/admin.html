@@ -61,6 +61,7 @@
 </head>
 <body>
     <div class="wrap">
+        <div id="backendWarn" style="display:none;background:#fff3cd;border:2px solid #e6a800;color:#664d03;border-radius:14px;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.5"></div>
         <div class="topbar">
             <div class="logo"><img src="logo.png" alt="logo" />Grow<span>Krishak</span> Admin</div>
             <a href="landing.html" class="home-link">Back to Home</a>
@@ -107,8 +108,8 @@
             </div>
             <div class="table-wrap">
                 <table>
-                    <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Location</th><th>Joined</th><th>Last login</th><th>Photo</th><th>Actions</th></tr></thead>
-                    <tbody id="rows"><tr><td colspan="8">Loading...</td></tr></tbody>
+                    <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Location</th><th>Joined</th><th>Updated</th><th>Last login</th><th>Photo</th><th>Actions</th></tr></thead>
+                    <tbody id="rows"><tr><td colspan="9">Loading...</td></tr></tbody>
                 </table>
             </div>
             <div class="pager">
@@ -131,6 +132,14 @@
                 <input type="email" id="eEmail" required />
                 <label for="eLoc">Location</label>
                 <input type="text" id="eLoc" placeholder="Village / City (optional)" />
+                <label>Profile photo</label>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:4px">
+                    <img id="ePhotoPrev" alt="Profile photo preview" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid #d7e6dc;background:#f2f8f4" />
+                    <div style="flex:1;min-width:0">
+                        <input type="file" id="ePhoto" accept="image/*" />
+                        <div><button type="button" class="danger" id="ePhotoRemove">Remove photo</button></div>
+                    </div>
+                </div>
                 <div id="editMsg" class="msg"></div>
                 <div class="modal-row">
                     <button type="button" class="cancel" id="editCancel">Cancel</button>
@@ -150,6 +159,7 @@
         let cache = [];
         let page = 1;
         let editingId = null;
+        let editingPhoto = '';
 
         const pageSize = () => {
             const v = document.getElementById('pageSize').value;
@@ -164,19 +174,52 @@
         }
         function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+        const CORRECT_URL = 'http://localhost:3000/admin.html';
+        function whereAmI() {
+            try { return location.protocol + '//' + location.host + location.pathname; }
+            catch (e) { return '(unknown)'; }
+        }
         // Translates raw backend/network failures into actionable guidance.
-        // "API route not found" almost always means the running server is an
-        // old copy (started before the admin routes were added) or the page
-        // was opened without the backend (file:// / another port).
         function friendlyError(err, status) {
             const raw = (err && err.message) || '';
+            const here = whereAmI();
+            if (location.protocol === 'file:') {
+                return 'You opened admin.html as a file. The API only exists on the server. Open ' + CORRECT_URL + ' instead (server is already running).';
+            }
             if (status === 404 || /API route not found/i.test(raw)) {
-                return 'Backend route missing. Restart the server: press Ctrl+C, run "node server.js" again, open http://localhost:3000/admin.html and retry.';
+                return 'Backend route missing at ' + here + ' (HTTP 404). You are on the wrong server/port (e.g. Live Server :5500) or an old cached page. Open ' + CORRECT_URL + ' and retry. Server is running on port 3000.';
             }
             if (/failed to fetch|networkerror|load failed/i.test(raw)) {
-                return 'Cannot reach the backend. Run "node server.js" and open http://localhost:3000/admin.html (not the file directly).';
+                return 'Cannot reach the backend from ' + here + '. Open ' + CORRECT_URL + ' (not the file directly, not Live Server).';
             }
-            return raw || 'Request failed.';
+            return (raw || 'Request failed.') + ' (at ' + here + ')';
+        }
+        // Shows a banner when this page was NOT served by the backend, with a one-click fix.
+        function diagnoseContext() {
+            const warn = document.getElementById('backendWarn');
+            const sameOriginBackend = (location.protocol === 'http:' || location.protocol === 'https:') &&
+                /(^|\.)(localhost|127\.0\.0\.1)(:\d+)?$/.test(location.host);
+            if (!sameOriginBackend) {
+                warn.style.display = 'block';
+                warn.innerHTML = '<b>Wrong address:</b> this page has no backend here, so login shows "Backend route missing". ' +
+                    '<a href="' + CORRECT_URL + '" style="font-weight:800">Click here to open http://localhost:3000/admin.html</a> (server is already running).';
+                return false;
+            }
+            fetch('/api/health', { cache: 'no-store' }).then(async (r) => {
+                if (r.ok) { warn.style.display = 'none'; return; }
+                const body = await r.text().catch(() => '');
+                if (r.status === 404) {
+                    warn.style.display = 'block';
+                    warn.innerHTML = '<b>Wrong port:</b> this page came from <code>' + escapeHtml(location.host) +
+                        '</code> but the API lives on port 3000.' +
+                        ' <a href="' + CORRECT_URL + '" style="font-weight:800">Open ' + CORRECT_URL + '</a>';
+                }
+            }).catch(() => {
+                warn.style.display = 'block';
+                warn.innerHTML = '<b>Backend not reached.</b> ' +
+                    '<a href="' + CORRECT_URL + '" style="font-weight:800">Open ' + CORRECT_URL + '</a> (server runs on port 3000).';
+            });
+            return true;
         }
 
         function sessionExpired() {
@@ -217,7 +260,7 @@
             setBusy(true);
             const q = document.getElementById('q').value.trim();
             const sort = document.getElementById('sort').value;
-            rows.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
+            rows.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
             try {
                 // Fetch the full filtered+sorted list; paginate client-side for instant paging.
                 const url = '/api/admin/users' + buildQuery({ q, sort });
@@ -230,7 +273,7 @@
                 document.getElementById('count').textContent = data.total + (q ? ` (found ${cache.length})` : '');
                 page = 1;
                 renderPage();
-            } catch (e) { rows.innerHTML = '<tr><td colspan="8">' + escapeHtml(friendlyError(e)) + '</td></tr>'; }
+            } catch (e) { rows.innerHTML = '<tr><td colspan="9">' + escapeHtml(friendlyError(e)) + '</td></tr>'; }
             finally { setBusy(false); }
         }
 
@@ -252,10 +295,11 @@
             rows.innerHTML = slice.length ? slice.map((u, i) =>
                 `<tr><td>${start + i + 1}</td><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td>` +
                 `<td>${escapeHtml(u.location || '-')}</td><td style="white-space:nowrap">${escapeHtml(fmtDate(u.createdAt))}</td>` +
+                `<td style="white-space:nowrap">${escapeHtml(fmtDate(u.updatedAt))}</td>` +
                 `<td style="white-space:nowrap">${escapeHtml(fmtDate(u.lastLoginAt))}</td>` +
-                `<td>${u.hasPhoto ? '<span class="badge">Yes</span>' : '-'}</td>` +
+                `<td>${u.photo ? `<img src="${escapeHtml(u.photo)}" alt="photo of ${escapeHtml(u.name)}" title="Click to view full photo" data-full="${escapeHtml(u.photo)}" class="photo-thumb" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid #d7e6dc;cursor:zoom-in" />` : '-'}</td>` +
                 `<td style="white-space:nowrap"><button class="editbtn" data-id="${escapeHtml(u.id)}">Edit</button> | <button class="danger" data-id="${escapeHtml(u.id)}">Delete</button></td></tr>`
-            ).join('') : '<tr><td colspan="8">No users found.</td></tr>';
+            ).join('') : '<tr><td colspan="9">No users found.</td></tr>';
         }
 
         function setBusy(b) {
@@ -295,8 +339,8 @@
         });
         document.getElementById('exportBtn').addEventListener('click', () => {
             if (!cache.length) { dashMsg.textContent = 'Nothing to export.'; return; }
-            const head = 'Name,Email,Location,Joined,LastLogin,HasPhoto,ID';
-            const lines = cache.map(u => [u.name, u.email, u.location || '', u.createdAt || '', u.lastLoginAt || '', u.hasPhoto ? 'yes' : 'no', u.id]
+            const head = 'Name,Email,Location,Joined,Updated,LastLogin,HasPhoto,ID';
+            const lines = cache.map(u => [u.name, u.email, u.location || '', u.createdAt || '', u.updatedAt || '', u.lastLoginAt || '', (u.photo || u.hasPhoto) ? 'yes' : 'no', u.id]
                 .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([[head, ...lines].join('\n')], { type: 'text/csv' }));
@@ -307,7 +351,34 @@
 
         // Edit modal
         const modalBack = document.getElementById('modalBack');
+        function paintEditPhoto() {
+            const img = document.getElementById('ePhotoPrev');
+            if (editingPhoto) { img.src = editingPhoto; img.style.visibility = 'visible'; }
+            else { img.removeAttribute('src'); img.style.visibility = 'hidden'; }
+        }
+        document.getElementById('ePhoto').addEventListener('change', (e) => {
+            const f = e.target.files && e.target.files[0];
+            if (!f) return;
+            if (f.size > 2 * 1024 * 1024) {
+                document.getElementById('editMsg').textContent = 'Photo must be under 2MB.';
+                e.target.value = '';
+                return;
+            }
+            const r = new FileReader();
+            r.onload = () => { editingPhoto = r.result; paintEditPhoto(); };
+            r.readAsDataURL(f);
+        });
+        document.getElementById('ePhotoRemove').addEventListener('click', () => {
+            editingPhoto = '';
+            document.getElementById('ePhoto').value = '';
+            paintEditPhoto();
+        });
         rows.addEventListener('click', async (e) => {
+            const thumb = e.target.closest('.photo-thumb');
+            if (thumb && thumb.dataset.full) {
+                window.open(thumb.dataset.full, '_blank');
+                return;
+            }
             const del = e.target.closest('.danger');
             const ed = e.target.closest('.editbtn');
             if (del) {
@@ -328,6 +399,9 @@
                 document.getElementById('eName').value = u.name || '';
                 document.getElementById('eEmail').value = u.email || '';
                 document.getElementById('eLoc').value = u.location || '';
+                editingPhoto = u.photo || '';
+                document.getElementById('ePhoto').value = '';
+                paintEditPhoto();
                 document.getElementById('editId').textContent = 'ID: ' + u.id;
                 document.getElementById('editMsg').textContent = '';
                 modalBack.classList.add('open');
@@ -347,7 +421,8 @@
                     body: JSON.stringify({
                         name: document.getElementById('eName').value.trim(),
                         email: document.getElementById('eEmail').value.trim(),
-                        location: document.getElementById('eLoc').value.trim()
+                        location: document.getElementById('eLoc').value.trim(),
+                        photo: editingPhoto
                     })
                 });
                 const data = await r.json().catch(() => ({}));
@@ -361,6 +436,7 @@
             finally { saveBtn.disabled = false; }
         });
 
+        diagnoseContext();
         checkSession();
     </script>
 </body>

@@ -10,11 +10,13 @@
  *   GET    /api/admin/me
  *   GET    /api/admin/users?q=&sort=&page=&limit= -> paged, sanitized list
  *   GET    /api/admin/users/:id  -> single sanitized user
- *   PUT    /api/admin/users/:id  -> update { name, email, location }
+ *   PUT    /api/admin/users/:id  -> update { name, email, location, photo }
  *   DELETE /api/admin/users/:id  -> remove a registered user
  *   GET    /api/admin/stats       -> counts + recent signups
  *
- * Password hashes are NEVER sent to the client.
+ * Password hashes are NEVER sent to the client. Every other user field
+ * (including the full profile photo) IS sent, so the admin dashboard
+ * shows/stores exactly the same data as the user account itself.
  */
 const { Router } = require('express');
 const config = require('../config');
@@ -28,6 +30,7 @@ function sanitizeUser(user) {
     name: user.name,
     email: user.email,
     location: user.location || '',
+    photo: user.photo || '',
     hasPhoto: Boolean(user.photo),
     createdAt: user.createdAt || '',
     updatedAt: user.updatedAt || '',
@@ -145,7 +148,7 @@ router.put(
     const user = users.find((u) => String(u.id) === String(req.params.id));
     if (!user) return res.status(404).json({ message: 'User not found.' });
 
-    const { name, email, location } = req.body || {};
+    const { name, email, location, photo } = req.body || {};
     if (!name || !String(name).trim()) {
       return res.status(400).json({ message: 'Name is required.' });
     }
@@ -159,10 +162,18 @@ router.put(
     if (users.some((u) => u.id !== user.id && u.email === normalizedEmail)) {
       return res.status(409).json({ message: 'This email is already used by another account.' });
     }
+    // Same photo limit as the user profile endpoint (PUT /api/me).
+    if (photo !== undefined && !(typeof photo === 'string')) {
+      return res.status(400).json({ message: 'Photo must be a string.' });
+    }
+    if (typeof photo === 'string' && photo.length > 3000000) {
+      return res.status(400).json({ message: 'Photo is too large (max ~2MB).' });
+    }
 
     user.name = String(name).trim();
     user.email = normalizedEmail;
     user.location = location ? String(location).trim() : '';
+    if (typeof photo === 'string') user.photo = photo;
     user.updatedAt = new Date().toISOString();
     await saveUsers(users);
     return res.json({ message: 'User updated successfully.', user: sanitizeUser(user) });

@@ -14,6 +14,25 @@ const jsonStore = require('../store');
 // so routes either get a live connection or a clean 503 — never a hang).
 mongoose.set('bufferCommands', false);
 
+// A background driver 'error' event with no listener would throw and
+// crash the process. The per-call fallback in db/index.js already
+// handles failures gracefully, so this guard only logs once and lets
+// the app keep serving from the JSON store.
+let errorGuarded = false;
+function attachErrorGuard() {
+  if (errorGuarded) return;
+  errorGuarded = true;
+  mongoose.connection.on('error', (err) => {
+    const msg = err && err.message ? String(err.message).split('\n')[0] : String(err);
+    // eslint-disable-next-line no-console
+    console.error(
+      `Mongo background error, staying up on JSON store: ${msg.slice(0, 200)} ` +
+        '(check network/DNS, Atlas Network Access, or unset MONGODB_URI for local JSON mode).'
+    );
+  });
+}
+attachErrorGuard();
+
 let connected = false;
 let connecting = null;
 

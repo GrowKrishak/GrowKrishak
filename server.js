@@ -13,7 +13,19 @@ const config = require('./src/config');
 
 // Never let a background driver retry (e.g. Mongo) take the whole
 // process down: log it and keep serving (DB routes return 503).
+// Mongo/network failures get a one-line actionable message instead of
+// a scary dump — the app already falls back to the JSON/memory store.
 process.on('unhandledRejection', (reason) => {
+  const message =
+    reason && reason.message ? String(reason.message).split('\n')[0] : String(reason);
+  if (/querySrv|ServerSelection|MongoNetwork|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|topolog|mongodb/i.test(message)) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `MongoDB background error, server staying up on fallback store: ${message.slice(0, 200)} ` +
+        '(check network/DNS, Atlas Network Access, or unset MONGODB_URI for local JSON mode).'
+    );
+    return;
+  }
   // eslint-disable-next-line no-console
   console.error(
     'Unhandled rejection (server staying up):',

@@ -145,6 +145,13 @@ function check(name, cond, extra) {
   r = await req('PUT', '/api/admin/users/' + encodeURIComponent(targetId), { name: 'Edited By Admin', email: r.data.email, location: 'Test Village' });
   check('admin edit user (200 + location saved)', r.status === 200 && r.data.user.location === 'Test Village', r);
 
+  const tinyPhoto = 'data:image/png;base64,iVBORw0KGgo=';
+  r = await req('PUT', '/api/admin/users/' + encodeURIComponent(targetId), { name: 'Edited By Admin', email: r.data.user.email, location: 'Test Village', photo: tinyPhoto });
+  check('admin edit user photo (saved + returned)', r.status === 200 && r.data.user.photo === tinyPhoto, r);
+
+  r = await req('GET', '/api/admin/users/' + encodeURIComponent(targetId));
+  check('admin single user has full data (photo/updatedAt, no passwordHash)', r.status === 200 && r.data.photo === tinyPhoto && Boolean(r.data.updatedAt) && !('passwordHash' in r.data), r);
+
   r = await req('POST', '/api/admin/logout');
   check('admin logout (200)', r.status === 200, r);
 

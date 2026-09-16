@@ -1,16 +1,5 @@
 [
   {
-    "id": "user-1789196618015",
-    "name": "Test User",
-    "email": "test@example.com",
-    "passwordHash": "$2a$10$eD6P9tXIHeO7GAzr68HRBuKTHiqI4VoJZdX13PVuR.JLvCyO4dzPq",
-    "location": "",
-    "photo": "",
-    "createdAt": "2026-09-12T07:03:38.015Z",
-    "updatedAt": "2026-09-12T07:03:38.015Z",
-    "lastLoginAt": ""
-  },
-  {
     "id": "demo-farmer",
     "name": "Rohan kumar",
     "email": "demo@growkrishak.com",
@@ -41,17 +30,6 @@
     "photo": "",
     "createdAt": "2026-09-13T07:07:49.669Z",
     "updatedAt": "2026-09-13T07:07:49.669Z",
-    "lastLoginAt": ""
-  },
-  {
-    "id": "user-1789202233303",
-    "name": "uiu",
-    "email": "iouuoi@gmail.com",
-    "passwordHash": "$2a$10$k3c.fViVRP31.ESY0m2PHuIrdTekR9C8XLNChvatsdJKJaOUkyYLm",
-    "location": "",
-    "photo": "",
-    "createdAt": "2026-09-12T08:37:13.303Z",
-    "updatedAt": "2026-09-12T08:37:13.303Z",
     "lastLoginAt": ""
   }
 ]
