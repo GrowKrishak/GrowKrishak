@@ -369,6 +369,61 @@
                 padding: 36px 24px;
             }
         }
+
+        /* Proper provider sign-in dialogs */
+        .provider-back {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 30, 22, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+        }
+        .provider-back.open { display: flex; }
+        .provider-card {
+            background: #fff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 32px 28px 24px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+        .provider-logo {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f2;
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .provider-card h3 { font-size: 22px; color: #183b20; margin-bottom: 6px; }
+        .provider-card p { font-size: 14px; color: #5f7865; margin-bottom: 18px; }
+        .provider-card input {
+            width: 100%;
+            border: 1px solid #d5e4d9;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 12px;
+            background: #f8fbf9;
+        }
+        .provider-card input:focus { border-color: #198754; background: #fff; box-shadow: 0 0 0 4px rgba(25,135,84,.12); }
+        .provider-err { min-height: 20px; font-size: 13px; font-weight: 700; color: #b42318; margin-bottom: 8px; }
+        .provider-actions { display: flex; gap: 10px; margin-top: 6px; }
+        .provider-actions button { flex: 1; border-radius: 12px; padding: 13px; font-weight: 700; font-size: 15px; cursor: pointer; }
+        .provider-go-google { background: #1a73e8; color: #fff; border: none; }
+        .provider-go-google:disabled { opacity: .6; cursor: wait; }
+        .provider-go-apple { background: #000; color: #fff; border: none; }
+        .provider-go-apple:disabled { opacity: .6; cursor: wait; }
+        .provider-cancel { background: #fff; border: 1px solid #d7e6dc; color: #183b20; }
     </style>
 </head>
 <body>
@@ -470,6 +525,40 @@
         </div>
     </div>
 
+    <!-- Proper Google sign-in form -->
+    <div class="provider-back" id="googleBack">
+        <div class="provider-card">
+            <div class="provider-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path fill="#EA4335" d="M12 10.2v3.8h5.5c-.3 1.4-1.6 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 4 1.5l2.7-2.7C16.8 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.9 0-.7-.1-1.2-.2-1.7H12z"/></svg></div>
+            <h3>Sign in with Google</h3>
+            <p>to continue to GrowKrishak</p>
+            <form id="googleForm">
+                <input type="email" id="googleEmail" placeholder="Email address" autocomplete="email" required />
+                <div class="provider-err" id="googleErr"></div>
+                <div class="provider-actions">
+                    <button type="button" class="provider-cancel" id="googleCancel">Cancel</button>
+                    <button type="submit" class="provider-go-google" id="googleGo">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Proper Apple sign-in form -->
+    <div class="provider-back" id="appleBack">
+        <div class="provider-card">
+            <div class="provider-logo" style="background:#000;color:#fff;" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M16.6 13.1c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.8-3.1.8s-1.7-.8-2.8-.8c-1.4 0-2.8 1.1-3.6 2.7-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-4.6-3.3zm-2.6-7.2c.6-.7 1-1.7.9-2.7-.9.1-1.9.6-2.5 1.3-.6.7-1.1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2z"/></svg></div>
+            <h3>Sign in with Apple</h3>
+            <p>to continue to GrowKrishak</p>
+            <form id="appleForm">
+                <input type="email" id="appleEmail" placeholder="Apple ID email" autocomplete="email" required />
+                <div class="provider-err" id="appleErr"></div>
+                <div class="provider-actions">
+                    <button type="button" class="provider-cancel" id="appleCancel">Cancel</button>
+                    <button type="submit" class="provider-go-apple" id="appleGo">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const loginForm = document.getElementById('loginForm');
         const loginMessage = document.getElementById('loginMessage');
@@ -515,22 +604,29 @@
             }
         });
 
-        // Social login (Google / Apple): uses the email already typed if
-        // present, otherwise asks once. The backend finds or creates the
-        // account and opens a normal session, then we go to the dashboard.
-        async function socialLogin(provider) {
-            const label = provider === 'google' ? 'Google' : 'Apple';
+        // Proper provider forms: open a branded dialog prefilled with the
+        // typed email, submit to the backend social login, then dashboard.
+        function openProvider(which) {
+            const back = document.getElementById(which === 'google' ? 'googleBack' : 'appleBack');
+            const input = document.getElementById(which === 'google' ? 'googleEmail' : 'appleEmail');
+            const err = document.getElementById(which === 'google' ? 'googleErr' : 'appleErr');
+            err.textContent = '';
+            input.value = document.getElementById('email').value.trim();
+            back.classList.add('open');
+            setTimeout(() => input.focus(), 50);
+        }
+        function closeProviders() {
+            document.getElementById('googleBack').classList.remove('open');
+            document.getElementById('appleBack').classList.remove('open');
+        }
+
+        async function submitProvider(provider, email, errEl, goBtn) {
             loginMessage.textContent = '';
             loginMessage.classList.remove('success');
-            let email = document.getElementById('email').value.trim();
-            if (!email) {
-                email = (window.prompt('Enter your ' + label + ' email to continue:') || '').trim();
-                if (!email) return;
-            }
-            const btn = document.getElementById(provider === 'google' ? 'googleBtn' : 'appleBtn');
-            const original = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = 'Connecting to ' + label + '...';
+            errEl.textContent = '';
+            goBtn.disabled = true;
+            const original = goBtn.textContent;
+            goBtn.textContent = 'Connecting...';
             try {
                 const response = await fetch('/api/social/login', {
                     method: 'POST',
@@ -544,15 +640,29 @@
                 try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
                 window.location.href = 'n.html';
             } catch (error) {
-                loginMessage.textContent = error.message;
+                errEl.textContent = error.message;
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = original;
+                goBtn.disabled = false;
+                goBtn.textContent = original;
             }
         }
 
-        document.getElementById('googleBtn').addEventListener('click', () => socialLogin('google'));
-        document.getElementById('appleBtn').addEventListener('click', () => socialLogin('apple'));
+        document.getElementById('googleBtn').addEventListener('click', () => openProvider('google'));
+        document.getElementById('appleBtn').addEventListener('click', () => openProvider('apple'));
+        document.getElementById('googleCancel').addEventListener('click', closeProviders);
+        document.getElementById('appleCancel').addEventListener('click', closeProviders);
+        document.getElementById('googleBack').addEventListener('click', (e) => { if (e.target.id === 'googleBack') closeProviders(); });
+        document.getElementById('appleBack').addEventListener('click', (e) => { if (e.target.id === 'appleBack') closeProviders(); });
+        document.getElementById('googleForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitProvider('google', document.getElementById('googleEmail').value.trim(),
+                document.getElementById('googleErr'), document.getElementById('googleGo'));
+        });
+        document.getElementById('appleForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitProvider('apple', document.getElementById('appleEmail').value.trim(),
+                document.getElementById('appleErr'), document.getElementById('appleGo'));
+        });
     </script>
 </body>
 </html>
