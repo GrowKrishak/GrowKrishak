@@ -354,7 +354,7 @@
             }
         }
 
-        /* Proper provider sign-up dialogs */
+        /* Provider dialogs: Google = create-account, Apple = dark Apple-ID */
         .provider-back {
             display: none;
             position: fixed;
@@ -366,48 +366,97 @@
             z-index: 100;
         }
         .provider-back.open { display: flex; }
-        .provider-card {
+        .google-card {
             background: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            padding: 32px 32px 20px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            text-align: center;
+            border-top: 4px solid #4285F4;
+        }
+        .google-card h3 { font-size: 22px; color: #202124; margin: 10px 0 4px; font-weight: 500; }
+        .google-card p { font-size: 14px; color: #5f6368; margin-bottom: 16px; }
+        .g-account {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            background: #fff;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .g-account:hover { background: #f6fafe; border-color: #4285F4; }
+        .g-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 16px; flex-shrink: 0;
+        }
+        .g-account small { display: block; color: #5f6368; font-size: 12px; }
+        .g-account strong { font-size: 14px; color: #202124; }
+        .g-add {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; border: none; background: none;
+            color: #1a73e8; font-weight: 700; font-size: 14px;
+            padding: 10px 14px; cursor: pointer; border-radius: 12px;
+        }
+        .g-add:hover { background: #f6fafe; }
+        .google-card input {
+            width: 100%;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 10px;
+            background: #fff;
+            color: #202124;
+        }
+        .google-card input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,.2); }
+        .g-links { display: flex; justify-content: space-between; margin-top: 14px; font-size: 13px; }
+        .g-links button { background: none; border: none; color: #1a73e8; font-weight: 700; cursor: pointer; font-size: 13px; }
+        .apple-card {
+            background: #000;
+            color: #f5f5f7;
             border-radius: 20px;
             width: 100%;
             max-width: 400px;
             padding: 32px 28px 24px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
             text-align: center;
+            border: 1px solid #333;
         }
-        .provider-logo {
-            width: 44px;
-            height: 44px;
-            margin: 0 auto 14px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f1f5f2;
-            font-size: 22px;
-            font-weight: 800;
-        }
-        .provider-card h3 { font-size: 22px; color: #183b20; margin-bottom: 6px; }
-        .provider-card p { font-size: 14px; color: #5f7865; margin-bottom: 18px; }
-        .provider-card input {
+        .apple-card h3 { font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+        .apple-card p { font-size: 13px; color: #a1a1a6; margin-bottom: 18px; }
+        .apple-card input {
             width: 100%;
-            border: 1px solid #d5e4d9;
+            border: 1px solid #333;
             border-radius: 12px;
             padding: 14px 16px;
             font-size: 15px;
             outline: none;
             margin-bottom: 12px;
-            background: #f8fbf9;
+            background: #1d1d1f;
+            color: #fff;
         }
-        .provider-card input:focus { border-color: #198754; background: #fff; box-shadow: 0 0 0 4px rgba(25,135,84,.12); }
-        .provider-err { min-height: 20px; font-size: 13px; font-weight: 700; color: #b42318; margin-bottom: 8px; }
+        .apple-card input:focus { border-color: #fff; }
+        .apple-card input::placeholder { color: #86868b; }
+        .apple-note { font-size: 12px; color: #86868b; margin: 10px 0 4px; }
+        .provider-err { min-height: 20px; font-size: 13px; font-weight: 700; color: #ff6961; margin-bottom: 8px; }
+        .google-card .provider-err { color: #b42318; }
         .provider-actions { display: flex; gap: 10px; margin-top: 6px; }
         .provider-actions button { flex: 1; border-radius: 12px; padding: 13px; font-weight: 700; font-size: 15px; cursor: pointer; }
         .provider-go-google { background: #1a73e8; color: #fff; border: none; }
         .provider-go-google:disabled { opacity: .6; cursor: wait; }
-        .provider-go-apple { background: #000; color: #fff; border: none; }
+        .provider-go-apple { background: #fff; color: #000; border: none; }
         .provider-go-apple:disabled { opacity: .6; cursor: wait; }
-        .provider-cancel { background: #fff; border: 1px solid #d7e6dc; color: #183b20; }
+        .provider-cancel { background: transparent; border: 1px solid #dadce0; color: #5f6368; }
+        .apple-card .provider-cancel { border-color: #444; color: #f5f5f7; }
     </style>
 </head>
 <body>
@@ -519,37 +568,46 @@
 
     <!-- Proper Google sign-up form -->
     <div class="provider-back" id="googleBack">
-        <div class="provider-card">
-            <div class="provider-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path fill="#EA4335" d="M12 10.2v3.8h5.5c-.3 1.4-1.6 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 4 1.5l2.7-2.7C16.8 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.9 0-.7-.1-1.2-.2-1.7H12z"/></svg></div>
-            <h3>Sign up with Google</h3>
+        <div class="google-card">
+            <div aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.3H12v4.5h6c-.3 1.4-1.6 3.9-6 3.9-3.6 0-6.6-3-6.6-6.6s3-6.6 6.6-6.6c2.1 0 3.5.9 4.3 1.6l3-3C17.5 2.5 15 1.5 12 1.5 6.5 1.5 2 6 2 11.5S6.5 21.5 12 21.5c5.6 0 9.3-3.9 9.3-9.4 0-.6 0-1-.1-1.4z"/></svg></div>
+            <h3>Create your Google Account</h3>
             <p>to continue to GrowKrishak</p>
-            <form id="googleForm">
+            <div id="googleAccounts"></div>
+            <form id="googleForm" style="display:none">
                 <input type="text" id="googleName" placeholder="Full name" autocomplete="name" required />
                 <input type="email" id="googleEmail" placeholder="Email address" autocomplete="email" required />
                 <div class="provider-err" id="googleErr"></div>
                 <div class="provider-actions">
-                    <button type="button" class="provider-cancel" id="googleCancel">Cancel</button>
-                    <button type="submit" class="provider-go-google" id="googleGo">Continue</button>
+                    <button type="button" class="provider-cancel" id="googleCancel">Back</button>
+                    <button type="submit" class="provider-go-google" id="googleGo">Create</button>
                 </div>
             </form>
+            <div id="googleChooserWrap">
+                <div class="provider-err" id="googleErrChooser"></div>
+                <div class="g-links">
+                    <button type="button" id="googleCancelLink">Cancel</button>
+                    <button type="button" id="googleUseAnother">Use another account</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Proper Apple sign-up form -->
+    <!-- Apple ID sign-up (distinct dark Apple style) -->
     <div class="provider-back" id="appleBack">
-        <div class="provider-card">
-            <div class="provider-logo" style="background:#000;color:#fff;" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M16.6 13.1c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.8-3.1.8s-1.7-.8-2.8-.8c-1.4 0-2.8 1.1-3.6 2.7-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-4.6-3.3zm-2.6-7.2c.6-.7 1-1.7.9-2.7-.9.1-1.9.6-2.5 1.3-.6.7-1.1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2z"/></svg></div>
-            <h3>Sign up with Apple</h3>
-            <p>to continue to GrowKrishak</p>
+        <div class="apple-card">
+            <div aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30"><path fill="#f5f5f7" d="M16.6 13.1c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.8-3.1.8s-1.7-.8-2.8-.8c-1.4 0-2.8 1.1-3.6 2.7-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-4.6-3.3zm-2.6-7.2c.6-.7 1-1.7.9-2.7-.9.1-1.9.6-2.5 1.3-.6.7-1.1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2z"/></svg></div>
+            <h3>Create Apple Account</h3>
+            <p>One Apple Account for GrowKrishak and more</p>
             <form id="appleForm">
                 <input type="text" id="appleName" placeholder="Full name" autocomplete="name" required />
                 <input type="email" id="appleEmail" placeholder="Apple ID email" autocomplete="email" required />
                 <div class="provider-err" id="appleErr"></div>
                 <div class="provider-actions">
                     <button type="button" class="provider-cancel" id="appleCancel">Cancel</button>
-                    <button type="submit" class="provider-go-apple" id="appleGo">Continue</button>
+                    <button type="submit" class="provider-go-apple" id="appleGo">Create</button>
                 </div>
             </form>
+            <div class="apple-note">Protected with Face ID / Touch ID.<br/>Apple keeps your email private with Hide My Email.</div>
         </div>
     </div>
 
@@ -591,18 +649,67 @@
             }
         });
 
-        // Proper provider forms: branded dialogs with name+email, submit
-        // to the backend social login, then dashboard.
+        // Google = account chooser + create-account form. Apple = dark
+        // Apple-ID dialog. Both POST to the backend social login.
+        function googleColors(i) {
+            return ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#7B1FA2'][i % 5];
+        }
+        function savedGoogleAccounts() {
+            try { return JSON.parse(localStorage.getItem('gk_google_accounts') || '[]'); }
+            catch (e) { return []; }
+        }
+        function rememberGoogleAccount(email) {
+            try {
+                const list = savedGoogleAccounts().filter((x) => x !== email);
+                list.unshift(email);
+                localStorage.setItem('gk_google_accounts', JSON.stringify(list.slice(0, 5)));
+            } catch (e) {}
+        }
+        function renderGoogleAccounts() {
+            const wrap = document.getElementById('googleAccounts');
+            const typedEmail = document.getElementById('email').value.trim().toLowerCase();
+            const typedName = document.getElementById('name').value.trim();
+            const saved = savedGoogleAccounts();
+            const emails = [...new Set([...(typedEmail ? [typedEmail] : []), ...saved])].slice(0, 4);
+            if (!emails.length) {
+                showGoogleForm();
+                return;
+            }
+            document.getElementById('googleForm').style.display = 'none';
+            document.getElementById('googleChooserWrap').style.display = 'block';
+            wrap.innerHTML = emails.map((email, i) => {
+                const initial = (email[0] || 'G').toUpperCase();
+                return `<button type="button" class="g-account" data-email="${email.replace(/"/g, '&quot;')}" data-name="${typedName.replace(/"/g, '&quot;')}">` +
+                    `<span class="g-avatar" style="background:${googleColors(i)}">${initial}</span>` +
+                    `<span><strong>${email}</strong><small>Google account</small></span></button>`;
+            }).join('') +
+            `<button type="button" class="g-add" id="gAddInline"><span style="font-size:20px">＋</span> Add another account</button>`;
+            wrap.querySelectorAll('.g-account').forEach((b) =>
+                b.addEventListener('click', () => submitProvider('google', b.dataset.name || typedName,
+                    b.dataset.email, document.getElementById('googleErrChooser'), b)));
+            const add = document.getElementById('gAddInline');
+            if (add) add.addEventListener('click', showGoogleForm);
+        }
+        function showGoogleForm() {
+            document.getElementById('googleForm').style.display = 'block';
+            document.getElementById('googleChooserWrap').style.display = 'none';
+            document.getElementById('googleName').value = document.getElementById('name').value.trim();
+            document.getElementById('googleEmail').value = document.getElementById('email').value.trim();
+            setTimeout(() => document.getElementById('googleName').focus(), 50);
+        }
         function openProvider(which) {
-            const back = document.getElementById(which === 'google' ? 'googleBack' : 'appleBack');
-            const nameInput = document.getElementById(which === 'google' ? 'googleName' : 'appleName');
-            const emailInput = document.getElementById(which === 'google' ? 'googleEmail' : 'appleEmail');
-            const err = document.getElementById(which === 'google' ? 'googleErr' : 'appleErr');
-            err.textContent = '';
-            nameInput.value = document.getElementById('name').value.trim();
-            emailInput.value = document.getElementById('email').value.trim();
-            back.classList.add('open');
-            setTimeout(() => (nameInput.value ? emailInput : nameInput).focus(), 50);
+            if (which === 'google') {
+                document.getElementById('googleErr').textContent = '';
+                document.getElementById('googleErrChooser').textContent = '';
+                renderGoogleAccounts();
+                document.getElementById('googleBack').classList.add('open');
+            } else {
+                document.getElementById('appleErr').textContent = '';
+                document.getElementById('appleName').value = document.getElementById('name').value.trim();
+                document.getElementById('appleEmail').value = document.getElementById('email').value.trim();
+                document.getElementById('appleBack').classList.add('open');
+                setTimeout(() => document.getElementById('appleName').focus(), 50);
+            }
         }
         function closeProviders() {
             document.getElementById('googleBack').classList.remove('open');
@@ -613,9 +720,10 @@
             signupMessage.textContent = '';
             signupMessage.classList.remove('success');
             errEl.textContent = '';
-            goBtn.disabled = true;
-            const original = goBtn.textContent;
-            goBtn.textContent = 'Connecting...';
+            const btn = goBtn && goBtn.classList ? goBtn : document.getElementById(provider === 'google' ? 'googleGo' : 'appleGo');
+            btn.disabled = true;
+            const original = btn.innerHTML || btn.textContent;
+            if (btn.innerHTML !== undefined) btn.innerHTML = 'Connecting...'; else btn.textContent = 'Connecting...';
             try {
                 const response = await fetch('/api/social/login', {
                     method: 'POST',
@@ -624,6 +732,7 @@
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.message || 'Social signup failed.');
+                if (provider === 'google') rememberGoogleAccount(String(email).toLowerCase());
                 signupMessage.textContent = data.message;
                 signupMessage.classList.add('success');
                 try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
@@ -631,15 +740,17 @@
             } catch (error) {
                 errEl.textContent = error.message;
             } finally {
-                goBtn.disabled = false;
-                goBtn.textContent = original;
+                btn.disabled = false;
+                if (btn.innerHTML !== undefined) btn.innerHTML = original; else btn.textContent = original;
             }
         }
 
         document.getElementById('googleBtn').addEventListener('click', () => openProvider('google'));
         document.getElementById('appleBtn').addEventListener('click', () => openProvider('apple'));
         document.getElementById('googleCancel').addEventListener('click', closeProviders);
+        document.getElementById('googleCancelLink').addEventListener('click', closeProviders);
         document.getElementById('appleCancel').addEventListener('click', closeProviders);
+        document.getElementById('googleUseAnother').addEventListener('click', showGoogleForm);
         document.getElementById('googleBack').addEventListener('click', (e) => { if (e.target.id === 'googleBack') closeProviders(); });
         document.getElementById('appleBack').addEventListener('click', (e) => { if (e.target.id === 'appleBack') closeProviders(); });
         document.getElementById('googleForm').addEventListener('submit', (e) => {
