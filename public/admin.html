@@ -174,7 +174,17 @@
         }
         function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-        const CORRECT_URL = 'http://localhost:3000/admin.html';
+const LOCAL_ADMIN_URL = 'http://localhost:3000/admin.html';
+        // On localhost dev the API lives on port 3000. On any deployed host
+        // (e.g. *.vercel.app) the API lives on THAT SAME host -- never send
+        // deployed users to localhost.
+        function isLocalHost() { return /(^|\.)(localhost|127\.0\.0\.1)(:\d+)?$/.test(location.host || ''); }
+        function correctAdminUrl() {
+            if ((location.protocol === 'http:' || location.protocol === 'https:') && !isLocalHost()) {
+                return location.origin + '/admin.html';
+            }
+            return LOCAL_ADMIN_URL;
+        }
         function whereAmI() {
             try { return location.protocol + '//' + location.host + location.pathname; }
             catch (e) { return '(unknown)'; }
@@ -183,41 +193,54 @@
         function friendlyError(err, status) {
             const raw = (err && err.message) || '';
             const here = whereAmI();
+            const good = correctAdminUrl();
             if (location.protocol === 'file:') {
-                return 'You opened admin.html as a file. The API only exists on the server. Open ' + CORRECT_URL + ' instead (server is already running).';
+                return 'You opened admin.html as a file, which has no backend. Open ' + good + ' instead.';
             }
             if (status === 404 || /API route not found/i.test(raw)) {
-                return 'Backend route missing at ' + here + ' (HTTP 404). You are on the wrong server/port (e.g. Live Server :5500) or an old cached page. Open ' + CORRECT_URL + ' and retry. Server is running on port 3000.';
+                if (!isLocalHost()) {
+                    return 'Backend route missing at ' + here + ' (HTTP 404). This deployment is serving a stale backend without the admin routes. Redeploy the latest code, then open ' + good + ' and retry.';
+                }
+                return 'Backend route missing at ' + here + ' (HTTP 404). Wrong port (e.g. Live Server :5500), old server copy, or cached page. Open ' + LOCAL_ADMIN_URL + ' and retry.';
             }
             if (/failed to fetch|networkerror|load failed/i.test(raw)) {
-                return 'Cannot reach the backend from ' + here + '. Open ' + CORRECT_URL + ' (not the file directly, not Live Server).';
+                if (!isLocalHost()) {
+                    return 'Cannot reach the backend at ' + here + '. Check that the deployment is up (see function logs), then retry at ' + good + '.';
+                }
+                return 'Cannot reach the backend from ' + here + '. Run "node server.js" and open ' + LOCAL_ADMIN_URL + '.';
             }
             return (raw || 'Request failed.') + ' (at ' + here + ')';
         }
-        // Shows a banner when this page was NOT served by the backend, with a one-click fix.
+        // Shows a banner when this page cannot reach its backend, with a one-click fix.
         function diagnoseContext() {
             const warn = document.getElementById('backendWarn');
-            const sameOriginBackend = (location.protocol === 'http:' || location.protocol === 'https:') &&
-                /(^|\.)(localhost|127\.0\.0\.1)(:\d+)?$/.test(location.host);
-            if (!sameOriginBackend) {
+            const good = correctAdminUrl();
+            if (location.protocol === 'file:') {
                 warn.style.display = 'block';
-                warn.innerHTML = '<b>Wrong address:</b> this page has no backend here, so login shows "Backend route missing". ' +
-                    '<a href="' + CORRECT_URL + '" style="font-weight:800">Click here to open http://localhost:3000/admin.html</a> (server is already running).';
+                warn.innerHTML = '<b>No backend here:</b> you opened this page as a file, so login shows "Backend route missing". ' +
+                    '<a href="' + good + '" style="font-weight:800">Click here to open ' + escapeHtml(good) + '</a> (locally: ' + LOCAL_ADMIN_URL + ').';
                 return false;
             }
             fetch('/api/health', { cache: 'no-store' }).then(async (r) => {
                 if (r.ok) { warn.style.display = 'none'; return; }
                 const body = await r.text().catch(() => '');
-                if (r.status === 404) {
-                    warn.style.display = 'block';
-                    warn.innerHTML = '<b>Wrong port:</b> this page came from <code>' + escapeHtml(location.host) +
-                        '</code> but the API lives on port 3000.' +
-                        ' <a href="' + CORRECT_URL + '" style="font-weight:800">Open ' + CORRECT_URL + '</a>';
+                warn.style.display = 'block';
+                if (r.status === 404 && /API route not found/i.test(body)) {
+                    warn.innerHTML = '<b>Stale backend:</b> <code>' + escapeHtml(location.host) +
+                        '</code> answered without the admin routes. Redeploy the latest code, then ' +
+                        '<a href="' + good + '" style="font-weight:800">open ' + escapeHtml(good) + '</a>';
+                } else if (r.status === 404) {
+                    warn.innerHTML = '<b>API not deployed on this host</b> (<code>' + escapeHtml(location.host) +
+                        '</code>, HTTP 404). Redeploy the latest code (check Vercel functions), then ' +
+                        '<a href="' + good + '" style="font-weight:800">open ' + escapeHtml(good) + '</a>';
+                } else {
+                    warn.innerHTML = '<b>Backend error</b> (HTTP ' + r.status + ' at <code>' + escapeHtml(location.host) +
+                        '</code>). Check server/function logs, then <a href="' + good + '" style="font-weight:800">retry here</a>.';
                 }
             }).catch(() => {
                 warn.style.display = 'block';
-                warn.innerHTML = '<b>Backend not reached.</b> ' +
-                    '<a href="' + CORRECT_URL + '" style="font-weight:800">Open ' + CORRECT_URL + '</a> (server runs on port 3000).';
+                warn.innerHTML = '<b>Backend not reached</b> at <code>' + escapeHtml(whereAmI()) + '</code>. ' +
+                    '<a href="' + good + '" style="font-weight:800">Open ' + escapeHtml(good) + '</a>';
             });
             return true;
         }
