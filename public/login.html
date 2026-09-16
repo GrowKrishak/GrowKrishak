@@ -475,6 +475,31 @@
         .provider-go-apple:disabled { opacity: .6; cursor: wait; }
         .provider-cancel { background: transparent; border: 1px solid #dadce0; color: #5f6368; }
         .apple-card .provider-cancel { border-color: #444; color: #f5f5f7; }
+
+        /* Forgot-password dialog (same overlay pattern as provider dialogs) */
+        .reset-card {
+            background: #fff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 32px 28px 24px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+        .reset-card h3 { font-size: 22px; color: #183b20; margin-bottom: 6px; }
+        .reset-card p { font-size: 14px; color: #5f7865; margin-bottom: 18px; }
+        .reset-card input {
+            width: 100%;
+            border: 1px solid #d5e4d9;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 12px;
+            background: #f8fbf9;
+        }
+        .reset-card input:focus { border-color: #198754; background: #fff; box-shadow: 0 0 0 4px rgba(25,135,84,.12); }
+        .forgot { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -535,7 +560,7 @@
                             <input type="checkbox" />
                             <span>Remember me</span>
                         </label>
-                        <a href="#" class="forgot">Forgot password?</a>
+                        <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
                     </div>
 
                     <div id="loginMessage" class="form-message" aria-live="polite"></div>
@@ -616,6 +641,24 @@
                 </div>
             </form>
             <div class="apple-note">Protected with Face ID / Touch ID on your device.<br/>Apple keeps your email private with Hide My Email.</div>
+        </div>
+    </div>
+
+    <!-- Forgot password: reset with account email + new password -->
+    <div class="provider-back" id="resetBack">
+        <div class="reset-card">
+            <h3>Reset password</h3>
+            <p>Enter your account email and choose a new password.</p>
+            <form id="resetForm">
+                <input type="email" id="resetEmail" placeholder="Account email" autocomplete="email" required />
+                <input type="password" id="resetNew" placeholder="New password (min 6 characters)" autocomplete="new-password" required />
+                <input type="password" id="resetConfirm" placeholder="Confirm new password" autocomplete="new-password" required />
+                <div class="provider-err" id="resetErr" style="color:#b42318"></div>
+                <div class="provider-actions">
+                    <button type="button" class="provider-cancel" id="resetCancel">Cancel</button>
+                    <button type="submit" class="provider-go-google" id="resetGo">Reset</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -778,6 +821,61 @@
             e.preventDefault();
             submitProvider('apple', document.getElementById('appleEmail').value.trim(),
                 document.getElementById('appleErr'), document.getElementById('appleGo'));
+        });
+
+        // Forgot password: dialog prefilled with the typed email, resets
+        // via POST /api/reset-password, then the user logs in normally.
+        function openReset() {
+            document.getElementById('resetErr').textContent = '';
+            document.getElementById('resetEmail').value = document.getElementById('email').value.trim();
+            document.getElementById('resetNew').value = '';
+            document.getElementById('resetConfirm').value = '';
+            document.getElementById('resetBack').classList.add('open');
+            setTimeout(() => document.getElementById('resetEmail').focus(), 50);
+        }
+        function closeReset() {
+            document.getElementById('resetBack').classList.remove('open');
+        }
+
+        document.getElementById('forgotLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            openReset();
+        });
+        document.getElementById('resetCancel').addEventListener('click', closeReset);
+        document.getElementById('resetBack').addEventListener('click', (e) => { if (e.target.id === 'resetBack') closeReset(); });
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('resetErr');
+            const goBtn = document.getElementById('resetGo');
+            errEl.textContent = '';
+            loginMessage.textContent = '';
+            loginMessage.classList.remove('success');
+            goBtn.disabled = true;
+            goBtn.textContent = 'Resetting...';
+            try {
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('resetEmail').value.trim(),
+                        newPassword: document.getElementById('resetNew').value,
+                        confirmPassword: document.getElementById('resetConfirm').value
+                    })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.message || 'Reset failed.');
+                closeReset();
+                document.getElementById('email').value = document.getElementById('resetEmail').value.trim();
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+                loginMessage.textContent = data.message;
+                loginMessage.classList.add('success');
+            } catch (error) {
+                errEl.textContent = error.message;
+            } finally {
+                goBtn.disabled = false;
+                goBtn.textContent = 'Reset';
+            }
         });
     </script>
 </body>

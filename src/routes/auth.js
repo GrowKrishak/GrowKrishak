@@ -101,6 +101,42 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// Password reset from the login page ("Forgot password?").
+// No email service is configured, so the reset happens in-app: the
+// user proves ownership with their account email and sets a new
+// password directly.
+router.post(
+  '/reset-password',
+  asyncHandler(async (req, res) => {
+    const users = await loadUsers();
+    const { email, newPassword, confirmPassword } = req.body || {};
+
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      return res.status(400).json({ message: 'Enter a valid email address.' });
+    }
+    if (!newPassword || !confirmPassword) {
+      return res.status(400).json({ message: 'Enter the new password twice.' });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match.' });
+    }
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters.' });
+    }
+
+    const user = users.find((u) => u.email === normalizedEmail);
+    if (!user) {
+      return res.status(404).json({ message: 'No account found with this email.' });
+    }
+
+    user.passwordHash = bcrypt.hashSync(String(newPassword), 10);
+    user.updatedAt = new Date().toISOString();
+    await saveUsers(users);
+    return res.json({ message: 'Password reset successfully. Please login with your new password.' });
+  })
+);
+
 // Social login (Google / Apple buttons on login.html + signup.html).
 // No external OAuth credentials are required: the client sends the
 // verified-by-provider { provider, email, name } and the backend finds
