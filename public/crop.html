@@ -232,6 +232,22 @@
       white-space: nowrap;
     }
 
+    .hamburger {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-backdrop { display: none; }
+
     .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
 
     .side-link.active {
@@ -416,14 +432,34 @@
     @media (max-width: 1100px) {
       .app-layout { grid-template-columns: 1fr; }
       .sidebar { position: static; }
-      .side-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .side-link { justify-content: flex-start; padding: 10px 12px; font-size: 0.85rem; gap: 8px; }
+      .hamburger { display: inline-flex; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(280px, 84vw);
+        z-index: 300;
+        border-radius: 0 22px 22px 0;
+        transform: translateX(-110%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+      .sidebar.open { transform: none; }
+      .nav-backdrop.open {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 250;
+      }
+      .side-nav { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
       .page { padding-left: 16px; padding-right: 16px; }
       .topbar { flex-wrap: wrap; }
-      .side-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .side-nav { grid-template-columns: 1fr; }
       .brand-sub { display: none; }
     }
   </style>
@@ -431,6 +467,7 @@
 <body>
   <div class="page">
     <header class="topbar">
+      <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Open menu">☰</button>
       <div class="brand">
         <img class="brand-mark" src="logo.png" alt="GrowKrishak logo" />
         <div class="brand-text">
@@ -474,6 +511,7 @@
           <a href="chatbot.html" class="side-link">🤖 <span>AI Chat</span></a>
         </nav>
       </aside>
+      <div class="nav-backdrop" id="navBackdrop"></div>
 
       <main>
         <section class="section-panel">
@@ -756,5 +794,26 @@
 
     checkSession();
   </script>
+    <script>
+      // Hamburger drawer (phones/tablets): slide the left menu in/out.
+      (function () {
+        const btn = document.getElementById('hamburgerBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const backdrop = document.getElementById('navBackdrop');
+        if (!btn || !sidebar || !backdrop) return;
+        function closeNav() {
+          sidebar.classList.remove('open');
+          backdrop.classList.remove('open');
+          btn.setAttribute('aria-label', 'Open menu');
+        }
+        btn.addEventListener('click', () => {
+          const open = sidebar.classList.toggle('open');
+          backdrop.classList.toggle('open', open);
+          btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        backdrop.addEventListener('click', closeNav);
+        sidebar.querySelectorAll('.side-link').forEach((a) => a.addEventListener('click', closeNav));
+      })();
+    </script>
 </body>
 </html>
