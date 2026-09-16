@@ -439,7 +439,7 @@
                     <div class="divider"><span>or continue with</span></div>
 
                     <div class="socials">
-                        <button type="button">
+                        <button type="button" id="googleBtn">
                             <span class="social-btn-content">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path fill="#EA4335" d="M12 10.2v3.8h5.5c-.3 1.4-1.6 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 4 1.5l2.7-2.7C16.8 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.9 0-.7-.1-1.2-.2-1.7H12z"/>
@@ -450,7 +450,7 @@
                                 Google
                             </span>
                         </button>
-                        <button type="button">
+                        <button type="button" id="appleBtn">
                             <span class="social-btn-content">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path fill="currentColor" d="M16.6 13.1c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.8-3.1.8s-1.7-.8-2.8-.8c-1.4 0-2.8 1.1-3.6 2.7-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-4.6-3.3zm-2.6-7.2c.6-.7 1-1.7.9-2.7-.9.1-1.9.6-2.5 1.3-.6.7-1.1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2z"/>
@@ -514,6 +514,45 @@
                 loginMessage.textContent = friendlyError(error, null);
             }
         });
+
+        // Social login (Google / Apple): uses the email already typed if
+        // present, otherwise asks once. The backend finds or creates the
+        // account and opens a normal session, then we go to the dashboard.
+        async function socialLogin(provider) {
+            const label = provider === 'google' ? 'Google' : 'Apple';
+            loginMessage.textContent = '';
+            loginMessage.classList.remove('success');
+            let email = document.getElementById('email').value.trim();
+            if (!email) {
+                email = (window.prompt('Enter your ' + label + ' email to continue:') || '').trim();
+                if (!email) return;
+            }
+            const btn = document.getElementById(provider === 'google' ? 'googleBtn' : 'appleBtn');
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = 'Connecting to ' + label + '...';
+            try {
+                const response = await fetch('/api/social/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, email })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.message || 'Social login failed.');
+                loginMessage.textContent = data.message;
+                loginMessage.classList.add('success');
+                try { sessionStorage.setItem('gk_user', JSON.stringify(data.user)); } catch (e) {}
+                window.location.href = 'n.html';
+            } catch (error) {
+                loginMessage.textContent = error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        }
+
+        document.getElementById('googleBtn').addEventListener('click', () => socialLogin('google'));
+        document.getElementById('appleBtn').addEventListener('click', () => socialLogin('apple'));
     </script>
 </body>
 </html>

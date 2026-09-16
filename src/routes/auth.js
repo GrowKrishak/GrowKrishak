@@ -101,6 +101,63 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// Social login (Google / Apple buttons on login.html + signup.html).
+// No external OAuth credentials are required: the client sends the
+// verified-by-provider { provider, email, name } and the backend finds
+// or creates the account, then opens the same session as /login.
+// When real OAuth (GIS / Apple ID) is added later, verify the ID token
+// server-side here before reaching the find-or-create logic below.
+router.post(
+  '/social/login',
+  asyncHandler(async (req, res) => {
+    const users = await loadUsers();
+    const { provider, email, name } = req.body || {};
+
+    const normalizedProvider = String(provider || '').trim().toLowerCase();
+    if (!['google', 'apple'].includes(normalizedProvider)) {
+      return res.status(400).json({ message: 'Provider must be google or apple.' });
+    }
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      return res.status(400).json({ message: 'A valid email address is required.' });
+    }
+    const displayName =
+      String(name || '').trim() ||
+      normalizedEmail.split('@')[0].replace(/[._-]+/g, ' ').trim() ||
+      (normalizedProvider === 'google' ? 'Google User' : 'Apple User');
+
+    let user = users.find((u) => u.email === normalizedEmail);
+    if (!user) {
+      user = {
+        id: `user-${Date.now()}`,
+        name: displayName,
+        email: normalizedEmail,
+        // Unusable random hash — this account logs in via provider until
+        // the user sets a password via profile update.
+        passwordHash: bcrypt.hashSync(`social-${normalizedProvider}-${Date.now()}-${Math.random()}`, 10),
+        location: '',
+        photo: '',
+        provider: normalizedProvider,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+      };
+      users.push(user);
+    } else {
+      if (!user.name && displayName) user.name = displayName;
+      if (!user.provider) user.provider = normalizedProvider;
+      user.lastLoginAt = new Date().toISOString();
+      user.updatedAt = user.lastLoginAt;
+    }
+    await saveUsers(users);
+
+    req.session.userId = user.id;
+    if (req.session) req.session.isAdmin = false;
+    const label = normalizedProvider === 'google' ? 'Google' : 'Apple';
+    return res.json({ message: `Signed in with ${label} successfully.`, user: publicUser(user) });
+  })
+);
+
 router.get(
   '/me',
   asyncHandler(async (req, res) => {
