@@ -853,6 +853,15 @@
     .alert-types { display: none; margin-top: 10px; }
     .alert-types.open { display: grid; gap: 8px; }
 
+    .section-spaced { margin-top: 24px; }
+    .flush-grid { margin-top: 0; }
+    .condition-value { font-size: 1.4rem; }
+    .alerts-spaced { margin-top: 16px; }
+    .type-dot-orange { background: var(--orange); }
+    .type-dot-blue { background: var(--blue); }
+    .type-dot-green { background: var(--green-2); }
+    .price-note { color: var(--muted); font-size: 0.8rem; margin: 14px 0 0; line-height: 1.6; }
+
     .type-row {
       display: flex;
       align-items: flex-start;
@@ -1130,7 +1139,7 @@
         </div>
       </section>
 
-      <section class="section-panel" id="user-details" style="margin-top:24px;">
+      <section class="section-panel section-spaced" id="user-details">
         <div class="panel-head">
           <div class="panel-title">User Details</div>
           <span class="chip" id="userStatusChip">Guest</span>
@@ -1156,13 +1165,13 @@
         </div>
       </section>
 
-      <section class="section-panel" id="weather" style="margin-top:24px;">
+      <section class="section-panel section-spaced" id="weather">
         <div class="panel-head">
           <div class="panel-title">Weather • Kanpur, UP</div>
           <span class="chip" id="wxUpdated">Live</span>
         </div>
 
-        <div class="stats-grid" style="margin-top:0;">
+        <div class="stats-grid flush-grid">
           <div class="card">
             <div class="stat-top">
               <span class="stat-title">Temperature</span>
@@ -1177,7 +1186,7 @@
               <span class="stat-title">Condition</span>
               <span class="stat-icon">⛅</span>
             </div>
-            <div class="stat-value" id="wxCond" style="font-size:1.4rem;">Clear</div>
+            <div class="stat-value condition-value" id="wxCond">Clear</div>
             <span class="delta">Kanpur, UP</span>
           </div>
 
@@ -1200,7 +1209,7 @@
           </div>
         </div>
 
-        <ul class="alerts-list" style="margin-top:16px;">
+        <ul class="alerts-list alerts-spaced">
           <li class="alert-item success" id="wxAlertBox">
             <span class="alert-dot"></span>
             <div class="alert-text">
@@ -1248,9 +1257,9 @@
             <span class="delta">2 need attention</span>
             <button class="types-toggle" id="alertTypesToggle" type="button"><span>▼</span> Which alerts?</button>
             <div class="alert-types" id="alertTypesBox">
-              <div class="type-row"><i class="type-dot" style="background:var(--orange);"></i><div><b>Low moisture in Zone D</b><small>Scheduled irrigation was delayed by 18 minutes.</small></div></div>
-              <div class="type-row"><i class="type-dot" style="background:var(--blue);"></i><div><b>Weather update</b><small>Dry wind detected. Adjust spray timing.</small></div></div>
-              <div class="type-row"><i class="type-dot" style="background:var(--green-2);"></i><div><b>Routine inspection complete</b><small>All cameras and sensors reported normal status.</small></div></div>
+              <div class="type-row"><i class="type-dot type-dot-orange"></i><div><b>Low moisture in Zone D</b><small>Scheduled irrigation was delayed by 18 minutes.</small></div></div>
+              <div class="type-row"><i class="type-dot type-dot-blue"></i><div><b>Weather update</b><small>Dry wind detected. Adjust spray timing.</small></div></div>
+              <div class="type-row"><i class="type-dot type-dot-green"></i><div><b>Routine inspection complete</b><small>All cameras and sensors reported normal status.</small></div></div>
             </div>
           </div>
       </section>
@@ -1402,13 +1411,13 @@
         </div>
       </section>
 
-      <section class="section-panel" id="fertilizer-prices" style="margin-top:24px;">
+      <section class="section-panel section-spaced" id="fertilizer-prices">
         <div class="panel-head">
           <div class="panel-title">Fertilizer Prices</div>
           <span class="chip">Sep 2026 • Govt rates</span>
         </div>
 
-        <div class="stats-grid" style="margin-top:0;">
+        <div class="stats-grid flush-grid">
           <div class="card">
             <div class="stat-top">
               <span class="stat-title">Urea (46% N)</span>
@@ -1446,7 +1455,7 @@
           </div>
         </div>
 
-        <p style="color:var(--muted);font-size:0.8rem;margin:14px 0 0;line-height:1.6;">Indicative government-approved retail rates (Kharif 2026 / FY 2026-27). Actual shop price may vary slightly by state, brand and taxes. Always buy from licensed dealers with PoS billing.</p>
+        <p class="price-note">Indicative government-approved retail rates (Kharif 2026 / FY 2026-27). Actual shop price may vary slightly by state, brand and taxes. Always buy from licensed dealers with PoS billing.</p>
       </section>
 
     </main>
