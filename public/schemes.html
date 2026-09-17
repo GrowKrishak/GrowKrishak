@@ -246,6 +246,26 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .nav a {
+      padding: 8px 10px;
+      border-radius: 10px;
+      transition: 0.25s ease;
+    }
+
+    .nav a:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+    }
+
     .nav-backdrop { display: none; }
 
     .side-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
@@ -392,7 +412,8 @@
 
     @media (max-width: 760px) {
       .page { padding-left: 16px; padding-right: 16px; }
-      .topbar { flex-wrap: nowrap; gap: 12px; }
+      .topbar { flex-wrap: wrap; gap: 12px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
       .brand { flex-shrink: 0; }
       .brand-text strong { white-space: nowrap; font-size: 1rem; }
       .status-pill { display: none; }
@@ -412,6 +433,14 @@
           <strong>GrowKrishak</strong>
         </div>
       </div>
+
+      <nav class="nav">
+        <a href="n.html#overview">Overview</a>
+        <a href="n.html#zones">Zones</a>
+        <a href="n.html#operations">Operations</a>
+        <a href="n.html#alerts">Alerts</a>
+        <a href="n.html#fertilizer-prices">Prices</a>
+      </nav>
 
       <div class="nav-actions">
         <div class="status-pill">
