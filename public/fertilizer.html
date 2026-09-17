@@ -15,6 +15,7 @@
       --green: #74dca4;
       --green-2: #3ec987;
       --green-3: #a5f0bc;
+      --blue: #80c8ff;
       --shadow: 0 18px 45px rgba(0,0,0,0.35);
     }
 
@@ -25,14 +26,11 @@
     .fert-link { text-decoration: underline; text-underline-offset: 3px; }
     .fert-link:hover { color: var(--green-3); }
     .buy-link {
-      display: inline-block;
-      margin-top: 8px;
-      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
-      color: #03150d !important;
-      font-weight: 800;
-      border-radius: 10px;
-      padding: 8px 14px;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.88rem;
     }
+    .buy-link:hover { text-decoration: underline; }
 
     body {
       margin: 0;
@@ -883,7 +881,7 @@
               </div>
               <div class="stat-value">${r.kg.toFixed(1)} kg</div>
               <span class="delta">≈ ${bags} bag${bags === 1 ? '' : 's'} (${prod.bagKg} kg) • ${money(cost)} • ${note}</span>
-              <span class="delta"><a class="buy-link" href="${prod.buy}" target="_blank" rel="noopener" title="Buy online — ${prod.store}">🛒 Official Portal</a></span>
+              <span class="delta"><a class="buy-link" href="${prod.buy}" target="_blank" rel="noopener" title="Buy online — ${prod.store}">Official portal ↗</a></span>
             </div>`;
           }).join('');
 
