@@ -354,6 +354,53 @@
             }
         }
 
+        /* Phones: stop words getting clipped by fixed widths/paddings */
+        @media (max-width: 520px) {
+            body { padding: 12px; }
+
+            .signup-shell {
+                border-radius: 20px;
+                min-height: 0;
+            }
+
+            .brand-panel,
+            .form-panel {
+                padding: 28px 18px;
+            }
+
+            .brand-panel h1 { font-size: 28px; }
+
+            .brand-panel p { font-size: 15px; }
+
+            .mini-features { grid-template-columns: 1fr; }
+
+            .topbar { flex-wrap: wrap; row-gap: 10px; }
+
+            .logo { font-size: 22px; }
+
+            .logo img { width: 40px; height: 40px; }
+
+            .home-link { font-size: 14px; padding: 7px 12px; }
+
+            .form-wrap h2 { font-size: 28px; }
+
+            .form-wrap > p { font-size: 14px; }
+
+            .socials { flex-wrap: wrap; }
+
+            .socials button { flex: 1 1 140px; padding: 12px 8px; font-size: 14px; }
+
+            .provider-back { padding: 12px; }
+
+            .provider-card,
+            .google-card,
+            .apple-card { padding: 26px 18px 20px; max-width: 100%; }
+
+            .provider-actions { flex-wrap: wrap; }
+
+            .provider-actions button { flex: 1 1 130px; }
+        }
+
         /* Provider dialogs: Google = create-account, Apple = dark Apple-ID */
         .provider-back {
             display: none;
