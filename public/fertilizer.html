@@ -77,6 +77,65 @@
     .brand-text strong { font-size: 1.1rem; }
     .brand-sub { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 
+    /* Fertilizer calculator form */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .calc-field { display: flex; flex-direction: column; gap: 8px; }
+    .calc-field.full { grid-column: 1 / -1; }
+    .calc-field label { font-size: 0.8rem; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; }
+    .calc-field input, .calc-field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .calc-field select option { color: #0b1713; }
+    .calc-field input:focus, .calc-field select:focus { border-color: var(--green-2); box-shadow: 0 0 0 3px rgba(62,201,135,0.18); }
+    .calc-btn {
+      margin-top: 18px;
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 15px;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(33,156,110,0.3);
+    }
+    .calc-btn:disabled { opacity: 0.6; cursor: wait; }
+    .calc-err { min-height: 20px; margin-top: 12px; font-size: 0.85rem; font-weight: 700; color: #ff8a80; }
+    #calcResult { display: none; margin-top: 18px; }
+    #calcResult.show { display: block; }
+    .dose-note { color: var(--muted); font-size: 0.8rem; margin: 14px 0 0; line-height: 1.7; }
+    .total-row {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: rgba(46,203,127,0.1);
+      border: 1px solid rgba(46,203,127,0.3);
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-weight: 800;
+    }
+    .total-row strong { font-size: 1.3rem; color: var(--green-3); }
+    @media (max-width: 760px) {
+      .calc-grid { grid-template-columns: 1fr; }
+    }
+
     .nav-actions { display: flex; align-items: center; gap: 14px; }
 
     .status-pill {
@@ -491,6 +550,88 @@
 
         <section class="section-panel" style="margin-top:24px;">
           <div class="panel-head">
+            <div class="panel-title">Fertilizer Calculator</div>
+            <span class="chip">Calculator</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.85rem;margin:12px 0 0;line-height:1.6;">Enter your field size and the crop you plan to grow. We will tell you exactly how much Urea, DAP and MOP your field needs, plus the estimated cost.</p>
+
+          <form id="calcForm">
+            <div class="calc-grid">
+              <div class="calc-field">
+                <label for="calcAcres">Field size (acres)</label>
+                <input type="number" id="calcAcres" min="0.1" step="0.1" placeholder="e.g. 2.5" required />
+              </div>
+              <div class="calc-field">
+                <label for="calcCrop">Crop you will grow</label>
+                <select id="calcCrop" required>
+                  <option value="">Select crop…</option>
+                  <option value="paddy">Rice / Paddy</option>
+                  <option value="wheat">Wheat</option>
+                  <option value="maize">Maize</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="sugarcane">Sugarcane</option>
+                  <option value="soybean">Soybean</option>
+                  <option value="mustard">Mustard</option>
+                  <option value="potato">Potato</option>
+                  <option value="groundnut">Groundnut</option>
+                  <option value="onion">Onion</option>
+                  <option value="tomato">Tomato</option>
+                  <option value="bajra">Bajra (Pearl millet)</option>
+                  <option value="jowar">Jowar (Sorghum)</option>
+                  <option value="sunflower">Sunflower</option>
+                  <option value="gram">Gram (Chickpea)</option>
+                </select>
+              </div>
+              <div class="calc-field">
+                <label for="calcN">Soil nitrogen level</label>
+                <select id="calcN">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="calc-field">
+                <label for="calcP">Soil phosphorus level</label>
+                <select id="calcP">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="calc-field">
+                <label for="calcK">Soil potash level</label>
+                <select id="calcK">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="calc-field">
+                <label for="calcName">Your name (optional)</label>
+                <input type="text" id="calcName" placeholder="e.g. Ramesh Patel" />
+              </div>
+            </div>
+            <div class="calc-err" id="calcErr"></div>
+            <button class="calc-btn" id="calcBtn" type="submit">Calculate Fertilizer Needed</button>
+          </form>
+
+          <div id="calcResult">
+            <div class="panel-head" style="margin-top:6px;">
+              <div class="panel-title" id="calcTitle">Your fertilizer plan</div>
+              <span class="chip" id="calcAcresChip"></span>
+            </div>
+            <div class="stats-grid" style="margin-top:0;" id="calcCards"></div>
+            <div class="total-row">
+              <span id="calcBagsLine">Total bags to buy</span>
+              <strong id="calcTotal">₹0</strong>
+            </div>
+            <p class="dose-note" id="calcSchedule"></p>
+            <p class="dose-note">Indicative doses based on standard state-agriculture recommendations, adjusted for your soil levels. Confirm with a soil-health card or your nearest Krishi Vigyan Kendra before buying.</p>
+          </div>
+        </section>
+
+        <section class="section-panel" style="margin-top:24px;">
+          <div class="panel-head">
             <div class="panel-title">Fertilizer Guide</div>
             <span class="chip">Guide</span>
           </div>
@@ -589,6 +730,135 @@
 
     checkSession();
   </script>
+    <script>
+      // Fertilizer calculator: field size + crop + soil levels ->
+      // N-P2O5-K2O need -> Urea/DAP/MOP bags + cost + dose schedule.
+      (function () {
+        // Recommended N:P2O5:K2O in kg per acre (state-agri guidance).
+        const CROPS = {
+          paddy:      { label: 'Rice / Paddy',        n: 40,  p: 24, k: 24 },
+          wheat:      { label: 'Wheat',               n: 48,  p: 24, k: 16 },
+          maize:      { label: 'Maize',               n: 48,  p: 24, k: 16 },
+          cotton:     { label: 'Cotton',              n: 48,  p: 20, k: 20 },
+          sugarcane:  { label: 'Sugarcane',           n: 100, p: 40, k: 40 },
+          soybean:    { label: 'Soybean',             n: 12,  p: 32, k: 16 },
+          mustard:    { label: 'Mustard',             n: 32,  p: 16, k: 12 },
+          potato:     { label: 'Potato',              n: 48,  p: 32, k: 48 },
+          groundnut:  { label: 'Groundnut',           n: 8,   p: 16, k: 20 },
+          onion:      { label: 'Onion',               n: 40,  p: 20, k: 24 },
+          tomato:     { label: 'Tomato',              n: 40,  p: 24, k: 24 },
+          bajra:      { label: 'Bajra (Pearl millet)',n: 24,  p: 16, k: 12 },
+          jowar:      { label: 'Jowar (Sorghum)',     n: 32,  p: 16, k: 12 },
+          sunflower:  { label: 'Sunflower',           n: 24,  p: 24, k: 16 },
+          gram:       { label: 'Gram (Chickpea)',     n: 8,   p: 20, k: 8 },
+        };
+        const PRODUCTS = {
+          urea: { name: 'Urea (46% N)',  bagKg: 45, price: 266.50, icon: '🧪' },
+          dap:  { name: 'DAP (18:46:0)', bagKg: 50, price: 1350,   icon: '🌾' },
+          mop:  { name: 'MOP (60% K2O)', bagKg: 50, price: 1975,   icon: '🌻' },
+        };
+        const ADJ = { low: 1.25, medium: 1, high: 0.75 };
+
+        const form = document.getElementById('calcForm');
+        if (!form) return;
+
+        // Remember the farmer's last entries on this device.
+        try {
+          const saved = JSON.parse(localStorage.getItem('gk_fert_calc') || '{}');
+          if (saved.acres) document.getElementById('calcAcres').value = saved.acres;
+          if (saved.crop) document.getElementById('calcCrop').value = saved.crop;
+          if (saved.n) document.getElementById('calcN').value = saved.n;
+          if (saved.p) document.getElementById('calcP').value = saved.p;
+          if (saved.k) document.getElementById('calcK').value = saved.k;
+          if (saved.name) document.getElementById('calcName').value = saved.name;
+        } catch (e) {}
+
+        function money(v) {
+          return '₹' + Number(v).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        }
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const errEl = document.getElementById('calcErr');
+          const btn = document.getElementById('calcBtn');
+          errEl.textContent = '';
+          document.getElementById('calcResult').classList.remove('show');
+
+          const acres = Number(document.getElementById('calcAcres').value);
+          const cropKey = document.getElementById('calcCrop').value;
+          const crop = CROPS[cropKey];
+          const farmer = document.getElementById('calcName').value.trim();
+
+          if (!acres || acres <= 0) { errEl.textContent = 'Enter a valid field size in acres.'; return; }
+          if (!crop) { errEl.textContent = 'Please select the crop you will grow.'; return; }
+
+          try {
+            localStorage.setItem('gk_fert_calc', JSON.stringify({
+              acres: document.getElementById('calcAcres').value, crop: cropKey,
+              n: document.getElementById('calcN').value, p: document.getElementById('calcP').value,
+              k: document.getElementById('calcK').value, name: farmer,
+            }));
+          } catch (e) {}
+
+          btn.disabled = true;
+          btn.textContent = 'Calculating...';
+
+          // Nutrient need for the whole field, adjusted for soil levels.
+          const needN = crop.n * ADJ[document.getElementById('calcN').value] * acres;
+          const needP = crop.p * ADJ[document.getElementById('calcP').value] * acres;
+          const needK = crop.k * ADJ[document.getElementById('calcK').value] * acres;
+
+          // Meet P with DAP (46% P2O5, 18% N), K with MOP (60% K2O),
+          // remaining N with Urea (46% N).
+          const dapKg = needP / 0.46;
+          const nFromDap = dapKg * 0.18;
+          const mopKg = needK / 0.60;
+          const ureaKg = Math.max(0, needN - nFromDap) / 0.46;
+
+          const rows = [
+            { key: 'dap',  kg: dapKg },
+            { key: 'mop',  kg: mopKg },
+            { key: 'urea', kg: ureaKg },
+          ];
+
+          let totalBags = 0;
+          let totalCost = 0;
+          document.getElementById('calcCards').innerHTML = rows.map((r) => {
+            const prod = PRODUCTS[r.key];
+            const bags = r.kg > 0 ? Math.ceil(r.kg / prod.bagKg - 1e-9) : 0;
+            const cost = bags * prod.price;
+            totalBags += bags;
+            totalCost += cost;
+            const note = r.key === 'dap' ? 'Basal dose at sowing' : r.key === 'mop' ? 'Basal dose at sowing' : 'In 2–3 splits';
+            return `<div class="card">
+              <div class="stat-top">
+                <span class="stat-title">${prod.name}</span>
+                <span class="stat-icon">${prod.icon}</span>
+              </div>
+              <div class="stat-value">${r.kg.toFixed(1)} kg</div>
+              <span class="delta">≈ ${bags} bag${bags === 1 ? '' : 's'} (${prod.bagKg} kg) • ${money(cost)} • ${note}</span>
+            </div>`;
+          }).join('');
+
+          document.getElementById('calcTitle').textContent =
+            (farmer ? farmer + ' — ' : '') + crop.label + ' fertilizer plan';
+          document.getElementById('calcAcresChip').textContent = acres + ' acre' + (acres === 1 ? '' : 's');
+          document.getElementById('calcBagsLine').textContent =
+            `Buy ${totalBags} bag${totalBags === 1 ? '' : 's'} ` +
+            `(N ${needN.toFixed(0)} kg • P ${needP.toFixed(0)} kg • K ${needK.toFixed(0)} kg)`;
+          document.getElementById('calcTotal').textContent = money(totalCost);
+          document.getElementById('calcSchedule').textContent =
+            `How to apply: full DAP + full MOP and one-third of the Urea as basal dose at sowing. ` +
+            `Give the remaining Urea in two equal splits — first at tillering/vegetative stage, second at flowering. ` +
+            `Irrigate lightly after each top dressing.`;
+          document.getElementById('calcResult').classList.add('show');
+          document.getElementById('calcResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+          btn.disabled = false;
+          btn.textContent = 'Calculate Fertilizer Needed';
+        });
+      })();
+    </script>
     <script>
       // Hamburger drawer (phones/tablets): slide the left menu in/out.
       (function () {
