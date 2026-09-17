@@ -20,6 +20,11 @@
 
     * { box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
+    .fert-link { text-decoration: underline; text-underline-offset: 3px; }
+    .fert-link:hover { color: var(--green-3); }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
@@ -532,7 +537,7 @@
       <div class="nav-backdrop" id="navBackdrop"></div>
 
       <main>
-        <section class="section-panel">
+        <section class="section-panel" id="prices">
           <div class="panel-head">
             <div class="panel-title">Current Prices</div>
             <span class="chip">Sep 2026 • Govt rates</span>
@@ -863,7 +868,7 @@
             const note = r.key === 'dap' ? 'Basal dose at sowing' : r.key === 'mop' ? 'Basal dose at sowing' : 'In 2–3 splits';
             return `<div class="card">
               <div class="stat-top">
-                <span class="stat-title">${prod.name}</span>
+                <a class="stat-title fert-link" href="#prices" title="See price">${prod.name} 🔗</a>
                 <span class="stat-icon">${prod.icon}</span>
               </div>
               <div class="stat-value">${r.kg.toFixed(1)} kg</div>
