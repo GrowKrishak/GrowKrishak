@@ -24,6 +24,15 @@
 
     .fert-link { text-decoration: underline; text-underline-offset: 3px; }
     .fert-link:hover { color: var(--green-3); }
+    .buy-link {
+      display: inline-block;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #2ecb7f, #1b9a66);
+      color: #03150d !important;
+      font-weight: 800;
+      border-radius: 10px;
+      padding: 8px 14px;
+    }
 
     body {
       margin: 0;
@@ -662,6 +671,7 @@
               <strong id="calcTotal">₹0</strong>
             </div>
             <p class="dose-note" id="calcSchedule"></p>
+            <p class="dose-note">Buy genuine subsidized fertilizer online from government cooperative stores: <a class="fert-link" href="https://iffcobazar.co.in" target="_blank" rel="noopener">IFFCO Bazar</a>. Check official government rates at the <a class="fert-link" href="https://www.fert.nic.in" target="_blank" rel="noopener">Department of Fertilizers (fert.nic.in)</a>. Always buy with PoS billing and Aadhaar for subsidy benefit.</p>
             <p class="dose-note">Indicative doses based on standard state-agriculture recommendations, adjusted for your soil levels. Confirm with a soil-health card or your nearest Krishi Vigyan Kendra before buying.</p>
           </div>
         </section>
@@ -789,9 +799,9 @@
           gram:       { label: 'Gram (Chickpea)',     n: 8,   p: 20, k: 8 },
         };
         const PRODUCTS = {
-          urea: { name: 'Urea (46% N)',  bagKg: 45, price: 266.50, icon: '🧪' },
-          dap:  { name: 'DAP (18:46:0)', bagKg: 50, price: 1350,   icon: '🌾' },
-          mop:  { name: 'MOP (60% K2O)', bagKg: 50, price: 1975,   icon: '🌻' },
+          urea: { name: 'Urea (46% N)',  bagKg: 45, price: 266.50, icon: '🧪', buy: 'https://www.iffco.in/en/urea-fertilizer', store: 'IFFCO (Govt. coop.)' },
+          dap:  { name: 'DAP (18:46:0)', bagKg: 50, price: 1350,   icon: '🌾', buy: 'https://iffcobazar.co.in', store: 'IFFCO Bazar (Govt. coop.)' },
+          mop:  { name: 'MOP (60% K2O)', bagKg: 50, price: 1975,   icon: '🌻', buy: 'https://iffcobazar.co.in', store: 'IFFCO Bazar (Govt. coop.)' },
         };
         const ADJ = { low: 1.25, medium: 1, high: 0.75 };
 
@@ -873,6 +883,7 @@
               </div>
               <div class="stat-value">${r.kg.toFixed(1)} kg</div>
               <span class="delta">≈ ${bags} bag${bags === 1 ? '' : 's'} (${prod.bagKg} kg) • ${money(cost)} • ${note}</span>
+              <span class="delta"><a class="buy-link" href="${prod.buy}" target="_blank" rel="noopener">🛒 Buy online — ${prod.store}</a></span>
             </div>`;
           }).join('');
 
