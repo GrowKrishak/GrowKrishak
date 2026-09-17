@@ -878,12 +878,12 @@
             const note = r.key === 'dap' ? 'Basal dose at sowing' : r.key === 'mop' ? 'Basal dose at sowing' : 'In 2–3 splits';
             return `<div class="card">
               <div class="stat-top">
-                <a class="stat-title fert-link" href="#prices" title="See price">${prod.name} 🔗</a>
+                <span class="stat-title">${prod.name}</span>
                 <span class="stat-icon">${prod.icon}</span>
               </div>
               <div class="stat-value">${r.kg.toFixed(1)} kg</div>
               <span class="delta">≈ ${bags} bag${bags === 1 ? '' : 's'} (${prod.bagKg} kg) • ${money(cost)} • ${note}</span>
-              <span class="delta"><a class="buy-link" href="${prod.buy}" target="_blank" rel="noopener">🛒 Buy online — ${prod.store}</a></span>
+              <span class="delta"><a class="buy-link" href="${prod.buy}" target="_blank" rel="noopener" title="Buy online — ${prod.store}">🛒 Official Portal</a></span>
             </div>`;
           }).join('');
 
